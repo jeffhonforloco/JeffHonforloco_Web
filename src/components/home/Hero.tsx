@@ -23,7 +23,7 @@ const Hero = () => {
             Discover insights, tips, and stories to inspire your own path.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Link to="/category/travel" className="btn-primary">
+            <Link to="/explore-travel" className="btn-primary">
               Explore Travel <ChevronRight className="ml-2 h-4 w-4" />
             </Link>
             <Link to="/about" className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-charcoal transition-colors inline-flex items-center">
