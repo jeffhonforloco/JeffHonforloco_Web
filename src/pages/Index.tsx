@@ -3,6 +3,7 @@ import React from 'react';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
 import FeaturedPosts from '../components/home/FeaturedPosts';
+import FeaturedDestinations from '../components/home/FeaturedDestinations';
 import CategoryFeature from '../components/home/CategoryFeature';
 import NewsletterCTA from '../components/home/NewsletterCTA';
 import AdSection from '../components/home/AdSection';
@@ -17,6 +18,7 @@ const Index = () => {
       />
       <Hero />
       <FeaturedPosts />
+      <FeaturedDestinations />
       <AdSection />
       <CategoryFeature />
       <NewsletterCTA />
