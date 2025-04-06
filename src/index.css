@@ -92,7 +92,7 @@
   }
   
   .nav-link {
-    @apply relative font-medium text-charcoal hover:text-gold transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-gold after:transition-all hover:after:w-full;
+    @apply relative font-semibold text-charcoal hover:text-gold transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-gold after:transition-all hover:after:w-full;
   }
   
   .story-link {

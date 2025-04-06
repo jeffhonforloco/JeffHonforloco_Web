@@ -20,7 +20,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           {/* About Link */}
           <Link 
             to="/about" 
-            className="text-lg font-medium text-charcoal w-full py-2"
+            className="text-lg font-semibold text-charcoal w-full py-2"
             onClick={onClose}
           >
             About
@@ -29,7 +29,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           {/* LifeStyle Section with Accordion */}
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="lifestyle" className="border-none">
-              <AccordionTrigger className="text-lg font-medium text-charcoal py-2">
+              <AccordionTrigger className="text-lg font-semibold text-charcoal py-2">
                 LifeStyle
               </AccordionTrigger>
               <AccordionContent>
@@ -70,7 +70,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           {/* Travel Adventures Section with Accordion */}
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="travel" className="border-none">
-              <AccordionTrigger className="text-lg font-medium text-charcoal py-2">
+              <AccordionTrigger className="text-lg font-semibold text-charcoal py-2">
                 Travel Adventures
               </AccordionTrigger>
               <AccordionContent>
@@ -111,7 +111,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           {/* Reviews Section with Accordion */}
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="reviews" className="border-none">
-              <AccordionTrigger className="text-lg font-medium text-charcoal py-2">
+              <AccordionTrigger className="text-lg font-semibold text-charcoal py-2">
                 Reviews
               </AccordionTrigger>
               <AccordionContent>
@@ -152,7 +152,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           {/* Guides Section with Accordion */}
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="guides" className="border-none">
-              <AccordionTrigger className="text-lg font-medium text-charcoal py-2">
+              <AccordionTrigger className="text-lg font-semibold text-charcoal py-2">
                 Guides
               </AccordionTrigger>
               <AccordionContent>
@@ -192,7 +192,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           
           {/* More Section */}
           <details className="group border-b border-gray-200 py-2">
-            <summary className="text-xl font-medium flex cursor-pointer items-center justify-between py-2">
+            <summary className="text-xl font-semibold flex cursor-pointer items-center justify-between py-2">
               <span>More</span>
               <ChevronDown className="h-5 w-5 transition-transform group-open:rotate-180" />
             </summary>
@@ -298,7 +298,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           {/* Shop Link */}
           <Link 
             to="/shop" 
-            className="text-lg font-medium text-charcoal flex items-center justify-center gap-2 w-full py-2"
+            className="text-lg font-semibold text-charcoal flex items-center justify-center gap-2 w-full py-2"
             onClick={onClose}
           >
             <ShoppingBag className="h-5 w-5" />
@@ -308,7 +308,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           {/* Contact Link - Added directly in the navigation */}
           <Link 
             to="/contact" 
-            className="text-lg font-medium text-charcoal w-full py-2"
+            className="text-lg font-semibold text-charcoal w-full py-2"
             onClick={onClose}
           >
             Contact
@@ -317,7 +317,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           <div className="pt-2 w-full">
             <ProductSearch>
               <button 
-                className="flex items-center justify-center text-charcoal w-full"
+                className="flex items-center justify-center text-charcoal w-full font-semibold"
                 onClick={onClose}
               >
                 <Search className="h-5 w-5 mr-2" />

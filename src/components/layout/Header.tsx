@@ -55,14 +55,14 @@ const Header = () => {
           
           {/* Mobile Search */}
           <ProductSearch>
-            <Button variant="ghost" size="icon" className="mr-1">
+            <Button variant="ghost" size="icon" className="mr-1 font-semibold">
               <span className="sr-only">Search products</span>
               <Search className="h-5 w-5" />
             </Button>
           </ProductSearch>
           
           <button 
-            className="text-charcoal"
+            className="text-charcoal font-semibold"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

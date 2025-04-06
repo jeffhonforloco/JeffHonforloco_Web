@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
@@ -18,13 +17,13 @@ const DesktopNavigation = () => {
   return (
     <nav className="hidden md:flex items-center justify-end w-full space-x-6">
       {/* About Link */}
-      <Link to="/about" className="nav-link font-medium text-base">About</Link>
+      <Link to="/about" className="nav-link font-semibold text-base">About</Link>
       
       {/* LifeStyle Link with Dropdown */}
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">LifeStyle</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-semibold text-base">LifeStyle</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[220px] gap-2 p-4">
                 <NavigationItem 
@@ -53,7 +52,7 @@ const DesktopNavigation = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">Travel Adventures</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-semibold text-base">Travel Adventures</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[220px] gap-2 p-4">
                 <NavigationItem 
@@ -82,7 +81,7 @@ const DesktopNavigation = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">Reviews</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-semibold text-base">Reviews</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[220px] gap-2 p-4">
                 <NavigationItem 
@@ -111,7 +110,7 @@ const DesktopNavigation = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">Guides</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-semibold text-base">Guides</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[220px] gap-2 p-4">
                 <NavigationItem 
@@ -140,7 +139,7 @@ const DesktopNavigation = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">More</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-semibold text-base">More</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[220px] gap-2 p-4">
                 <li className="pt-2">
@@ -218,13 +217,13 @@ const DesktopNavigation = () => {
       </NavigationMenu>
       
       {/* Shop Link */}
-      <Link to="/shop" className="nav-link flex items-center gap-1 font-medium text-base">
+      <Link to="/shop" className="nav-link flex items-center gap-1 font-semibold text-base">
         <ShoppingBag className="h-5 w-5" />
         <span>Shop</span>
       </Link>
       
       {/* Contact Link - Added directly in the navigation */}
-      <Link to="/contact" className="nav-link font-medium text-base">Contact</Link>
+      <Link to="/contact" className="nav-link font-semibold text-base">Contact</Link>
       
       {/* Cart */}
       <CartButton />
