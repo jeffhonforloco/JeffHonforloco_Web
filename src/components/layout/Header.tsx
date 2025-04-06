@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown, ShoppingBag, ShoppingCart, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -22,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { useShopContext } from '@/context/ShopContext';
 import ProductSearch from '@/components/shop/ProductSearch';
 
-// Define our official categories
 const mainCategories = [
   { id: 1, name: "Lifestyle & Growth", slug: "lifestyle-growth", description: "Productivity hacks, healthy habits, mindfulness" },
   { id: 2, name: "Travel Adventures", slug: "travel-adventures", description: "Travel hacks, adventure spots, budget-friendly trips" },
@@ -59,7 +57,7 @@ const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img 
-            src="/lovable-uploads/1b3ef5fa-016d-4cd5-9724-895a53b211a9.png" 
+            src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
             alt="Jeff HonForLoco Logo" 
             className="h-24 transition-all duration-300" 
           />
@@ -244,7 +242,6 @@ const Header = () => {
   );
 };
 
-// Helper component for NavigationMenu items
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a"> & {

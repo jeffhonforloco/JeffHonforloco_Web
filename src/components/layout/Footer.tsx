@@ -22,7 +22,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
             <Link to="/" className="block mb-4">
               <img 
-                src="/lovable-uploads/1b3ef5fa-016d-4cd5-9724-895a53b211a9.png" 
+                src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
                 alt="Jeff HonForLoco Logo" 
                 className="h-24 mx-auto md:mx-0 mb-2" 
               />
@@ -71,6 +71,7 @@ const Footer = () => {
             </ul>
           </div>
           
+          {/* Pages */}
           <div className="col-span-1">
             <h3 className="font-serif text-lg font-semibold mb-4">Pages</h3>
             <ul className="space-y-2">
