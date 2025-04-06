@@ -52,7 +52,7 @@ const Header = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
+        isScrolled ? 'bg-white shadow-md py-2' : 'bg-white py-2'
       }`}
     >
       <div className="container-lg flex items-center justify-between">
@@ -61,7 +61,7 @@ const Header = () => {
           <img 
             src="/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png" 
             alt="Jeff HonForLoco Logo" 
-            className="h-28 transition-all duration-300" 
+            className="h-20 transition-all duration-300" 
           />
         </Link>
         
