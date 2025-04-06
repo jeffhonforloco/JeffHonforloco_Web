@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
@@ -26,32 +26,51 @@ const heroImages = [
 ];
 
 const Hero = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    // Automatically advance the slider every 5 seconds
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative bg-gradient-to-r from-charcoal to-gray-800 text-white min-h-[85vh] flex items-center overflow-hidden">
-      <Carousel 
-        className="absolute inset-0 w-full h-full" 
-        opts={{
-          loop: true,
-          align: "start",
-        }}
-      >
-        <CarouselContent className="h-full">
-          {heroImages.map((image, index) => (
-            <CarouselItem key={index} className="h-full">
-              <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-70 z-10"></div>
-                <img 
-                  src={image.url} 
-                  alt={image.alt}
-                  className="object-cover w-full h-full transition-all duration-500 ease-in-out" 
-                />
-              </div>
-            </CarouselItem>
+      {/* Fullscreen background image carousel */}
+      <div className="absolute inset-0 w-full h-full">
+        {heroImages.map((image, index) => (
+          <div 
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-70 z-10"></div>
+            <img 
+              src={image.url} 
+              alt={image.alt}
+              className="object-cover w-full h-full" 
+            />
+          </div>
+        ))}
+        
+        {/* Manual navigation controls */}
+        <div className="absolute bottom-8 left-0 right-0 z-20 flex justify-center gap-2">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentIndex ? 'bg-white scale-125' : 'bg-white/50'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
           ))}
-        </CarouselContent>
-        <CarouselPrevious className="absolute left-4 z-20 bg-black/30 hover:bg-black/50 text-white" />
-        <CarouselNext className="absolute right-4 z-20 bg-black/30 hover:bg-black/50 text-white" />
-      </Carousel>
+        </div>
+      </div>
       
       <div className="container-lg relative z-10">
         <div className="max-w-2xl animate-fade-in">
