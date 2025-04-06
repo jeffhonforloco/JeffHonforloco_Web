@@ -1,35 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Facebook, Twitter, Instagram, Youtube, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getCategories } from '../../lib/wordpress';
 
-interface Category {
-  id: number;
-  name: string;
-  slug: string;
-}
+// Define our main categories for the footer
+const footerCategories = [
+  { id: 1, name: "Lifestyle & Growth", slug: "lifestyle-growth" },
+  { id: 2, name: "Travel Adventures", slug: "travel-adventures" },
+  { id: 3, name: "Product Reviews", slug: "product-reviews" },
+  { id: 4, name: "How-To Guides", slug: "how-to-guides" },
+  { id: 5, name: "Motivation & Stories", slug: "motivation-stories" }
+];
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const [categories, setCategories] = useState<Category[]>([]);
-  
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const fetchedCategories = await getCategories();
-        // Filter out categories with no posts and limit to top 5
-        const filteredCategories = fetchedCategories
-          .filter(category => category.count > 0)
-          .slice(0, 5);
-        setCategories(filteredCategories);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-    
-    fetchCategories();
-  }, []);
   
   return (
     <footer className="bg-charcoal text-white pt-16 pb-8">
@@ -63,7 +47,7 @@ const Footer = () => {
           <div className="col-span-1">
             <h3 className="font-serif text-lg font-semibold mb-4">Categories</h3>
             <ul className="space-y-2">
-              {categories.map((category) => (
+              {footerCategories.map((category) => (
                 <li key={category.id}>
                   <Link 
                     to={`/category/${category.slug}`}
@@ -73,6 +57,11 @@ const Footer = () => {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link to="/blog" className="text-gray-300 hover:text-gold transition-colors">
+                  View All Posts
+                </Link>
+              </li>
             </ul>
           </div>
           

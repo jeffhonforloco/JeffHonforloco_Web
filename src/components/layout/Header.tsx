@@ -2,18 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Search, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getCategories } from '../../lib/wordpress';
 
-interface Category {
-  id: number;
-  name: string;
-  slug: string;
-}
+// Define our official categories
+const mainCategories = [
+  { id: 1, name: "Lifestyle & Growth", slug: "lifestyle-growth" },
+  { id: 2, name: "Travel Adventures", slug: "travel-adventures" },
+  { id: 3, name: "Product Reviews", slug: "product-reviews" },
+  { id: 4, name: "How-To Guides", slug: "how-to-guides" },
+  { id: 5, name: "Motivation & Stories", slug: "motivation-stories" }
+];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -26,23 +27,6 @@ const Header = () => {
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const fetchedCategories = await getCategories();
-        // Filter out categories with no posts and limit to top 5
-        const filteredCategories = fetchedCategories
-          .filter(category => category.count > 0)
-          .slice(0, 5);
-        setCategories(filteredCategories);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-    
-    fetchCategories();
   }, []);
   
   return (
@@ -66,7 +50,7 @@ const Header = () => {
               Categories <ChevronDown className="ml-1 h-4 w-4" />
             </button>
             <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden hidden group-hover:block animate-fade-in z-10">
-              {categories.map((category) => (
+              {mainCategories.map((category) => (
                 <Link 
                   key={category.id}
                   to={`/category/${category.slug}`}
@@ -75,6 +59,12 @@ const Header = () => {
                   {category.name}
                 </Link>
               ))}
+              <Link 
+                to="/blog"
+                className="block px-4 py-2 text-sm font-medium text-charcoal bg-offwhite hover:text-gold transition-colors"
+              >
+                View All Posts
+              </Link>
             </div>
           </div>
           
@@ -110,7 +100,7 @@ const Header = () => {
             <div className="py-2">
               <p className="text-lg font-medium text-charcoal mb-2">Categories</p>
               <div className="pl-4 flex flex-col space-y-2">
-                {categories.map((category) => (
+                {mainCategories.map((category) => (
                   <Link 
                     key={category.id}
                     to={`/category/${category.slug}`}
@@ -120,6 +110,13 @@ const Header = () => {
                     {category.name}
                   </Link>
                 ))}
+                <Link 
+                  to="/blog"
+                  className="text-charcoal font-medium hover:text-gold transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  View All Posts
+                </Link>
               </div>
             </div>
             
