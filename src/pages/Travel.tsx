@@ -5,7 +5,7 @@ import PostCard from '../components/blog/PostCard';
 import AdSection from '../components/home/AdSection';
 import SEO from '../components/shared/SEO';
 import { ArrowLeft, ArrowRight, Compass, MapPin, Mountain, Palmtree } from 'lucide-react';
-import { getCategoryBySlug, getPostsByCategory, transformPost } from '../lib/wordpress';
+import { getCategoryBySlug, getPostsByCategory, getPosts, transformPost } from '../lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
