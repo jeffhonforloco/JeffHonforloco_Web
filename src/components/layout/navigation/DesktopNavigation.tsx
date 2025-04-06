@@ -107,8 +107,34 @@ const DesktopNavigation = () => {
         </NavigationMenuList>
       </NavigationMenu>
       
-      {/* Guides Link */}
-      <Link to="/category/how-to-guides" className="nav-link font-medium text-base">Guides</Link>
+      {/* Guides Link with Dropdown */}
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">Guides</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[220px] gap-2 p-4">
+                <NavigationItem 
+                  title="Starting a Blog" 
+                  href="/guides/starting-a-blog"
+                />
+                <NavigationItem 
+                  title="Time Management Tips" 
+                  href="/guides/time-management-tips"
+                />
+                <NavigationItem 
+                  title="Remote Work Setups" 
+                  href="/guides/remote-work-setups"
+                />
+                <NavigationItem 
+                  title="All Guides" 
+                  href="/category/how-to-guides"
+                />
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
       
       {/* More Link - This could be a dropdown for additional content */}
       <NavigationMenu>

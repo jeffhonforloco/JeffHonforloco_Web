@@ -149,14 +149,46 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             </AccordionItem>
           </Accordion>
           
-          {/* Guides Link */}
-          <Link 
-            to="/category/how-to-guides" 
-            className="text-lg font-medium text-charcoal w-full py-2"
-            onClick={onClose}
-          >
-            Guides
-          </Link>
+          {/* Guides Section with Accordion */}
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="guides" className="border-none">
+              <AccordionTrigger className="text-lg font-medium text-charcoal py-2">
+                Guides
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="pl-4 flex flex-col">
+                  <Link 
+                    to="/guides/starting-a-blog" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Starting a Blog
+                  </Link>
+                  <Link 
+                    to="/guides/time-management-tips" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Time Management Tips
+                  </Link>
+                  <Link 
+                    to="/guides/remote-work-setups" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Remote Work Setups
+                  </Link>
+                  <Link 
+                    to="/category/how-to-guides" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    All Guides
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
           
           {/* More Link - Expand to show additional links */}
           <details className="w-full">
