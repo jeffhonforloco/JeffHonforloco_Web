@@ -197,32 +197,11 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             </summary>
             <div className="pl-4 flex flex-col">
               <Link 
-                to="/" 
-                className="text-lg font-medium text-charcoal w-full py-2"
-                onClick={onClose}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/blog" 
-                className="text-lg font-medium text-charcoal w-full py-2"
-                onClick={onClose}
-              >
-                Blog
-              </Link>
-              <Link 
                 to="/contact" 
                 className="text-lg font-medium text-charcoal w-full py-2"
                 onClick={onClose}
               >
                 Contact
-              </Link>
-              <Link 
-                to="/category/motivation-stories" 
-                className="text-lg font-medium text-charcoal w-full py-2"
-                onClick={onClose}
-              >
-                Motivation & Stories
               </Link>
               
               {/* Stories Section */}

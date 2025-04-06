@@ -143,22 +143,9 @@ const DesktopNavigation = () => {
             <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">More</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[220px] gap-2 p-4">
-                <NavigationItem 
-                  title="Home" 
-                  href="/"
-                />
-                <NavigationItem 
-                  title="Blog" 
-                  href="/blog"
-                />
-                <NavigationItem 
-                  title="Contact" 
-                  href="/contact"
-                />
-                <NavigationItem 
-                  title="Motivation & Stories" 
-                  href="/category/motivation-stories"
-                />
+                <Link to="/contact" className="block select-none rounded-md p-3 leading-none hover:bg-accent hover:text-accent-foreground">
+                  <div className="text-sm font-medium leading-none">Contact</div>
+                </Link>
                 <li className="pt-2">
                   <div className="text-sm font-medium leading-none mb-2 text-gray-500">Stories</div>
                   <ul className="pl-2">
