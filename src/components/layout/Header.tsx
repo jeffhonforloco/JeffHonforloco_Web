@@ -57,8 +57,12 @@ const Header = () => {
     >
       <div className="container-lg flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="font-serif text-2xl md:text-3xl font-bold text-charcoal">
-          Jeff HonForLoco
+        <Link to="/" className="flex items-center">
+          <img 
+            src="/lovable-uploads/074a0d88-eee8-4e86-b08f-a5634be337ee.png" 
+            alt="Jeff HonForLoco Logo" 
+            className="h-16 transition-all duration-300" 
+          />
         </Link>
         
         {/* Desktop Navigation */}

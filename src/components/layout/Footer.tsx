@@ -21,13 +21,20 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
-            <Link to="/" className="font-serif text-2xl font-bold mb-4 inline-block">
-              Jeff HonForLoco
+            <Link to="/" className="block mb-4">
+              <img 
+                src="/lovable-uploads/074a0d88-eee8-4e86-b08f-a5634be337ee.png" 
+                alt="Jeff HonForLoco Logo" 
+                className="h-16 mx-auto md:mx-0 mb-2" 
+              />
+              <p className="text-gray-300 text-xs text-center md:text-left italic">
+                live bold. travel far. grow every day.
+              </p>
             </Link>
             <p className="text-gray-300 mb-6">
               Exploring life through travel, lifestyle, and personal growth experiences.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 justify-center md:justify-start">
               <a href="https://facebook.com" className="hover:text-gold transition-colors" aria-label="Facebook">
                 <Facebook className="h-5 w-5" />
               </a>
