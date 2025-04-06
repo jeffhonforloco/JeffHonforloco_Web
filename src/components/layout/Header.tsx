@@ -2,14 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Search, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 // Define our official categories
 const mainCategories = [
-  { id: 1, name: "Lifestyle & Growth", slug: "lifestyle-growth" },
-  { id: 2, name: "Travel Adventures", slug: "travel-adventures" },
-  { id: 3, name: "Product Reviews", slug: "product-reviews" },
-  { id: 4, name: "How-To Guides", slug: "how-to-guides" },
-  { id: 5, name: "Motivation & Stories", slug: "motivation-stories" }
+  { id: 1, name: "Lifestyle & Growth", slug: "lifestyle-growth", description: "Productivity hacks, healthy habits, mindfulness" },
+  { id: 2, name: "Travel Adventures", slug: "travel-adventures", description: "Travel hacks, adventure spots, budget-friendly trips" },
+  { id: 3, name: "Product Reviews", slug: "product-reviews", description: "Tech for travelers, home fitness, growth tools" },
+  { id: 4, name: "How-To Guides", slug: "how-to-guides", description: "Blogging tips, productivity tricks, remote work guide" },
+  { id: 5, name: "Motivation & Stories", slug: "motivation-stories", description: "Personal growth, travel lessons, blogging journey" }
 ];
 
 const Header = () => {
@@ -45,28 +55,30 @@ const Header = () => {
         <nav className="hidden md:flex items-center space-x-8">
           <Link to="/" className="nav-link">Home</Link>
           
-          <div className="relative group">
-            <button className="nav-link flex items-center">
-              Categories <ChevronDown className="ml-1 h-4 w-4" />
-            </button>
-            <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden hidden group-hover:block animate-fade-in z-10">
-              {mainCategories.map((category) => (
-                <Link 
-                  key={category.id}
-                  to={`/category/${category.slug}`}
-                  className="block px-4 py-2 text-sm text-charcoal hover:bg-offwhite hover:text-gold transition-colors"
-                >
-                  {category.name}
-                </Link>
-              ))}
-              <Link 
-                to="/blog"
-                className="block px-4 py-2 text-sm font-medium text-charcoal bg-offwhite hover:text-gold transition-colors"
-              >
-                View All Posts
-              </Link>
-            </div>
-          </div>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="nav-link">Categories</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    {mainCategories.map((category) => (
+                      <ListItem
+                        key={category.id}
+                        title={category.name}
+                        href={`/category/${category.slug}`}
+                        description={category.description}
+                      />
+                    ))}
+                    <ListItem
+                      title="View All Posts"
+                      href="/blog"
+                      description="Browse all blog posts across categories"
+                    />
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
           
           <Link to="/about" className="nav-link">About</Link>
           <Link to="/contact" className="nav-link">Contact</Link>
@@ -148,5 +160,36 @@ const Header = () => {
     </header>
   );
 };
+
+// Helper component for NavigationMenu items
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a"> & {
+    title: string;
+    description?: string;
+  }
+>(({ className, title, description, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {description}
+          </p>
+          {children}
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";
 
 export default Header;
