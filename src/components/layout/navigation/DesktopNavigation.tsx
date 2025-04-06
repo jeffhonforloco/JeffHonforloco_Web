@@ -17,6 +17,10 @@ import { mainCategories, navigationLinks } from '../HeaderData';
 const DesktopNavigation = () => {
   return (
     <nav className="hidden md:flex items-center space-x-8">
+      {/* About Link - Now First */}
+      <Link to="/about" className="nav-link">About</Link>
+      
+      {/* Categories - Now Second */}
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -42,7 +46,6 @@ const DesktopNavigation = () => {
         </NavigationMenuList>
       </NavigationMenu>
       
-      <Link to="/about" className="nav-link">About</Link>
       <Link to="/contact" className="nav-link">Contact</Link>
       
       {/* Shop Link */}
