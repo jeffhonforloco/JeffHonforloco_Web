@@ -1,13 +1,26 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import Layout from '../components/layout/Layout';
+import Hero from '../components/home/Hero';
+import FeaturedPosts from '../components/home/FeaturedPosts';
+import CategoryFeature from '../components/home/CategoryFeature';
+import NewsletterCTA from '../components/home/NewsletterCTA';
+import AdSection from '../components/home/AdSection';
+import SEO from '../components/shared/SEO';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <Layout>
+      <SEO 
+        title="Home" 
+        description="Explore lifestyle, travel, and personal growth with Jeff HonForLoco. Discover insights, tips, and stories to inspire your journey." 
+      />
+      <Hero />
+      <FeaturedPosts />
+      <AdSection />
+      <CategoryFeature />
+      <NewsletterCTA />
+    </Layout>
   );
 };
 
