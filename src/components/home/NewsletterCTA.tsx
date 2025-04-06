@@ -1,8 +1,28 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
 
 const NewsletterCTA = () => {
+  const [email, setEmail] = useState('');
+  const { toast } = useToast();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Save subscription status to localStorage
+    localStorage.setItem('newsletter-subscribed', 'true');
+    
+    // Reset form
+    setEmail('');
+    
+    // Show success toast
+    toast({
+      title: "Subscription successful!",
+      description: "Thank you for subscribing to our newsletter.",
+    });
+  };
+
   return (
     <section className="py-20 bg-charcoal text-white relative overflow-hidden">
       <div className="absolute inset-0 opacity-10">
@@ -21,9 +41,11 @@ const NewsletterCTA = () => {
             Subscribe to my newsletter and never miss an update. Get exclusive content, travel tips, and personal insights delivered directly to your inbox.
           </p>
           
-          <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input 
               type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email address" 
               className="flex-grow px-4 py-3 rounded-md text-charcoal focus:outline-none focus:ring-2 focus:ring-gold"
               required
