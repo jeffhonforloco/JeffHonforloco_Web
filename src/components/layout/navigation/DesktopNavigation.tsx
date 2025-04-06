@@ -180,6 +180,23 @@ const DesktopNavigation = () => {
                     />
                   </ul>
                 </li>
+                <li className="pt-2">
+                  <div className="text-sm font-medium leading-none mb-2 text-gray-500">Recommendations</div>
+                  <ul className="pl-2">
+                    <NavigationItem 
+                      title="Nature Destinations" 
+                      href="/recommendations/nature-destinations"
+                    />
+                    <NavigationItem 
+                      title="Lifestyle Products" 
+                      href="/recommendations/lifestyle-products"
+                    />
+                    <NavigationItem 
+                      title="Blogging Resources" 
+                      href="/recommendations/blogging-resources"
+                    />
+                  </ul>
+                </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

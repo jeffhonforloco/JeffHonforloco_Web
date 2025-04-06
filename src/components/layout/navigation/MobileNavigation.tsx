@@ -251,6 +251,30 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               >
                 Exclusive Deals
               </Link>
+              
+              {/* Recommendations Section */}
+              <div className="mt-2 mb-1 font-medium text-gray-500">Recommendations:</div>
+              <Link 
+                to="/recommendations/nature-destinations" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Nature Destinations
+              </Link>
+              <Link 
+                to="/recommendations/lifestyle-products" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Lifestyle Products
+              </Link>
+              <Link 
+                to="/recommendations/blogging-resources" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Blogging Resources
+              </Link>
             </div>
           </details>
           
