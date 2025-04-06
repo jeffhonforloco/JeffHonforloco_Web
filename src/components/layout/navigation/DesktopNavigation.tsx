@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
@@ -221,9 +222,6 @@ const DesktopNavigation = () => {
         <ShoppingBag className="h-5 w-5" />
         <span>Shop</span>
       </Link>
-      
-      {/* Contact Link - Added directly in the navigation */}
-      <Link to="/contact" className="nav-link font-semibold text-base">Contact</Link>
       
       {/* Cart */}
       <CartButton />

@@ -305,15 +305,6 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             <span>Shop</span>
           </Link>
           
-          {/* Contact Link - Added directly in the navigation */}
-          <Link 
-            to="/contact" 
-            className="text-lg font-semibold text-charcoal w-full py-2"
-            onClick={onClose}
-          >
-            Contact
-          </Link>
-          
           <div className="pt-2 w-full">
             <ProductSearch>
               <button 
