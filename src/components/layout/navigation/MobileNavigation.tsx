@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ShoppingBag } from 'lucide-react';
+import { Search, ShoppingBag, ChevronDown } from 'lucide-react';
 import ProductSearch from '@/components/shop/ProductSearch';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -196,14 +197,6 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               <ChevronDown className="h-5 w-5 transition-transform group-open:rotate-180" />
             </summary>
             <div className="pb-3 pl-4 flex flex-col">
-              <Link 
-                to="/contact" 
-                className="text-lg font-medium text-charcoal w-full py-2"
-                onClick={onClose}
-              >
-                Contact
-              </Link>
-              
               {/* Stories Section */}
               <div className="mt-2 mb-1 font-medium text-gray-500">Stories:</div>
               <Link 
@@ -310,6 +303,15 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           >
             <ShoppingBag className="h-5 w-5" />
             <span>Shop</span>
+          </Link>
+          
+          {/* Contact Link - Added directly in the navigation */}
+          <Link 
+            to="/contact" 
+            className="text-lg font-medium text-charcoal w-full py-2"
+            onClick={onClose}
+          >
+            Contact
           </Link>
           
           <div className="pt-2 w-full">

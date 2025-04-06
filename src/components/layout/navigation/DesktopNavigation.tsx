@@ -143,9 +143,6 @@ const DesktopNavigation = () => {
             <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">More</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[220px] gap-2 p-4">
-                <Link to="/contact" className="block select-none rounded-md p-3 leading-none hover:bg-accent hover:text-accent-foreground">
-                  <div className="text-sm font-medium leading-none">Contact</div>
-                </Link>
                 <li className="pt-2">
                   <div className="text-sm font-medium leading-none mb-2 text-gray-500">Stories</div>
                   <ul className="pl-2">
@@ -225,6 +222,9 @@ const DesktopNavigation = () => {
         <ShoppingBag className="h-5 w-5" />
         <span>Shop</span>
       </Link>
+      
+      {/* Contact Link - Added directly in the navigation */}
+      <Link to="/contact" className="nav-link font-medium text-base">Contact</Link>
       
       {/* Cart */}
       <CartButton />
