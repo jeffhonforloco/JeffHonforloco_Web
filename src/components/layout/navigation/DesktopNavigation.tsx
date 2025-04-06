@@ -163,6 +163,23 @@ const DesktopNavigation = () => {
                     />
                   </ul>
                 </li>
+                <li className="pt-2">
+                  <div className="text-sm font-medium leading-none mb-2 text-gray-500">Affiliate</div>
+                  <ul className="pl-2">
+                    <NavigationItem 
+                      title="Tools for Bloggers" 
+                      href="/affiliate/tools-for-bloggers"
+                    />
+                    <NavigationItem 
+                      title="Travel Essentials" 
+                      href="/affiliate/travel-essentials"
+                    />
+                    <NavigationItem 
+                      title="Exclusive Deals" 
+                      href="/affiliate/exclusive-deals"
+                    />
+                  </ul>
+                </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

@@ -227,6 +227,30 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               >
                 Blogging Milestones
               </Link>
+              
+              {/* Affiliate Section */}
+              <div className="mt-2 mb-1 font-medium text-gray-500">Affiliate:</div>
+              <Link 
+                to="/affiliate/tools-for-bloggers" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Tools for Bloggers
+              </Link>
+              <Link 
+                to="/affiliate/travel-essentials" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Travel Essentials
+              </Link>
+              <Link 
+                to="/affiliate/exclusive-deals" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Exclusive Deals
+              </Link>
             </div>
           </details>
           
