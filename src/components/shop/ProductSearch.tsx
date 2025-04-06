@@ -37,14 +37,14 @@ const ProductSearch = ({ children }: ProductSearchProps) => {
     <>
       {children ? (
         <button 
-          className="text-charcoal hover:text-gold transition-colors flex items-center gap-1" 
+          className="text-charcoal dark:text-white hover:text-gold transition-colors flex items-center gap-1" 
           onClick={() => setOpen(true)}
         >
           {children}
         </button>
       ) : (
         <button 
-          className="text-charcoal hover:text-gold transition-colors flex items-center gap-1" 
+          className="text-charcoal dark:text-white hover:text-gold transition-colors flex items-center gap-1" 
           onClick={() => setOpen(true)}
         >
           <Search className="h-5 w-5" />

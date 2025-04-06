@@ -57,7 +57,7 @@ const Header = () => {
           <ProductSearch>
             <Button variant="ghost" size="icon" className="mr-1 font-semibold">
               <span className="sr-only">Search products</span>
-              <Search className="h-5 w-5" />
+              <Search className="h-5 w-5 text-charcoal dark:text-white" />
             </Button>
           </ProductSearch>
           

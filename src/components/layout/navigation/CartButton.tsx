@@ -23,7 +23,7 @@ const CartButton = ({ mobile = false }: CartButtonProps) => {
   if (mobile) {
     return (
       <Link to="/cart" className="relative mr-2">
-        <ShoppingCart className="h-5 w-5 text-charcoal" />
+        <ShoppingCart className="h-5 w-5 text-charcoal dark:text-white" />
         {cartCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-gold text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
             {cartCount}
@@ -37,7 +37,7 @@ const CartButton = ({ mobile = false }: CartButtonProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
-          <ShoppingCart className="h-5 w-5 text-charcoal hover:text-gold transition-colors" />
+          <ShoppingCart className="h-5 w-5 text-charcoal dark:text-white hover:text-gold transition-colors" />
           {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-gold text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {cartCount}
