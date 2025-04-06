@@ -9,6 +9,14 @@ import { getCategoryBySlug, getPostsByCategory, getPosts, transformPost } from '
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import { 
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from '@/components/ui/pagination';
 
 const Travel = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -17,31 +25,63 @@ const Travel = () => {
   const postsPerPage = 6;
   const [totalPages, setTotalPages] = useState(1);
   const [category, setCategory] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        // Fetch posts from the "travel-adventures" category
-        const { posts: fetchedPosts, category: fetchedCategory } = await getPostsByCategory('travel-adventures', currentPage, postsPerPage);
+        setError(null);
         
-        if (fetchedPosts.length > 0) {
-          const transformedPosts = fetchedPosts.map(transformPost);
-          setPosts(transformedPosts);
-          setCategory(fetchedCategory);
+        // Try fetching by category first
+        const categorySlug = 'travel-adventures';
+        console.log(`Attempting to fetch posts from category: ${categorySlug}`);
+        
+        const category = await getCategoryBySlug(categorySlug);
+        
+        if (category) {
+          console.log(`Found category: ${category.name} with ${category.count} posts`);
+          setCategory(category);
           
-          // For pagination
-          setTotalPages(Math.ceil(fetchedCategory?.count || 0 / postsPerPage));
+          // Fetch posts for this category
+          const postsResult = await getPostsByCategory(categorySlug, currentPage, postsPerPage);
+          const fetchedPosts = postsResult.posts;
+          
+          if (fetchedPosts && fetchedPosts.length > 0) {
+            console.log(`Found ${fetchedPosts.length} posts in category`);
+            const transformedPosts = fetchedPosts.map(transformPost);
+            setPosts(transformedPosts);
+            setTotalPages(Math.ceil(category.count / postsPerPage));
+          } else {
+            console.log('No posts found in category, falling back to all posts');
+            // Fall back to all posts
+            const fallbackPosts = await getPosts({ page: currentPage, perPage: postsPerPage });
+            if (fallbackPosts.length > 0) {
+              const transformedPosts = fallbackPosts.map(transformPost);
+              setPosts(transformedPosts);
+              setTotalPages(Math.ceil(10 / postsPerPage)); // Assuming at least 10 posts total
+            } else {
+              setPosts([]);
+              setError('No travel posts found');
+            }
+          }
         } else {
-          // If no posts found in travel-adventures, fall back to all posts
-          console.log('No travel adventure posts found, falling back to regular posts');
+          console.log('Category not found, falling back to all posts');
+          // Category not found, fall back to all posts
           const fallbackPosts = await getPosts({ page: currentPage, perPage: postsPerPage });
-          const transformedPosts = fallbackPosts.map(transformPost);
-          setPosts(transformedPosts);
-          setTotalPages(Math.ceil(fallbackPosts.length / postsPerPage));
+          if (fallbackPosts.length > 0) {
+            const transformedPosts = fallbackPosts.map(transformPost);
+            setPosts(transformedPosts);
+            setTotalPages(Math.ceil(10 / postsPerPage)); // Assuming at least 10 posts total
+          } else {
+            setPosts([]);
+            setError('No travel posts found');
+          }
         }
       } catch (error) {
         console.error('Error fetching travel posts:', error);
+        setError('Failed to load travel posts. Please try again later.');
+        setPosts([]);
       } finally {
         setLoading(false);
       }
@@ -123,48 +163,45 @@ const Travel = () => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <h2 className="title-md mb-4">No travel adventure posts found</h2>
-              <p className="text-gray-600 mb-6">Check back later for exciting travel content.</p>
+              <h2 className="title-md mb-4">{error || "No travel adventure posts found"}</h2>
+              <p className="text-gray-600 mb-6">Check back later for exciting travel content or create some posts in the travel-adventures category.</p>
               <Link to="/blog" className="btn-primary">View All Blog Posts</Link>
             </div>
           )}
           
-          {/* Pagination */}
+          {/* Pagination - Using shadcn/ui Pagination component */}
           {totalPages > 1 && (
-            <div className="mt-12 flex justify-center">
-              <nav className="flex items-center space-x-2">
-                <button 
-                  onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="p-2 rounded-md border bg-white text-charcoal disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Previous page"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </button>
-                
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className={`px-4 py-2 rounded-md ${
-                      currentPage === i + 1
-                        ? 'bg-gold text-white'
-                        : 'bg-white text-charcoal border'
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-                
-                <button 
-                  onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="p-2 rounded-md border bg-white text-charcoal disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Next page"
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </nav>
+            <div className="mt-12">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                      className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}
+                      aria-disabled={currentPage === 1}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        onClick={() => setCurrentPage(i + 1)}
+                        isActive={currentPage === i + 1}
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+                      className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}
+                      aria-disabled={currentPage === totalPages}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           )}
         </div>
