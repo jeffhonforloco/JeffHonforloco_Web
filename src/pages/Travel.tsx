@@ -5,9 +5,10 @@ import PostCard from '../components/blog/PostCard';
 import AdSection from '../components/home/AdSection';
 import SEO from '../components/shared/SEO';
 import { ArrowLeft, ArrowRight, Compass, MapPin, Mountain, Palmtree } from 'lucide-react';
-import { getPosts, transformPost } from '../lib/wordpress';
+import { getCategoryBySlug, getPostsByCategory, transformPost } from '../lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 
 const Travel = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -15,18 +16,30 @@ const Travel = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
   const [totalPages, setTotalPages] = useState(1);
+  const [category, setCategory] = useState<any>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        // Here we're using the standard posts API but would ideally filter by travel category
-        const fetchedPosts = await getPosts({ page: currentPage, perPage: postsPerPage });
-        const transformedPosts = fetchedPosts.map(transformPost);
-        setPosts(transformedPosts);
+        // Fetch posts from the "travel-adventures" category
+        const { posts: fetchedPosts, category: fetchedCategory } = await getPostsByCategory('travel-adventures', currentPage, postsPerPage);
         
-        // For pagination
-        setTotalPages(Math.ceil(fetchedPosts.length / postsPerPage));
+        if (fetchedPosts.length > 0) {
+          const transformedPosts = fetchedPosts.map(transformPost);
+          setPosts(transformedPosts);
+          setCategory(fetchedCategory);
+          
+          // For pagination
+          setTotalPages(Math.ceil(fetchedCategory?.count || 0 / postsPerPage));
+        } else {
+          // If no posts found in travel-adventures, fall back to all posts
+          console.log('No travel adventure posts found, falling back to regular posts');
+          const fallbackPosts = await getPosts({ page: currentPage, perPage: postsPerPage });
+          const transformedPosts = fallbackPosts.map(transformPost);
+          setPosts(transformedPosts);
+          setTotalPages(Math.ceil(fallbackPosts.length / postsPerPage));
+        }
       } catch (error) {
         console.error('Error fetching travel posts:', error);
       } finally {
@@ -47,7 +60,7 @@ const Travel = () => {
   return (
     <Layout>
       <SEO 
-        title="Explore Travel" 
+        title="Explore Travel Adventures" 
         description="Discover amazing travel destinations, adventure guides, and travel tips for your next journey." 
         type="website"
       />
@@ -55,7 +68,7 @@ const Travel = () => {
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-gradient-to-b from-sky-100 to-white">
         <div className="container-lg">
-          <h1 className="title-lg mb-4">Explore Travel</h1>
+          <h1 className="title-lg mb-4">Explore Travel Adventures</h1>
           <p className="text-gray-600 mb-8 max-w-2xl text-lg">
             Discover breathtaking destinations, practical travel tips, and unforgettable adventures to inspire your next journey.
           </p>
@@ -80,7 +93,9 @@ const Travel = () => {
       {/* Travel Articles Section */}
       <section className="py-12 bg-white">
         <div className="container-lg">
-          <h2 className="title-md mb-8">Latest Travel Articles</h2>
+          <h2 className="title-md mb-8">
+            {category ? `Latest ${category.name} Articles` : 'Latest Travel Adventures'}
+          </h2>
           
           {loading ? (
             // Loading skeletons
@@ -108,8 +123,9 @@ const Travel = () => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <h2 className="title-md mb-4">No travel posts found</h2>
-              <p className="text-gray-600">Check back later for exciting travel content.</p>
+              <h2 className="title-md mb-4">No travel adventure posts found</h2>
+              <p className="text-gray-600 mb-6">Check back later for exciting travel content.</p>
+              <Link to="/blog" className="btn-primary">View All Blog Posts</Link>
             </div>
           )}
           
