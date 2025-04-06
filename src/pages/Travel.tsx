@@ -4,7 +4,7 @@ import Layout from '../components/layout/Layout';
 import PostCard from '../components/blog/PostCard';
 import AdSection from '../components/home/AdSection';
 import SEO from '../components/shared/SEO';
-import { ArrowLeft, ArrowRight, Compass, MapPin, Mountain, Beach } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Compass, MapPin, Mountain, Palmtree } from 'lucide-react';
 import { getPosts, transformPost } from '../lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
@@ -39,7 +39,7 @@ const Travel = () => {
 
   const travelCategories = [
     { icon: <Mountain className="h-8 w-8 text-gold" />, name: "Mountain Getaways", description: "Explore majestic peaks and hiking trails" },
-    { icon: <Beach className="h-8 w-8 text-gold" />, name: "Beach Destinations", description: "Discover pristine shores and coastal retreats" },
+    { icon: <Palmtree className="h-8 w-8 text-gold" />, name: "Beach Destinations", description: "Discover pristine shores and coastal retreats" },
     { icon: <Compass className="h-8 w-8 text-gold" />, name: "Adventure Travel", description: "Thrilling experiences for the bold traveler" },
     { icon: <MapPin className="h-8 w-8 text-gold" />, name: "City Exploration", description: "Urban adventures and cultural experiences" }
   ];
