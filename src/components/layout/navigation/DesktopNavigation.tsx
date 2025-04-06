@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
+import { Compass, ShoppingBag } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -46,6 +46,12 @@ const DesktopNavigation = () => {
       
       <Link to="/about" className="nav-link">About</Link>
       <Link to="/contact" className="nav-link">Contact</Link>
+      
+      {/* Explore Travel Link */}
+      <Link to="/explore-travel" className="nav-link flex items-center gap-1">
+        <Compass className="h-5 w-5" />
+        <span>Explore Travel</span>
+      </Link>
       
       {/* Shop Link */}
       <Link to="/shop" className="nav-link flex items-center gap-1">

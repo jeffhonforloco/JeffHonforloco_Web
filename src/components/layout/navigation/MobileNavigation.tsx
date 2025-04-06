@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ShoppingBag } from 'lucide-react';
+import { Compass, Search, ShoppingBag } from 'lucide-react';
 import ProductSearch from '@/components/shop/ProductSearch';
 import { mainCategories } from '../HeaderData';
 
@@ -61,6 +61,16 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           onClick={onClose}
         >
           Contact
+        </Link>
+        
+        {/* Explore Travel Link for Mobile */}
+        <Link 
+          to="/explore-travel" 
+          className="text-lg font-medium text-charcoal flex items-center gap-2"
+          onClick={onClose}
+        >
+          <Compass className="h-5 w-5" />
+          <span>Explore Travel</span>
         </Link>
         
         {/* Shop Link for Mobile */}

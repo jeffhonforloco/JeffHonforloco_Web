@@ -15,6 +15,7 @@ import Contact from "./pages/Contact";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import Travel from "./pages/Travel";
+import ExploreTravel from "./pages/ExploreTravel";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="/shop" element={<Shop />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/travel" element={<Travel />} />
+              <Route path="/explore-travel" element={<ExploreTravel />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="*" element={<NotFound />} />
