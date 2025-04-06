@@ -16,15 +16,6 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
     <div className="md:hidden bg-white animate-slide-down">
       <nav className="container-lg py-6 flex flex-col space-y-4">
         <div className="flex flex-col items-center text-center">
-          {/* Home Link */}
-          <Link 
-            to="/" 
-            className="text-lg font-medium text-charcoal w-full py-2"
-            onClick={onClose}
-          >
-            Home
-          </Link>
-          
           {/* About Link */}
           <Link 
             to="/about" 
@@ -32,6 +23,15 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             onClick={onClose}
           >
             About
+          </Link>
+          
+          {/* LifeStyle Link */}
+          <Link 
+            to="/category/lifestyle-growth" 
+            className="text-lg font-medium text-charcoal w-full py-2"
+            onClick={onClose}
+          >
+            LifeStyle
           </Link>
           
           {/* Travel Link */}
@@ -43,23 +43,60 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             Travel
           </Link>
           
-          {/* Blog Link */}
+          {/* Reviews Link */}
           <Link 
-            to="/blog" 
+            to="/category/product-reviews" 
             className="text-lg font-medium text-charcoal w-full py-2"
             onClick={onClose}
           >
-            Blog
+            Reviews
           </Link>
           
-          {/* Contact Link */}
+          {/* Guides Link */}
           <Link 
-            to="/contact" 
+            to="/category/how-to-guides" 
             className="text-lg font-medium text-charcoal w-full py-2"
             onClick={onClose}
           >
-            Contact
+            Guides
           </Link>
+          
+          {/* More Link - Expand to show additional links */}
+          <details className="w-full">
+            <summary className="text-lg font-medium text-charcoal w-full py-2 cursor-pointer">
+              More
+            </summary>
+            <div className="pl-4 flex flex-col">
+              <Link 
+                to="/" 
+                className="text-lg font-medium text-charcoal w-full py-2"
+                onClick={onClose}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/blog" 
+                className="text-lg font-medium text-charcoal w-full py-2"
+                onClick={onClose}
+              >
+                Blog
+              </Link>
+              <Link 
+                to="/contact" 
+                className="text-lg font-medium text-charcoal w-full py-2"
+                onClick={onClose}
+              >
+                Contact
+              </Link>
+              <Link 
+                to="/category/motivation-stories" 
+                className="text-lg font-medium text-charcoal w-full py-2"
+                onClick={onClose}
+              >
+                Motivation & Stories
+              </Link>
+            </div>
+          </details>
           
           {/* Shop Link */}
           <Link 
