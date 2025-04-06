@@ -52,7 +52,7 @@ const post = {
     
     <p>Italy's hidden coastal gems offer authentic experiences, breathtaking natural beauty, and a glimpse into traditional Italian coastal life that can be hard to find in more popular destinations. By venturing beyond the well-trodden tourist path, you'll discover a side of Italy that many visitors never see.</p>
   `,
-  excerpt: 'Explore the scenic coastal towns and secret beaches that most tourists never find in this journey through Italy's stunning coastline.',
+  excerpt: 'Explore the scenic coastal towns and secret beaches that most tourists never find in this journey through Italy\'s stunning coastline.',
   category: 'Travel',
   categorySlug: 'travel',
   featuredImage: 'https://images.unsplash.com/photo-1533606688190-a73cb4b14e22?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
@@ -77,8 +77,8 @@ const relatedPosts = [
   {
     id: 6,
     slug: 'japan-food-guide',
-    title: 'A Foodie's Guide to Japan: Beyond Sushi and Ramen',
-    excerpt: 'Discover Japan's lesser-known culinary treasures from regional specialties to hidden local favorites that most tourists never experience.',
+    title: 'A Foodie\'s Guide to Japan: Beyond Sushi and Ramen',
+    excerpt: 'Discover Japan\'s lesser-known culinary treasures from regional specialties to hidden local favorites that most tourists never experience.',
     category: 'Travel',
     categorySlug: 'travel',
     featuredImage: 'https://images.unsplash.com/photo-1464093515883-ec948246accb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
