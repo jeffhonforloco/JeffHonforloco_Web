@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Facebook, Twitter, Instagram, Youtube, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -34,7 +35,7 @@ const Footer = () => {
               Exploring life through travel, lifestyle, and personal growth experiences.
             </p>
             <div className="flex space-x-4 justify-center md:justify-start">
-              <a href="https://facebook.com" className="hover:text-gold transition-colors" aria-label="Facebook">
+              <a href="https://www.facebook.com/people/Jeff-Honforloco/61551819509232/" className="hover:text-gold transition-colors" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
                 <Facebook className="h-5 w-5" />
               </a>
               <a href="https://twitter.com" className="hover:text-gold transition-colors" aria-label="Twitter">

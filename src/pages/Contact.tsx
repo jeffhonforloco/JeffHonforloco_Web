@@ -125,7 +125,7 @@ const Contact = () => {
                 <div className="mt-8">
                   <h3 className="text-sm font-medium text-gray-500 mb-3">Connect with me</h3>
                   <div className="flex space-x-4">
-                    <a href="https://facebook.com" className="text-charcoal hover:text-gold transition-colors" aria-label="Facebook">
+                    <a href="https://www.facebook.com/people/Jeff-Honforloco/61551819509232/" className="text-charcoal hover:text-gold transition-colors" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                     </a>
                     <a href="https://twitter.com" className="text-charcoal hover:text-gold transition-colors" aria-label="Twitter">
