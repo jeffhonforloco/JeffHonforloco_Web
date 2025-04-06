@@ -16,40 +16,24 @@ import { mainCategories, navigationLinks } from '../HeaderData';
 
 const DesktopNavigation = () => {
   return (
-    <nav className="hidden md:flex items-center space-x-4">
-      {/* About Link - Now First */}
-      <Link to="/about" className="nav-link">About</Link>
+    <nav className="hidden md:flex items-center space-x-8">
+      {/* Home Link */}
+      <Link to="/" className="nav-link font-medium text-base">Home</Link>
       
-      {/* Categories - Now Second */}
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="nav-link">Categories</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                {mainCategories.map((category) => (
-                  <NavigationItem
-                    key={category.id}
-                    title={category.name}
-                    href={`/category/${category.slug}`}
-                    description={category.description}
-                  />
-                ))}
-                <NavigationItem
-                  title="View All Posts"
-                  href="/blog"
-                  description="Browse all blog posts across categories"
-                />
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+      {/* About Link */}
+      <Link to="/about" className="nav-link font-medium text-base">About</Link>
       
-      <Link to="/contact" className="nav-link">Contact</Link>
+      {/* Travel Link */}
+      <Link to="/travel" className="nav-link font-medium text-base">Travel</Link>
+      
+      {/* Blog Link - replaces Categories dropdown */}
+      <Link to="/blog" className="nav-link font-medium text-base">Blog</Link>
+      
+      {/* Contact Link */}
+      <Link to="/contact" className="nav-link font-medium text-base">Contact</Link>
       
       {/* Shop Link */}
-      <Link to="/shop" className="nav-link flex items-center gap-1">
+      <Link to="/shop" className="nav-link flex items-center gap-1 font-medium text-base">
         <ShoppingBag className="h-5 w-5" />
         <span>Shop</span>
       </Link>

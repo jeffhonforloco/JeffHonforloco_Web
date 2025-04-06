@@ -33,9 +33,9 @@ const Header = () => {
         isScrolled ? 'bg-white shadow-md py-2' : 'bg-white py-2'
       }`}
     >
-      <div className="container-lg flex items-center">
+      <div className="container-lg flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center mr-4">
+        <Link to="/" className="flex items-center">
           <img 
             src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
             alt="Jeff HonForLoco Logo" 
@@ -43,10 +43,8 @@ const Header = () => {
           />
         </Link>
         
-        {/* Desktop Navigation - Now taking more space and centered */}
-        <div className="flex-1 flex justify-center">
-          <DesktopNavigation />
-        </div>
+        {/* Desktop Navigation */}
+        <DesktopNavigation />
         
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-2">

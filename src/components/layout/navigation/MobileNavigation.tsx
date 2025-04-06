@@ -3,7 +3,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search, ShoppingBag } from 'lucide-react';
 import ProductSearch from '@/components/shop/ProductSearch';
-import { mainCategories } from '../HeaderData';
 
 interface MobileNavigationProps {
   isOpen: boolean;
@@ -17,7 +16,16 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
     <div className="md:hidden bg-white animate-slide-down">
       <nav className="container-lg py-6 flex flex-col space-y-4">
         <div className="flex flex-col items-center text-center">
-          {/* About Link - Now First */}
+          {/* Home Link */}
+          <Link 
+            to="/" 
+            className="text-lg font-medium text-charcoal w-full py-2"
+            onClick={onClose}
+          >
+            Home
+          </Link>
+          
+          {/* About Link */}
           <Link 
             to="/about" 
             className="text-lg font-medium text-charcoal w-full py-2"
@@ -26,30 +34,25 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             About
           </Link>
           
-          {/* Categories - Now Second */}
-          <div className="py-2 w-full">
-            <p className="text-lg font-medium text-charcoal mb-2">Categories</p>
-            <div className="flex flex-col space-y-2">
-              {mainCategories.map((category) => (
-                <Link 
-                  key={category.id}
-                  to={`/category/${category.slug}`}
-                  className="text-charcoal hover:text-gold transition-colors"
-                  onClick={onClose}
-                >
-                  {category.name}
-                </Link>
-              ))}
-              <Link 
-                to="/blog"
-                className="text-charcoal font-medium hover:text-gold transition-colors"
-                onClick={onClose}
-              >
-                View All Posts
-              </Link>
-            </div>
-          </div>
+          {/* Travel Link */}
+          <Link 
+            to="/travel" 
+            className="text-lg font-medium text-charcoal w-full py-2"
+            onClick={onClose}
+          >
+            Travel
+          </Link>
           
+          {/* Blog Link */}
+          <Link 
+            to="/blog" 
+            className="text-lg font-medium text-charcoal w-full py-2"
+            onClick={onClose}
+          >
+            Blog
+          </Link>
+          
+          {/* Contact Link */}
           <Link 
             to="/contact" 
             className="text-lg font-medium text-charcoal w-full py-2"
@@ -58,7 +61,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             Contact
           </Link>
           
-          {/* Shop Link for Mobile */}
+          {/* Shop Link */}
           <Link 
             to="/shop" 
             className="text-lg font-medium text-charcoal flex items-center justify-center gap-2 w-full py-2"
