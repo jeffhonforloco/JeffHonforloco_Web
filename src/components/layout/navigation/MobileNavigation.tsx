@@ -17,15 +17,6 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
     <div className="md:hidden bg-white animate-slide-down">
       <nav className="container-lg py-6 flex flex-col space-y-4">
         <div className="flex flex-col items-center text-center">
-          {/* About Link */}
-          <Link 
-            to="/about" 
-            className="text-lg font-semibold text-charcoal w-full py-2"
-            onClick={onClose}
-          >
-            About
-          </Link>
-          
           {/* LifeStyle Section with Accordion */}
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="lifestyle" className="border-none">
