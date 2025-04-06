@@ -5,22 +5,40 @@ import { useToast } from "@/hooks/use-toast";
 
 const NewsletterCTA = () => {
   const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Save subscription status to localStorage
-    localStorage.setItem('newsletter-subscribed', 'true');
-    
-    // Reset form
-    setEmail('');
-    
-    // Show success toast
-    toast({
-      title: "Subscription successful!",
-      description: "Thank you for subscribing to our newsletter.",
-    });
+    try {
+      // In a real app, this would be an API call
+      // Simulating an API call with setTimeout
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      console.log(`Subscription from ${email} sent to info@jeffhonforloco.com`);
+      
+      // Save subscription status to localStorage
+      localStorage.setItem('newsletter-subscribed', 'true');
+      
+      // Reset form
+      setEmail('');
+      
+      // Show success toast
+      toast({
+        title: "Subscription successful!",
+        description: "Thank you for subscribing to our newsletter.",
+      });
+    } catch (error) {
+      toast({
+        title: "Subscription failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -49,12 +67,14 @@ const NewsletterCTA = () => {
               placeholder="Your email address" 
               className="flex-grow px-4 py-3 rounded-md text-charcoal focus:outline-none focus:ring-2 focus:ring-gold"
               required
+              disabled={isSubmitting}
             />
             <button 
               type="submit" 
               className="bg-gold text-white px-6 py-3 rounded-md hover:bg-opacity-90 transition-colors flex items-center justify-center whitespace-nowrap"
+              disabled={isSubmitting}
             >
-              Subscribe <Mail className="ml-2 h-4 w-4" />
+              {isSubmitting ? 'Subscribing...' : 'Subscribe'} <Mail className="ml-2 h-4 w-4" />
             </button>
           </form>
           <p className="mt-4 text-sm text-gray-400">
