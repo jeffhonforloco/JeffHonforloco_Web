@@ -16,7 +16,7 @@ import { mainCategories, navigationLinks } from '../HeaderData';
 
 const DesktopNavigation = () => {
   return (
-    <nav className="hidden md:flex items-center space-x-8">
+    <nav className="hidden md:flex items-center justify-end w-full space-x-6">
       {/* About Link */}
       <Link to="/about" className="nav-link font-medium text-base">About</Link>
       

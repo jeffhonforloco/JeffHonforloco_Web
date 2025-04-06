@@ -34,17 +34,19 @@ const Header = () => {
       }`}
     >
       <div className="container-lg flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center">
+        {/* Logo - adjusted to take less space */}
+        <Link to="/" className="flex items-center mr-6">
           <img 
             src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
             alt="Jeff HonForLoco Logo" 
-            className="h-24 transition-all duration-300" 
+            className="h-20 transition-all duration-300" 
           />
         </Link>
         
-        {/* Desktop Navigation */}
-        <DesktopNavigation />
+        {/* Desktop Navigation - with more space */}
+        <div className="flex-1">
+          <DesktopNavigation />
+        </div>
         
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-2">
