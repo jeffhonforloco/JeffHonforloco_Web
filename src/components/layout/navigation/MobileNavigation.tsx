@@ -67,13 +67,13 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             </AccordionItem>
           </Accordion>
           
-          {/* Travel Link */}
+          {/* Travel Adventures Link */}
           <Link 
             to="/travel" 
             className="text-lg font-medium text-charcoal w-full py-2"
             onClick={onClose}
           >
-            Travel
+            Travel Adventures
           </Link>
           
           {/* Reviews Link */}

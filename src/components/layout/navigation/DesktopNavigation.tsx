@@ -49,8 +49,8 @@ const DesktopNavigation = () => {
         </NavigationMenuList>
       </NavigationMenu>
       
-      {/* Travel Link */}
-      <Link to="/travel" className="nav-link font-medium text-base">Travel</Link>
+      {/* Travel Adventures Link */}
+      <Link to="/travel" className="nav-link font-medium text-base">Travel Adventures</Link>
       
       {/* Reviews Link */}
       <Link to="/category/product-reviews" className="nav-link font-medium text-base">Reviews</Link>
