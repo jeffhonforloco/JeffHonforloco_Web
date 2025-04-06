@@ -36,11 +36,20 @@ const Header = () => {
       <div className="container-lg flex items-center justify-between">
         {/* Logo - adjusted to take less space */}
         <Link to="/" className="flex items-center mr-6">
-          <img 
-            src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
-            alt="Jeff HonForLoco Logo" 
-            className="h-20 transition-all duration-300" 
-          />
+          <div className="h-20 relative transition-all duration-300">
+            {/* Light mode logo */}
+            <img 
+              src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
+              alt="Jeff HonForLoco Logo" 
+              className="h-full dark:hidden"
+            />
+            {/* Dark mode logo - we use the same image but apply a filter to make it white */}
+            <img 
+              src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
+              alt="Jeff HonForLoco Logo" 
+              className="h-full hidden dark:block brightness-0 invert"
+            />
+          </div>
         </Link>
         
         {/* Desktop Navigation - with more space */}
