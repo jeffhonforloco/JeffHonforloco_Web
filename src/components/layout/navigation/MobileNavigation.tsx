@@ -16,14 +16,6 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
   return (
     <div className="md:hidden bg-white animate-slide-down">
       <nav className="container-lg py-6 flex flex-col space-y-4">
-        <Link 
-          to="/" 
-          className="text-lg font-medium text-charcoal" 
-          onClick={onClose}
-        >
-          Home
-        </Link>
-        
         <div className="py-2">
           <p className="text-lg font-medium text-charcoal mb-2">Categories</p>
           <div className="pl-4 flex flex-col space-y-2">
