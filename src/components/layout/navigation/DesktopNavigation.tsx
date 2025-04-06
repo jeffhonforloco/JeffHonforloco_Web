@@ -142,7 +142,7 @@ const DesktopNavigation = () => {
           <NavigationMenuItem>
             <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">More</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[200px] gap-2 p-4">
+              <ul className="grid w-[220px] gap-2 p-4">
                 <NavigationItem 
                   title="Home" 
                   href="/"
@@ -159,6 +159,23 @@ const DesktopNavigation = () => {
                   title="Motivation & Stories" 
                   href="/category/motivation-stories"
                 />
+                <li className="pt-2">
+                  <div className="text-sm font-medium leading-none mb-2 text-gray-500">Stories</div>
+                  <ul className="pl-2">
+                    <NavigationItem 
+                      title="Lessons from Solo Travel" 
+                      href="/stories/solo-travel-lessons"
+                    />
+                    <NavigationItem 
+                      title="Overcoming Challenges" 
+                      href="/stories/overcoming-challenges"
+                    />
+                    <NavigationItem 
+                      title="Blogging Milestones" 
+                      href="/stories/blogging-milestones"
+                    />
+                  </ul>
+                </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

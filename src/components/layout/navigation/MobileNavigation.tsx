@@ -224,6 +224,30 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               >
                 Motivation & Stories
               </Link>
+              
+              {/* Stories Section */}
+              <div className="mt-2 mb-1 font-medium text-gray-500">Stories:</div>
+              <Link 
+                to="/stories/solo-travel-lessons" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Lessons from Solo Travel
+              </Link>
+              <Link 
+                to="/stories/overcoming-challenges" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Overcoming Challenges
+              </Link>
+              <Link 
+                to="/stories/blogging-milestones" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Blogging Milestones
+              </Link>
             </div>
           </details>
           
