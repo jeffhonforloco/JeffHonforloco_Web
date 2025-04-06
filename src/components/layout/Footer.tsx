@@ -25,7 +25,7 @@ const Footer = () => {
               <img 
                 src="/lovable-uploads/074a0d88-eee8-4e86-b08f-a5634be337ee.png" 
                 alt="Jeff HonForLoco Logo" 
-                className="h-16 mx-auto md:mx-0 mb-2" 
+                className="h-20 mx-auto md:mx-0 mb-2" 
               />
               <p className="text-gray-300 text-xs text-center md:text-left italic">
                 live bold. travel far. grow every day.
