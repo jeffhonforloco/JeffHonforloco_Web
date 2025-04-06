@@ -61,7 +61,7 @@ const Header = () => {
           <img 
             src="/lovable-uploads/074a0d88-eee8-4e86-b08f-a5634be337ee.png" 
             alt="Jeff HonForLoco Logo" 
-            className="h-20 transition-all duration-300" 
+            className="h-28 transition-all duration-300" 
           />
         </Link>
         
