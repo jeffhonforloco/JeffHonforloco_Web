@@ -1,16 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { getPosts, transformPost } from '@/lib/wordpress';
 
-const heroImages = [
+interface HeroImage {
+  url: string;
+  alt: string;
+}
+
+const fallbackImages = [
   {
     url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
     alt: "Travel landscape"
@@ -27,6 +25,42 @@ const heroImages = [
 
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [heroImages, setHeroImages] = useState<HeroImage[]>(fallbackImages);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPostImages = async () => {
+      try {
+        setLoading(true);
+        const posts = await getPosts({ perPage: 5 });
+        
+        if (posts && posts.length > 0) {
+          // Get images from featured posts
+          const images = posts
+            .filter(post => post._embedded?.['wp:featuredmedia']?.[0]?.source_url)
+            .map(post => {
+              const transformedPost = transformPost(post);
+              return {
+                url: transformedPost.featuredImage,
+                alt: transformedPost.title || 'Featured post image'
+              };
+            });
+          
+          // If we got at least 3 images, use them, otherwise keep fallbacks
+          if (images.length >= 3) {
+            setHeroImages(images);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching post images for hero:', error);
+        // Keep using fallback images
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPostImages();
+  }, []);
 
   useEffect(() => {
     // Automatically advance the slider every 5 seconds
@@ -35,7 +69,7 @@ const Hero = () => {
     }, 5000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [heroImages.length]);
 
   return (
     <section className="relative bg-gradient-to-r from-charcoal to-gray-800 text-white min-h-[85vh] flex items-center overflow-hidden">
@@ -83,8 +117,8 @@ const Hero = () => {
             <Link to="/explore-travel" className="btn-primary">
               Explore Travel <ChevronRight className="ml-2 h-4 w-4" />
             </Link>
-            <Link to="/about" className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-charcoal transition-colors inline-flex items-center">
-              About Me <ChevronRight className="ml-2 h-4 w-4" />
+            <Link to="/blog" className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-charcoal transition-colors inline-flex items-center">
+              Read Blog <ChevronRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
         </div>
