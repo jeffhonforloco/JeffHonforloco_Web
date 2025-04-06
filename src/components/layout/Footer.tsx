@@ -23,7 +23,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
             <Link to="/" className="block mb-4">
               <img 
-                src="/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png" 
+                src="/lovable-uploads/1b3ef5fa-016d-4cd5-9724-895a53b211a9.png" 
                 alt="Jeff HonForLoco Logo" 
                 className="h-20 mx-auto md:mx-0 mb-2" 
               />
