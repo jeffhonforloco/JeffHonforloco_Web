@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Search, ChevronDown, ShoppingBag, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -19,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useShopContext } from '@/context/ShopContext';
 
 // Define our official categories
 const mainCategories = [
@@ -32,7 +32,7 @@ const mainCategories = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  const { cartCount } = useShopContext();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -102,18 +102,18 @@ const Header = () => {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5 text-charcoal hover:text-gold transition-colors" />
-                {cartItemsCount > 0 && (
+                {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-gold text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {cartItemsCount}
+                    {cartCount}
                   </span>
                 )}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-72 p-4">
               <div className="flex flex-col gap-4">
-                {cartItemsCount > 0 ? (
+                {cartCount > 0 ? (
                   <>
-                    <p className="text-sm text-muted-foreground">Your cart has {cartItemsCount} items</p>
+                    <p className="text-sm text-muted-foreground">Your cart has {cartCount} items</p>
                     <DropdownMenuItem asChild>
                       <Link to="/cart" className="w-full justify-center">
                         <Button className="w-full">View Cart</Button>
@@ -137,9 +137,9 @@ const Header = () => {
           {/* Mobile Cart */}
           <Link to="/cart" className="relative mr-2">
             <ShoppingCart className="h-5 w-5 text-charcoal" />
-            {cartItemsCount > 0 && (
+            {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-gold text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                {cartItemsCount}
+                {cartCount}
               </span>
             )}
           </Link>
