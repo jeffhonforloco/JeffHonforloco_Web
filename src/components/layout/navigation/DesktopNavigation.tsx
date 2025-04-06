@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Compass } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -18,12 +18,6 @@ const DesktopNavigation = () => {
   return (
     <nav className="hidden md:flex items-center space-x-8">
       <Link to="/" className="nav-link">Home</Link>
-      
-      {/* Travel Link with Icon */}
-      <Link to="/travel" className="nav-link flex items-center gap-1">
-        <Compass className="h-5 w-5" />
-        <span>Travel</span>
-      </Link>
       
       <NavigationMenu>
         <NavigationMenuList>
