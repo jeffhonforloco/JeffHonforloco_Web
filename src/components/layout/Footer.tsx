@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Facebook, Twitter, Instagram, Youtube, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -25,7 +24,7 @@ const Footer = () => {
               <img 
                 src="/lovable-uploads/1b3ef5fa-016d-4cd5-9724-895a53b211a9.png" 
                 alt="Jeff HonForLoco Logo" 
-                className="h-20 mx-auto md:mx-0 mb-2" 
+                className="h-24 mx-auto md:mx-0 mb-2" 
               />
               <p className="text-gray-300 text-xs text-center md:text-left italic">
                 live bold. travel far. grow every day.
