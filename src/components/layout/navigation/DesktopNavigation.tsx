@@ -20,8 +20,34 @@ const DesktopNavigation = () => {
       {/* About Link */}
       <Link to="/about" className="nav-link font-medium text-base">About</Link>
       
-      {/* LifeStyle Link */}
-      <Link to="/category/lifestyle-growth" className="nav-link font-medium text-base">LifeStyle</Link>
+      {/* LifeStyle Link with Dropdown */}
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">LifeStyle</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[220px] gap-2 p-4">
+                <NavigationItem 
+                  title="Morning Routines" 
+                  href="/category/morning-routines"
+                />
+                <NavigationItem 
+                  title="Mindfulness Tips" 
+                  href="/category/mindfulness-tips"
+                />
+                <NavigationItem 
+                  title="Building Habits" 
+                  href="/category/building-habits"
+                />
+                <NavigationItem 
+                  title="All Lifestyle Content" 
+                  href="/category/lifestyle-growth"
+                />
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
       
       {/* Travel Link */}
       <Link to="/travel" className="nav-link font-medium text-base">Travel</Link>

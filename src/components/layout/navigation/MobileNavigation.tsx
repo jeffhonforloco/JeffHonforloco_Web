@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search, ShoppingBag } from 'lucide-react';
 import ProductSearch from '@/components/shop/ProductSearch';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface MobileNavigationProps {
   isOpen: boolean;
@@ -25,14 +26,46 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             About
           </Link>
           
-          {/* LifeStyle Link */}
-          <Link 
-            to="/category/lifestyle-growth" 
-            className="text-lg font-medium text-charcoal w-full py-2"
-            onClick={onClose}
-          >
-            LifeStyle
-          </Link>
+          {/* LifeStyle Section with Accordion */}
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="lifestyle" className="border-none">
+              <AccordionTrigger className="text-lg font-medium text-charcoal py-2">
+                LifeStyle
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="pl-4 flex flex-col">
+                  <Link 
+                    to="/category/morning-routines" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Morning Routines
+                  </Link>
+                  <Link 
+                    to="/category/mindfulness-tips" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Mindfulness Tips
+                  </Link>
+                  <Link 
+                    to="/category/building-habits" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Building Habits
+                  </Link>
+                  <Link 
+                    to="/category/lifestyle-growth" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    All Lifestyle Content
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
           
           {/* Travel Link */}
           <Link 
