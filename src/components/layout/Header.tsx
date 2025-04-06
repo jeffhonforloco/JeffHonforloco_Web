@@ -30,7 +30,7 @@ const Header = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md py-2' : 'bg-white py-2'
+        isScrolled ? 'bg-white dark:bg-gray-900 shadow-md py-2' : 'bg-white dark:bg-gray-900 py-2'
       }`}
     >
       <div className="container-lg flex items-center justify-between">
@@ -62,7 +62,7 @@ const Header = () => {
           </ProductSearch>
           
           <button 
-            className="text-charcoal font-semibold"
+            className="text-charcoal dark:text-white font-semibold"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

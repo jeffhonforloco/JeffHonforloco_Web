@@ -13,6 +13,7 @@ import NavigationItem from './NavigationItem';
 import CartButton from './CartButton';
 import ProductSearch from '@/components/shop/ProductSearch';
 import { mainCategories, navigationLinks } from '../HeaderData';
+import ThemeToggle from './ThemeToggle';
 
 const DesktopNavigation = () => {
   return (
@@ -219,6 +220,9 @@ const DesktopNavigation = () => {
         <ShoppingBag className="h-5 w-5" />
         <span>Shop</span>
       </Link>
+      
+      {/* Theme Toggle */}
+      <ThemeToggle />
       
       {/* Cart */}
       <CartButton />

@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ShoppingBag, ChevronDown } from 'lucide-react';
+import { Search, ShoppingBag, ChevronDown, Moon, Sun } from 'lucide-react';
 import ProductSearch from '@/components/shop/ProductSearch';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import ThemeToggle from './ThemeToggle';
 
 interface MobileNavigationProps {
   isOpen: boolean;
@@ -14,7 +15,7 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
   if (!isOpen) return null;
   
   return (
-    <div className="md:hidden bg-white animate-slide-down">
+    <div className="md:hidden bg-white dark:bg-gray-900 animate-slide-down">
       <nav className="container-lg py-6 flex flex-col space-y-4">
         <div className="flex flex-col items-center text-center">
           {/* LifeStyle Section with Accordion */}
@@ -289,17 +290,22 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           {/* Shop Link */}
           <Link 
             to="/shop" 
-            className="text-lg font-semibold text-charcoal flex items-center justify-center gap-2 w-full py-2"
+            className="text-lg font-semibold text-charcoal dark:text-white flex items-center justify-center gap-2 w-full py-2"
             onClick={onClose}
           >
             <ShoppingBag className="h-5 w-5" />
             <span>Shop</span>
           </Link>
           
+          {/* Theme Toggle */}
+          <div className="w-full flex justify-center py-2 border-b border-gray-200 dark:border-gray-700">
+            <ThemeToggle />
+          </div>
+          
           <div className="pt-2 w-full">
             <ProductSearch>
               <button 
-                className="flex items-center justify-center text-charcoal w-full font-semibold"
+                className="flex items-center justify-center text-charcoal dark:text-white w-full font-semibold"
                 onClick={onClose}
               >
                 <Search className="h-5 w-5 mr-2" />
