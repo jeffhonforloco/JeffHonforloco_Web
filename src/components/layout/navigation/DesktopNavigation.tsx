@@ -78,8 +78,34 @@ const DesktopNavigation = () => {
         </NavigationMenuList>
       </NavigationMenu>
       
-      {/* Reviews Link */}
-      <Link to="/category/product-reviews" className="nav-link font-medium text-base">Reviews</Link>
+      {/* Reviews Link with Dropdown */}
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">Reviews</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[220px] gap-2 p-4">
+                <NavigationItem 
+                  title="Best Gadgets" 
+                  href="/category/best-gadgets"
+                />
+                <NavigationItem 
+                  title="Personal Growth Books" 
+                  href="/category/personal-growth-books"
+                />
+                <NavigationItem 
+                  title="Fitness Equipment" 
+                  href="/category/fitness-equipment"
+                />
+                <NavigationItem 
+                  title="All Reviews" 
+                  href="/category/product-reviews"
+                />
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
       
       {/* Guides Link */}
       <Link to="/category/how-to-guides" className="nav-link font-medium text-base">Guides</Link>

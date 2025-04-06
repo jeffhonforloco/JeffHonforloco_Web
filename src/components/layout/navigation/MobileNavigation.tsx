@@ -108,14 +108,46 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             </AccordionItem>
           </Accordion>
           
-          {/* Reviews Link */}
-          <Link 
-            to="/category/product-reviews" 
-            className="text-lg font-medium text-charcoal w-full py-2"
-            onClick={onClose}
-          >
-            Reviews
-          </Link>
+          {/* Reviews Section with Accordion */}
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="reviews" className="border-none">
+              <AccordionTrigger className="text-lg font-medium text-charcoal py-2">
+                Reviews
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="pl-4 flex flex-col">
+                  <Link 
+                    to="/category/best-gadgets" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Best Gadgets
+                  </Link>
+                  <Link 
+                    to="/category/personal-growth-books" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Personal Growth Books
+                  </Link>
+                  <Link 
+                    to="/category/fitness-equipment" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Fitness Equipment
+                  </Link>
+                  <Link 
+                    to="/category/product-reviews" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    All Reviews
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
           
           {/* Guides Link */}
           <Link 
