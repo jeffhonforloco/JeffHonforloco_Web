@@ -2,18 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Search, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getCategories } from '../../lib/wordpress';
 
-const categories = [
-  { name: "Travel", path: "/category/travel" },
-  { name: "Lifestyle", path: "/category/lifestyle" },
-  { name: "Personal Growth", path: "/category/personal-growth" },
-  { name: "Health", path: "/category/health" },
-  { name: "Entertainment", path: "/category/entertainment" }
-];
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +26,23 @@ const Header = () => {
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await getCategories();
+        // Filter out categories with no posts and limit to top 5
+        const filteredCategories = fetchedCategories
+          .filter(category => category.count > 0)
+          .slice(0, 5);
+        setCategories(filteredCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    
+    fetchCategories();
   }, []);
   
   return (
@@ -51,8 +68,8 @@ const Header = () => {
             <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden hidden group-hover:block animate-fade-in z-10">
               {categories.map((category) => (
                 <Link 
-                  key={category.name}
-                  to={category.path}
+                  key={category.id}
+                  to={`/category/${category.slug}`}
                   className="block px-4 py-2 text-sm text-charcoal hover:bg-offwhite hover:text-gold transition-colors"
                 >
                   {category.name}
@@ -95,8 +112,8 @@ const Header = () => {
               <div className="pl-4 flex flex-col space-y-2">
                 {categories.map((category) => (
                   <Link 
-                    key={category.name}
-                    to={category.path}
+                    key={category.id}
+                    to={`/category/${category.slug}`}
                     className="text-charcoal hover:text-gold transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >

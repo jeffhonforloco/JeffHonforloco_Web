@@ -1,18 +1,35 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Facebook, Twitter, Instagram, Youtube, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getCategories } from '../../lib/wordpress';
 
-const categories = [
-  { name: "Travel", path: "/category/travel" },
-  { name: "Lifestyle", path: "/category/lifestyle" },
-  { name: "Personal Growth", path: "/category/personal-growth" },
-  { name: "Health", path: "/category/health" },
-  { name: "Entertainment", path: "/category/entertainment" }
-];
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [categories, setCategories] = useState<Category[]>([]);
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await getCategories();
+        // Filter out categories with no posts and limit to top 5
+        const filteredCategories = fetchedCategories
+          .filter(category => category.count > 0)
+          .slice(0, 5);
+        setCategories(filteredCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    
+    fetchCategories();
+  }, []);
   
   return (
     <footer className="bg-charcoal text-white pt-16 pb-8">
@@ -47,9 +64,9 @@ const Footer = () => {
             <h3 className="font-serif text-lg font-semibold mb-4">Categories</h3>
             <ul className="space-y-2">
               {categories.map((category) => (
-                <li key={category.name}>
+                <li key={category.id}>
                   <Link 
-                    to={category.path}
+                    to={`/category/${category.slug}`}
                     className="text-gray-300 hover:text-gold transition-colors"
                   >
                     {category.name}
