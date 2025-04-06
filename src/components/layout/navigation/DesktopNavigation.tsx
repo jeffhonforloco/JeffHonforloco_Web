@@ -197,6 +197,23 @@ const DesktopNavigation = () => {
                     />
                   </ul>
                 </li>
+                <li className="pt-2">
+                  <div className="text-sm font-medium leading-none mb-2 text-gray-500">Resources</div>
+                  <ul className="pl-2">
+                    <NavigationItem 
+                      title="Productivity Apps" 
+                      href="/resources/productivity-apps"
+                    />
+                    <NavigationItem 
+                      title="Blogger Essentials" 
+                      href="/resources/blogger-essentials"
+                    />
+                    <NavigationItem 
+                      title="Budget Travel Tools" 
+                      href="/resources/budget-travel-tools"
+                    />
+                  </ul>
+                </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

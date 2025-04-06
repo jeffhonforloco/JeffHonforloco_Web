@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search, ShoppingBag } from 'lucide-react';
@@ -190,12 +189,13 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
             </AccordionItem>
           </Accordion>
           
-          {/* More Link - Expand to show additional links */}
-          <details className="w-full">
-            <summary className="text-lg font-medium text-charcoal w-full py-2 cursor-pointer">
-              More
+          {/* More Section */}
+          <details className="group border-b border-gray-200 py-2">
+            <summary className="text-xl font-medium flex cursor-pointer items-center justify-between py-2">
+              <span>More</span>
+              <ChevronDown className="h-5 w-5 transition-transform group-open:rotate-180" />
             </summary>
-            <div className="pl-4 flex flex-col">
+            <div className="pb-3 pl-4 flex flex-col">
               <Link 
                 to="/contact" 
                 className="text-lg font-medium text-charcoal w-full py-2"
@@ -274,6 +274,30 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
                 onClick={onClose}
               >
                 Blogging Resources
+              </Link>
+              
+              {/* Resources Section */}
+              <div className="mt-2 mb-1 font-medium text-gray-500">Resources:</div>
+              <Link 
+                to="/resources/productivity-apps" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Productivity Apps
+              </Link>
+              <Link 
+                to="/resources/blogger-essentials" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Blogger Essentials
+              </Link>
+              <Link 
+                to="/resources/budget-travel-tools" 
+                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
+                onClick={onClose}
+              >
+                Budget Travel Tools
               </Link>
             </div>
           </details>
