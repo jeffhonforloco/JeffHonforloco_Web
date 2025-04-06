@@ -59,7 +59,7 @@ const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img 
-            src="/lovable-uploads/074a0d88-eee8-4e86-b08f-a5634be337ee.png" 
+            src="/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png" 
             alt="Jeff HonForLoco Logo" 
             className="h-28 transition-all duration-300" 
           />
