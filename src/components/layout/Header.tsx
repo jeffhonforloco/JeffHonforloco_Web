@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Search, ChevronDown } from 'lucide-react';
+import { Menu, X, Search, ChevronDown, ShoppingBag, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   NavigationMenu,
@@ -12,6 +12,13 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 // Define our official categories
 const mainCategories = [
@@ -25,6 +32,7 @@ const mainCategories = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [cartItemsCount, setCartItemsCount] = useState(0);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -83,18 +91,66 @@ const Header = () => {
           <Link to="/about" className="nav-link">About</Link>
           <Link to="/contact" className="nav-link">Contact</Link>
           
+          {/* Shop Link */}
+          <Link to="/shop" className="nav-link flex items-center gap-1">
+            <ShoppingBag className="h-5 w-5" />
+            <span>Shop</span>
+          </Link>
+          
+          {/* Cart */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5 text-charcoal hover:text-gold transition-colors" />
+                {cartItemsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-gold text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItemsCount}
+                  </span>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-72 p-4">
+              <div className="flex flex-col gap-4">
+                {cartItemsCount > 0 ? (
+                  <>
+                    <p className="text-sm text-muted-foreground">Your cart has {cartItemsCount} items</p>
+                    <DropdownMenuItem asChild>
+                      <Link to="/cart" className="w-full justify-center">
+                        <Button className="w-full">View Cart</Button>
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center">Your cart is empty</p>
+                )}
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
           <button className="text-charcoal hover:text-gold transition-colors">
             <Search className="h-5 w-5" />
           </button>
         </nav>
         
         {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden text-charcoal"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        <div className="md:hidden flex items-center gap-2">
+          {/* Mobile Cart */}
+          <Link to="/cart" className="relative mr-2">
+            <ShoppingCart className="h-5 w-5 text-charcoal" />
+            {cartItemsCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-gold text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                {cartItemsCount}
+              </span>
+            )}
+          </Link>
+          
+          <button 
+            className="text-charcoal"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
       
       {/* Mobile Menu */}
@@ -146,6 +202,16 @@ const Header = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
+            </Link>
+            
+            {/* Shop Link for Mobile */}
+            <Link 
+              to="/shop" 
+              className="text-lg font-medium text-charcoal flex items-center gap-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <ShoppingBag className="h-5 w-5" />
+              <span>Shop</span>
             </Link>
             
             <div className="pt-2">
