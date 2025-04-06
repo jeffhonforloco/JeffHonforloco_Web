@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { Menu, X, ChevronDown, ShoppingBag, ShoppingCart, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   NavigationMenu,
@@ -147,7 +148,7 @@ const Header = () => {
           <ProductSearch>
             <Button variant="ghost" size="icon" className="mr-1">
               <span className="sr-only">Search products</span>
-              <ProductSearch />
+              <Search className="h-5 w-5" />
             </Button>
           </ProductSearch>
           

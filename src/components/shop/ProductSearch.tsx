@@ -36,9 +36,12 @@ const ProductSearch = ({ children }: ProductSearchProps) => {
   return (
     <>
       {children ? (
-        <DialogTrigger asChild onClick={() => setOpen(true)}>
+        <button 
+          className="text-charcoal hover:text-gold transition-colors flex items-center gap-1" 
+          onClick={() => setOpen(true)}
+        >
           {children}
-        </DialogTrigger>
+        </button>
       ) : (
         <button 
           className="text-charcoal hover:text-gold transition-colors flex items-center gap-1" 
