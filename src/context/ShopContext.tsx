@@ -10,6 +10,7 @@ interface ShopContextType {
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
+  initiateDownload: (productId: string) => void;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -71,7 +72,9 @@ export const ShopProvider = ({ children }: ShopProviderProps) => {
           name: product.name,
           price: product.price,
           image: product.image,
-          quantity
+          quantity,
+          type: product.type,
+          downloadUrl: product.downloadUrl
         }];
       }
     });
@@ -97,6 +100,13 @@ export const ShopProvider = ({ children }: ShopProviderProps) => {
     setCartItems([]);
   };
   
+  const initiateDownload = (productId: string) => {
+    const item = cartItems.find(item => item.id === productId);
+    if (item?.type === 'digital' && item.downloadUrl) {
+      window.open(item.downloadUrl, '_blank');
+    }
+  };
+  
   const value = {
     cartItems,
     cartCount,
@@ -104,7 +114,8 @@ export const ShopProvider = ({ children }: ShopProviderProps) => {
     addToCart,
     removeFromCart,
     updateQuantity,
-    clearCart
+    clearCart,
+    initiateDownload
   };
   
   return (

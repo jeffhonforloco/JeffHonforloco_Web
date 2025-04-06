@@ -12,6 +12,10 @@ export interface Product {
   categoryName: string;
   date: string;
   featured?: boolean;
+  type: 'affiliate' | 'digital' | 'physical';
+  downloadUrl?: string;
+  fileType?: string;
+  fileSize?: string;
 }
 
 export interface Category {
@@ -26,4 +30,6 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  type: 'affiliate' | 'digital' | 'physical';
+  downloadUrl?: string;
 }

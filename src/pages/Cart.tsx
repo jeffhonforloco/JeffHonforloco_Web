@@ -5,13 +5,14 @@ import Layout from '@/components/layout/Layout';
 import { useShopContext } from '@/context/ShopContext';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag } from 'lucide-react';
+import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag, Download, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
 
 const Cart = () => {
-  const { cartItems, cartTotal, updateQuantity, removeFromCart, clearCart } = useShopContext();
+  const { cartItems, cartTotal, updateQuantity, removeFromCart, clearCart, initiateDownload } = useShopContext();
   const { toast } = useToast();
   
   const handleRemoveItem = (id: string, name: string) => {
@@ -28,6 +29,14 @@ const Cart = () => {
       description: "This would typically connect to a payment processor.",
     });
     // In a real app, this would redirect to checkout or process payment
+  };
+  
+  const handleDownload = (id: string, name: string) => {
+    initiateDownload(id);
+    toast({
+      title: "Download started",
+      description: `Your download for ${name} has started.`,
+    });
   };
   
   if (cartItems.length === 0) {
@@ -54,6 +63,11 @@ const Cart = () => {
       </Layout>
     );
   }
+  
+  // Calculate number of digital and physical items
+  const digitalItems = cartItems.filter(item => item.type === 'digital');
+  const affiliateItems = cartItems.filter(item => item.type === 'affiliate');
+  const physicalItems = cartItems.filter(item => item.type === 'physical');
   
   return (
     <Layout>
@@ -85,29 +99,62 @@ const Cart = () => {
                   <CardContent className="flex-1 p-4">
                     <div className="flex flex-col sm:flex-row justify-between">
                       <div>
-                        <h3 className="font-medium">{item.name}</h3>
+                        <div className="flex items-center">
+                          <h3 className="font-medium">{item.name}</h3>
+                          <Badge variant="outline" className="ml-2">
+                            {item.type === 'digital' ? 'Digital' : item.type === 'affiliate' ? 'Affiliate' : 'Physical'}
+                          </Badge>
+                        </div>
                         <p className="text-muted-foreground text-sm">${item.price.toFixed(2)}</p>
                       </div>
                       
                       <div className="flex items-center mt-4 sm:mt-0">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-8 w-8 rounded-full"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          disabled={item.quantity <= 1}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <span className="w-10 text-center">{item.quantity}</span>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-8 w-8 rounded-full"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        >
-                          <Plus className="h-3 w-3" />
-                        </Button>
+                        {item.type !== 'affiliate' && (
+                          <>
+                            <Button 
+                              variant="outline" 
+                              size="icon" 
+                              className="h-8 w-8 rounded-full"
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              disabled={item.quantity <= 1}
+                            >
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                            <span className="w-10 text-center">{item.quantity}</span>
+                            <Button 
+                              variant="outline" 
+                              size="icon" 
+                              className="h-8 w-8 rounded-full"
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </>
+                        )}
+                        
+                        {item.type === 'digital' && item.downloadUrl && (
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            className="h-8 w-8 ml-2"
+                            onClick={() => handleDownload(item.id, item.name)}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        )}
+                        
+                        {item.type === 'affiliate' && (
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            className="h-8 w-8 mr-2"
+                            asChild
+                          >
+                            <a href={item.downloadUrl} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="h-4 w-4" />
+                            </a>
+                          </Button>
+                        )}
                         
                         <Button 
                           variant="ghost" 
@@ -143,10 +190,12 @@ const Cart = () => {
                     <span>${cartTotal.toFixed(2)}</span>
                   </div>
                   
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Shipping</span>
-                    <span>Calculated at checkout</span>
-                  </div>
+                  {physicalItems.length > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Shipping</span>
+                      <span>Calculated at checkout</span>
+                    </div>
+                  )}
                   
                   <Separator className="my-4" />
                   
@@ -154,12 +203,30 @@ const Cart = () => {
                     <span>Total</span>
                     <span>${cartTotal.toFixed(2)}</span>
                   </div>
+                  
+                  {digitalItems.length > 0 && (
+                    <div className="text-sm text-muted-foreground mt-2">
+                      Includes {digitalItems.length} digital {digitalItems.length === 1 ? 'item' : 'items'}
+                    </div>
+                  )}
+                  
+                  {affiliateItems.length > 0 && (
+                    <div className="text-sm text-muted-foreground mt-2">
+                      Includes {affiliateItems.length} affiliate {affiliateItems.length === 1 ? 'item' : 'items'}
+                    </div>
+                  )}
                 </div>
               </CardContent>
               
               <CardFooter>
-                <Button className="w-full" onClick={handleCheckout}>
-                  Checkout
+                <Button 
+                  className="w-full" 
+                  onClick={handleCheckout}
+                  disabled={cartItems.every(item => item.type === 'affiliate')}
+                >
+                  {cartItems.every(item => item.type === 'affiliate') 
+                    ? 'Visit Affiliate Links' 
+                    : 'Checkout'}
                 </Button>
               </CardFooter>
             </Card>
