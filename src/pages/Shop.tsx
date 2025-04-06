@@ -1,6 +1,6 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import ShopHeader from '@/components/shop/ShopHeader';
 import ProductGrid from '@/components/shop/ProductGrid';
@@ -12,8 +12,26 @@ const Shop = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [sortOption, setSortOption] = useState<string>('featured');
+  const location = useLocation();
   
-  // Filter products based on category
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const productId = params.get('product');
+    
+    if (productId) {
+      const product = products.find(p => p.id === productId);
+      if (product) {
+        setFilteredProducts([product]);
+        setActiveCategory(product.categoryId);
+      } else {
+        setFilteredProducts(products);
+        setActiveCategory('all');
+      }
+    } else {
+      handleCategoryChange(activeCategory);
+    }
+  }, [location.search]);
+  
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId);
     
@@ -24,7 +42,6 @@ const Shop = () => {
     }
   };
   
-  // Sort products based on selected option
   const handleSortChange = (option: string) => {
     setSortOption(option);
     let sortedProducts = [...filteredProducts];

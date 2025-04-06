@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Search, ChevronDown, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { Menu, X, ChevronDown, ShoppingBag, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   NavigationMenu,
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useShopContext } from '@/context/ShopContext';
+import ProductSearch from '@/components/shop/ProductSearch';
 
 // Define our official categories
 const mainCategories = [
@@ -127,9 +128,7 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <button className="text-charcoal hover:text-gold transition-colors">
-            <Search className="h-5 w-5" />
-          </button>
+          <ProductSearch />
         </nav>
         
         {/* Mobile Menu Button */}
@@ -143,6 +142,14 @@ const Header = () => {
               </span>
             )}
           </Link>
+          
+          {/* Mobile Search */}
+          <ProductSearch>
+            <Button variant="ghost" size="icon" className="mr-1">
+              <span className="sr-only">Search products</span>
+              <ProductSearch />
+            </Button>
+          </ProductSearch>
           
           <button 
             className="text-charcoal"
@@ -215,10 +222,15 @@ const Header = () => {
             </Link>
             
             <div className="pt-2">
-              <button className="flex items-center text-charcoal">
-                <Search className="h-5 w-5 mr-2" />
-                <span>Search</span>
-              </button>
+              <ProductSearch>
+                <button 
+                  className="flex items-center text-charcoal"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Search className="h-5 w-5 mr-2" />
+                  <span>Search</span>
+                </button>
+              </ProductSearch>
             </div>
           </nav>
         </div>

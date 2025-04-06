@@ -38,7 +38,8 @@ export const products: Product[] = [
     categoryId: 'travel',
     categoryName: 'Travel Essentials',
     date: '2024-01-15',
-    featured: true
+    featured: true,
+    type: 'affiliate'
   },
   {
     id: 'prod_02',
@@ -51,7 +52,8 @@ export const products: Product[] = [
     categoryId: 'tech',
     categoryName: 'Tech & Gadgets',
     date: '2024-02-10',
-    featured: true
+    featured: true,
+    type: 'affiliate'
   },
   {
     id: 'prod_03',
@@ -62,7 +64,8 @@ export const products: Product[] = [
     url: 'https://example.com/product',
     categoryId: 'lifestyle',
     categoryName: 'Lifestyle & Productivity',
-    date: '2024-01-20'
+    date: '2024-01-20',
+    type: 'physical'
   },
   {
     id: 'prod_04',
@@ -73,7 +76,8 @@ export const products: Product[] = [
     url: 'https://example.com/product',
     categoryId: 'travel',
     categoryName: 'Travel Essentials',
-    date: '2024-03-05'
+    date: '2024-03-05',
+    type: 'affiliate'
   },
   {
     id: 'prod_05',
@@ -86,7 +90,8 @@ export const products: Product[] = [
     badge: 'Sale',
     categoryId: 'travel',
     categoryName: 'Travel Essentials',
-    date: '2024-02-15'
+    date: '2024-02-15',
+    type: 'affiliate'
   },
   {
     id: 'prod_06',
@@ -98,7 +103,11 @@ export const products: Product[] = [
     categoryId: 'books',
     categoryName: 'Books & Resources',
     date: '2024-01-10',
-    featured: true
+    featured: true,
+    type: 'digital',
+    downloadUrl: 'https://example.com/download/atomic-habits.pdf',
+    fileType: 'PDF',
+    fileSize: '12.5 MB'
   },
   {
     id: 'prod_07',
@@ -109,7 +118,8 @@ export const products: Product[] = [
     url: 'https://example.com/product',
     categoryId: 'tech',
     categoryName: 'Tech & Gadgets',
-    date: '2024-03-20'
+    date: '2024-03-20',
+    type: 'affiliate'
   },
   {
     id: 'prod_08',
@@ -120,7 +130,8 @@ export const products: Product[] = [
     url: 'https://example.com/product',
     categoryId: 'lifestyle',
     categoryName: 'Lifestyle & Productivity',
-    date: '2024-02-25'
+    date: '2024-02-25',
+    type: 'physical'
   },
   {
     id: 'prod_09',
@@ -131,6 +142,10 @@ export const products: Product[] = [
     url: 'https://example.com/product',
     categoryId: 'books',
     categoryName: 'Books & Resources',
-    date: '2024-03-10'
+    date: '2024-03-10',
+    type: 'digital',
+    downloadUrl: 'https://example.com/download/digital-minimalism.pdf',
+    fileType: 'PDF',
+    fileSize: '10.2 MB'
   }
 ];
