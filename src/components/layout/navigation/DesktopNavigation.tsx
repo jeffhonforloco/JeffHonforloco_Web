@@ -49,8 +49,34 @@ const DesktopNavigation = () => {
         </NavigationMenuList>
       </NavigationMenu>
       
-      {/* Travel Adventures Link */}
-      <Link to="/travel" className="nav-link font-medium text-base">Travel Adventures</Link>
+      {/* Travel Adventures Link with Dropdown */}
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger className="bg-transparent px-0 font-medium text-base">Travel Adventures</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[220px] gap-2 p-4">
+                <NavigationItem 
+                  title="Budget Travel Tips" 
+                  href="/travel/budget-tips"
+                />
+                <NavigationItem 
+                  title="Outdoor Destinations" 
+                  href="/travel/outdoor-destinations"
+                />
+                <NavigationItem 
+                  title="Backpacking Guides" 
+                  href="/travel/backpacking-guides"
+                />
+                <NavigationItem 
+                  title="All Travel Content" 
+                  href="/travel"
+                />
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
       
       {/* Reviews Link */}
       <Link to="/category/product-reviews" className="nav-link font-medium text-base">Reviews</Link>
