@@ -27,28 +27,28 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               <AccordionContent>
                 <div className="pl-4 flex flex-col">
                   <Link 
-                    to="/category/morning-routines" 
+                    to="/blog?category=morning-routines" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Morning Routines
                   </Link>
                   <Link 
-                    to="/category/mindfulness-tips" 
+                    to="/blog?category=mindfulness-tips" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Mindfulness Tips
                   </Link>
                   <Link 
-                    to="/category/building-habits" 
+                    to="/blog?category=building-habits" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Building Habits
                   </Link>
                   <Link 
-                    to="/category/lifestyle-growth" 
+                    to="/blog" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
@@ -68,25 +68,25 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               <AccordionContent>
                 <div className="pl-4 flex flex-col">
                   <Link 
-                    to="/travel/budget-tips" 
+                    to="/explore-travel?category=budget-travel" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Budget Travel Tips
                   </Link>
                   <Link 
-                    to="/travel/outdoor-destinations" 
+                    to="/explore-travel?category=mountain-getaways" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Outdoor Destinations
                   </Link>
                   <Link 
-                    to="/travel/backpacking-guides" 
+                    to="/explore-travel?category=adventure-travel" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
-                    Backpacking Guides
+                    Adventure Travel
                   </Link>
                   <Link 
                     to="/travel" 
@@ -109,28 +109,28 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               <AccordionContent>
                 <div className="pl-4 flex flex-col">
                   <Link 
-                    to="/category/best-gadgets" 
+                    to="/blog?category=gadget-reviews" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Best Gadgets
                   </Link>
                   <Link 
-                    to="/category/personal-growth-books" 
+                    to="/blog?category=book-reviews" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Personal Growth Books
                   </Link>
                   <Link 
-                    to="/category/fitness-equipment" 
+                    to="/blog?category=fitness-equipment" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Fitness Equipment
                   </Link>
                   <Link 
-                    to="/category/product-reviews" 
+                    to="/blog" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
@@ -150,28 +150,28 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               <AccordionContent>
                 <div className="pl-4 flex flex-col">
                   <Link 
-                    to="/guides/starting-a-blog" 
+                    to="/blog?category=blogging-guides" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Starting a Blog
                   </Link>
                   <Link 
-                    to="/guides/time-management-tips" 
+                    to="/blog?category=productivity" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Time Management Tips
                   </Link>
                   <Link 
-                    to="/guides/remote-work-setups" 
+                    to="/blog?category=remote-work" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
                     Remote Work Setups
                   </Link>
                   <Link 
-                    to="/category/how-to-guides" 
+                    to="/blog?category=how-to" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}
                   >
@@ -192,97 +192,73 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               {/* Stories Section */}
               <div className="mt-2 mb-1 font-medium text-gray-500">Stories:</div>
               <Link 
-                to="/stories/solo-travel-lessons" 
+                to="/blog?category=solo-travel" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Lessons from Solo Travel
               </Link>
               <Link 
-                to="/stories/overcoming-challenges" 
+                to="/blog?category=personal-growth" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Overcoming Challenges
               </Link>
               <Link 
-                to="/stories/blogging-milestones" 
+                to="/blog?category=blogging" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Blogging Milestones
               </Link>
               
-              {/* Affiliate Section */}
-              <div className="mt-2 mb-1 font-medium text-gray-500">Affiliate:</div>
+              {/* Resources Section */}
+              <div className="mt-2 mb-1 font-medium text-gray-500">Resources:</div>
               <Link 
-                to="/affiliate/tools-for-bloggers" 
+                to="/shop" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Tools for Bloggers
               </Link>
               <Link 
-                to="/affiliate/travel-essentials" 
+                to="/shop" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Travel Essentials
               </Link>
               <Link 
-                to="/affiliate/exclusive-deals" 
-                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
-                onClick={onClose}
-              >
-                Exclusive Deals
-              </Link>
-              
-              {/* Recommendations Section */}
-              <div className="mt-2 mb-1 font-medium text-gray-500">Recommendations:</div>
-              <Link 
-                to="/recommendations/nature-destinations" 
-                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
-                onClick={onClose}
-              >
-                Nature Destinations
-              </Link>
-              <Link 
-                to="/recommendations/lifestyle-products" 
+                to="/shop" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Lifestyle Products
               </Link>
-              <Link 
-                to="/recommendations/blogging-resources" 
-                className="text-lg font-medium text-charcoal w-full py-2 pl-2"
-                onClick={onClose}
-              >
-                Blogging Resources
-              </Link>
               
-              {/* Resources Section */}
-              <div className="mt-2 mb-1 font-medium text-gray-500">Resources:</div>
+              {/* Info Pages */}
+              <div className="mt-2 mb-1 font-medium text-gray-500">Info:</div>
               <Link 
-                to="/resources/productivity-apps" 
+                to="/about" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
-                Productivity Apps
+                About
               </Link>
               <Link 
-                to="/resources/blogger-essentials" 
+                to="/contact" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
-                Blogger Essentials
+                Contact Us
               </Link>
               <Link 
-                to="/resources/budget-travel-tools" 
+                to="/privacy-policy" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
-                Budget Travel Tools
+                Privacy Policy
               </Link>
             </div>
           </details>
