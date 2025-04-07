@@ -1,6 +1,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -88,7 +89,7 @@
   }
   
   p {
-    @apply leading-relaxed;
+    @apply leading-relaxed text-gray-700;
   }
 }
 
@@ -132,4 +133,26 @@
   .hover-scale {
     @apply transition-transform duration-300 hover:scale-105;
   }
+  
+  /* Adam Enfroy style classes */
+  .article-title {
+    @apply font-serif text-3xl md:text-4xl font-bold text-gray-900 leading-tight;
+  }
+  
+  .article-body {
+    @apply font-sans text-lg text-gray-700 leading-relaxed;
+  }
+  
+  .article-card {
+    @apply bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300;
+  }
+  
+  .article-metadata {
+    @apply text-sm text-gray-500 flex items-center gap-2;
+  }
+  
+  .article-category {
+    @apply inline-block bg-blue-600 text-white text-xs font-medium px-2.5 py-1 rounded-sm uppercase tracking-wide;
+  }
 }
+

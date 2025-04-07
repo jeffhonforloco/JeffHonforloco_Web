@@ -22,9 +22,9 @@ const Index = () => {
       <FeaturedArticle />
       <FeaturedPosts />
       <TrendingArticles />
+      <CategoryFeature />
       <FeaturedDestinations />
       <AdSection />
-      <CategoryFeature />
       <NewsletterCTA />
     </Layout>
   );
