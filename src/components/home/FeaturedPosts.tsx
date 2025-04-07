@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getPosts, transformPost } from '../../lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 
 interface Post {
   id: number;
@@ -24,7 +25,7 @@ const FeaturedPosts = () => {
     const fetchFeaturedPosts = async () => {
       try {
         setLoading(true);
-        const posts = await getPosts({ perPage: 3 });
+        const posts = await getPosts({ perPage: 6 }); // Increased from 3 to 6 posts
         const transformedPosts = posts.map(transformPost);
         setFeaturedPosts(transformedPosts);
       } catch (error) {
@@ -38,22 +39,28 @@ const FeaturedPosts = () => {
   }, []);
 
   return (
-    <section className="py-20 bg-offwhite">
+    <section className="py-24 bg-gradient-to-b from-offwhite to-white">
       <div className="container-lg">
-        <div className="flex justify-between items-center mb-12">
-          <h2 className="title-lg">Featured Stories</h2>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16">
+          <div>
+            <h2 className="title-lg mb-3">Featured Stories</h2>
+            <p className="text-gray-600 text-lg max-w-2xl">Discover insights and adventures from my latest articles</p>
+          </div>
           <Link 
             to="/blog" 
-            className="flex items-center text-charcoal hover:text-gold transition-colors"
+            className="mt-4 md:mt-0"
           >
-            View all posts <ArrowRight className="ml-2 h-4 w-4" />
+            <Button variant="outline" className="group">
+              View all posts 
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Button>
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
             // Loading skeletons
-            Array(3).fill(0).map((_, index) => (
+            Array(6).fill(0).map((_, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
                 <Skeleton className="w-full aspect-video" />
                 <div className="p-6">

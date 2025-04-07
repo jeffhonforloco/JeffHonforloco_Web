@@ -8,6 +8,8 @@ import CategoryFeature from '../components/home/CategoryFeature';
 import NewsletterCTA from '../components/home/NewsletterCTA';
 import AdSection from '../components/home/AdSection';
 import SEO from '../components/shared/SEO';
+import FeaturedArticle from '../components/home/FeaturedArticle';
+import TrendingArticles from '../components/home/TrendingArticles';
 
 const Index = () => {
   return (
@@ -17,7 +19,9 @@ const Index = () => {
         description="Explore lifestyle, travel, and personal growth with Jeff HonForLoco. Discover insights, tips, and stories to inspire your journey." 
       />
       <Hero />
+      <FeaturedArticle />
       <FeaturedPosts />
+      <TrendingArticles />
       <FeaturedDestinations />
       <AdSection />
       <CategoryFeature />

@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getPosts, transformPost } from '@/lib/wordpress';
+import { Button } from '@/components/ui/button';
 
 interface HeroImage {
   url: string;
@@ -72,7 +74,7 @@ const Hero = () => {
   }, [heroImages.length]);
 
   return (
-    <section className="relative bg-gradient-to-r from-charcoal to-gray-800 text-white min-h-[85vh] flex items-center overflow-hidden">
+    <section className="relative bg-gradient-to-r from-charcoal to-gray-800 text-white min-h-[90vh] flex items-center overflow-hidden">
       {/* Fullscreen background image carousel */}
       <div className="absolute inset-0 w-full h-full">
         {heroImages.map((image, index) => (
@@ -82,7 +84,7 @@ const Hero = () => {
               index === currentIndex ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-70 z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-10"></div>
             <img 
               src={image.url} 
               alt={image.alt}
@@ -108,17 +110,24 @@ const Hero = () => {
       
       <div className="container-lg relative z-10">
         <div className="max-w-2xl animate-fade-in">
-          <h1 className="title-xl mb-6">Explore. Experience. Evolve.</h1>
-          <p className="text-lg md:text-xl mb-8 text-gray-100">
+          <span className="inline-block px-4 py-1 bg-gold text-white text-sm font-bold rounded-full mb-6">
+            Welcome to Jeff HonForLoco
+          </span>
+          <h1 className="title-xl mb-8 leading-tight">Explore. Experience. Evolve.</h1>
+          <p className="text-xl md:text-2xl mb-10 text-gray-100 leading-relaxed max-w-xl">
             Join me on a journey through lifestyle, travel, and personal growth. 
             Discover insights, tips, and stories to inspire your own path.
           </p>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/explore-travel" className="btn-primary">
-              Explore Travel <ChevronRight className="ml-2 h-4 w-4" />
+          <div className="flex flex-wrap gap-5">
+            <Link to="/explore-travel">
+              <Button size="lg" className="bg-gold hover:bg-gold/90 text-white font-medium">
+                Explore Travel <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
             </Link>
-            <Link to="/blog" className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-charcoal transition-colors inline-flex items-center">
-              Read Blog <ChevronRight className="ml-2 h-4 w-4" />
+            <Link to="/blog">
+              <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">
+                Read Blog <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
             </Link>
           </div>
         </div>
