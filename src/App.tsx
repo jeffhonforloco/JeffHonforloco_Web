@@ -21,6 +21,12 @@ import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import DynamicWordPressPage from "./pages/DynamicWordPressPage";
 
+// Define routes that should be handled by specific components
+const HANDLED_ROUTES = [
+  "/", "/blog", "/about", "/contact", "/shop", "/cart", 
+  "/travel", "/explore-travel", "/privacy-policy", "/terms-of-service"
+];
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -32,6 +38,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
+              {/* Main pages */}
               <Route path="/" element={<Index />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/post/:slug" element={<SinglePost />} />
@@ -45,7 +52,33 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               
-              {/* Dynamic WordPress routes */}
+              {/* Category Pages */}
+              <Route path="/category/:categorySlug/*" element={<DynamicWordPressPage />} />
+              
+              {/* Story Pages */}
+              <Route path="/stories/:storySlug" element={<DynamicWordPressPage />} />
+              <Route path="/solo-travel" element={<DynamicWordPressPage />} />
+              <Route path="/personal-growth" element={<DynamicWordPressPage />} />
+              <Route path="/blogging" element={<DynamicWordPressPage />} />
+              
+              {/* Resource Pages */}
+              <Route path="/tools-for-bloggers" element={<DynamicWordPressPage />} />
+              <Route path="/travel-essentials" element={<DynamicWordPressPage />} />
+              <Route path="/lifestyle-products" element={<DynamicWordPressPage />} />
+              
+              {/* Guide Pages */}
+              <Route path="/guides/:guideSlug" element={<DynamicWordPressPage />} />
+              
+              {/* Recommendation Pages */}
+              <Route path="/recommendations/:recommendationSlug" element={<DynamicWordPressPage />} />
+              
+              {/* Resource Pages */}
+              <Route path="/resources/:resourceSlug" element={<DynamicWordPressPage />} />
+              
+              {/* Affiliate Pages */}
+              <Route path="/affiliate/:affiliateSlug" element={<DynamicWordPressPage />} />
+              
+              {/* Catch-all for dynamic WordPress pages */}
               <Route path="/:slug" element={<DynamicWordPressPage />} />
               
               {/* 404 route */}

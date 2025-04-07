@@ -9,7 +9,7 @@ import PostCard from '@/components/blog/PostCard';
 import { Loader2 } from 'lucide-react';
 
 const DynamicWordPressPage = () => {
-  const { slug } = useParams();
+  const { slug, categorySlug, storySlug, guideSlug, recommendationSlug, resourceSlug, affiliateSlug } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -18,6 +18,11 @@ const DynamicWordPressPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [pageType, setPageType] = useState<'page' | 'category' | null>(null);
   const [posts, setPosts] = useState<any[]>([]);
+
+  // Extract path segments to determine what type of content to fetch
+  const pathSegments = location.pathname.split('/').filter(Boolean);
+  const contentType = pathSegments[0];
+  const contentSlug = slug || categorySlug || storySlug || guideSlug || recommendationSlug || resourceSlug || affiliateSlug || pathSegments[pathSegments.length - 1];
 
   // Extract category from query params if present
   const searchParams = new URLSearchParams(location.search);
@@ -29,10 +34,30 @@ const DynamicWordPressPage = () => {
       setError(null);
       
       try {
-        // First try to fetch as a page
-        const pageResult = await getPageBySlug(slug || '');
+        console.log(`Fetching content for path: ${location.pathname}`);
+        console.log(`Content type: ${contentType}, slug: ${contentSlug}`);
+        
+        // Try to fetch as a page first
+        let pageResult;
+        
+        // Try with the direct slug
+        if (contentSlug) {
+          pageResult = await getPageBySlug(contentSlug);
+        }
+        
+        // If not found and we have a content type and slug, try with a combined path
+        if (!pageResult && contentType && contentSlug && contentType !== contentSlug) {
+          pageResult = await getPageBySlug(`${contentType}/${contentSlug}`);
+        }
+        
+        // If still not found, try with the full path minus the leading slash
+        if (!pageResult && location.pathname) {
+          const fullPath = location.pathname.startsWith('/') ? location.pathname.substring(1) : location.pathname;
+          pageResult = await getPageBySlug(fullPath);
+        }
         
         if (pageResult) {
+          console.log('Found page:', pageResult.title.rendered);
           setContent(pageResult);
           setPageType('page');
           setLoading(false);
@@ -40,21 +65,14 @@ const DynamicWordPressPage = () => {
         }
         
         // If not found as page, try as category
-        if (categoryParam) {
-          const { category, posts: categoryPosts } = await getPostsByCategory(categoryParam);
+        let categoryToUse = categoryParam || contentSlug;
+        
+        if (categoryToUse) {
+          console.log(`Trying as category: ${categoryToUse}`);
+          const { category, posts: categoryPosts } = await getPostsByCategory(categoryToUse);
           
           if (category) {
-            setContent(category);
-            setPosts(categoryPosts);
-            setPageType('category');
-            setLoading(false);
-            return;
-          }
-        } else {
-          // Try to fetch as a category using the slug
-          const { category, posts: categoryPosts } = await getPostsByCategory(slug || '');
-          
-          if (category) {
+            console.log('Found category:', category.name);
             setContent(category);
             setPosts(categoryPosts);
             setPageType('category');
@@ -64,6 +82,7 @@ const DynamicWordPressPage = () => {
         }
         
         // If we get here, nothing was found
+        console.error(`Content not found for ${location.pathname}`);
         setError(`The requested content was not found.`);
         toast({
           title: "Content not found",
@@ -84,7 +103,7 @@ const DynamicWordPressPage = () => {
     };
     
     fetchContent();
-  }, [slug, categoryParam, toast]);
+  }, [location.pathname, categoryParam, contentSlug, contentType, toast]);
 
   // Handle loading state
   if (loading) {

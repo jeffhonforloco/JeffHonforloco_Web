@@ -1,12 +1,13 @@
 
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { HomeIcon, RotateCcw, Search, Book, SearchX } from "lucide-react";
+import { HomeIcon, RotateCcw, Search, Book, SearchX, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import Layout from "../components/layout/Layout";
 import { Input } from "@/components/ui/input";
 import { getPosts } from "@/lib/wordpress";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const NotFound = () => {
   const location = useLocation();
@@ -17,7 +18,10 @@ const NotFound = () => {
   const [loading, setLoading] = useState(false);
   
   useEffect(() => {
+    // Log detailed information about the 404 error
     console.error("404 Error: Page not found -", location.pathname);
+    console.log("Query params:", location.search);
+    console.log("Referrer:", document.referrer);
     
     // Extract potential search term from URL path
     const pathParts = location.pathname.split('/').filter(Boolean);
@@ -32,7 +36,7 @@ const NotFound = () => {
       description: `We couldn't find the page "${location.pathname}"`,
       variant: "destructive",
     });
-  }, [location.pathname, toast]);
+  }, [location.pathname, location.search, toast]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,10 +65,15 @@ const NotFound = () => {
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6">
           Page Not Found
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg">
-          Sorry, we couldn't find the page you're looking for. The page might have been removed, 
-          had its name changed, or is temporarily unavailable.
-        </p>
+        
+        <Alert variant="destructive" className="mb-8 max-w-lg">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            Sorry, we couldn't find the page "{location.pathname}". The page might have been removed, 
+            had its name changed, or is temporarily unavailable.
+          </AlertDescription>
+        </Alert>
         
         {/* Search form */}
         <div className="w-full max-w-md mb-8">
