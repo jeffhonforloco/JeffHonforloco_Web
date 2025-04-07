@@ -1,17 +1,30 @@
 
-import { useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
-import { HomeIcon, RotateCcw, Search } from "lucide-react";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { HomeIcon, RotateCcw, Search, Book, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import Layout from "../components/layout/Layout";
+import { Input } from "@/components/ui/input";
+import { getPosts } from "@/lib/wordpress";
 
 const NotFound = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   
   useEffect(() => {
     console.error("404 Error: Page not found -", location.pathname);
+    
+    // Extract potential search term from URL path
+    const pathParts = location.pathname.split('/').filter(Boolean);
+    if (pathParts.length > 0) {
+      // Use the last part of the path as initial search query
+      setSearchQuery(pathParts[pathParts.length - 1].replace(/-/g, ' '));
+    }
     
     // Show toast notification
     toast({
@@ -20,6 +33,26 @@ const NotFound = () => {
       variant: "destructive",
     });
   }, [location.pathname, toast]);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    
+    setLoading(true);
+    try {
+      // Search for content with the query
+      const results = await getPosts({ search: searchQuery, perPage: 5 });
+      setSuggestions(results);
+    } catch (error) {
+      console.error("Search error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSuggestionClick = (slug: string) => {
+    navigate(`/post/${slug}`);
+  };
 
   return (
     <Layout>
@@ -32,6 +65,53 @@ const NotFound = () => {
           Sorry, we couldn't find the page you're looking for. The page might have been removed, 
           had its name changed, or is temporarily unavailable.
         </p>
+        
+        {/* Search form */}
+        <div className="w-full max-w-md mb-8">
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="Search for content"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-grow"
+            />
+            <Button type="submit" disabled={loading}>
+              <Search className="h-5 w-5" />
+            </Button>
+          </form>
+          
+          {/* Search suggestions */}
+          {suggestions.length > 0 && (
+            <div className="mt-4 bg-white dark:bg-gray-800 rounded-md shadow-md p-4 text-left">
+              <h3 className="text-sm font-medium mb-2 flex items-center">
+                <Book className="h-4 w-4 mr-2" />
+                Suggested content:
+              </h3>
+              <ul className="space-y-2">
+                {suggestions.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => handleSuggestionClick(item.slug)}
+                      className="text-primary hover:underline text-left w-full truncate"
+                    >
+                      <span dangerouslySetInnerHTML={{ __html: item.title.rendered }} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          
+          {suggestions.length === 0 && !loading && searchQuery && (
+            <div className="mt-4 bg-white dark:bg-gray-800 rounded-md shadow-md p-4 text-left">
+              <p className="text-sm flex items-center text-gray-600 dark:text-gray-300">
+                <SearchX className="h-4 w-4 mr-2" />
+                No results found for "{searchQuery}"
+              </p>
+            </div>
+          )}
+        </div>
         
         <div className="flex flex-col sm:flex-row gap-4">
           <Button asChild size="lg" className="gap-2">

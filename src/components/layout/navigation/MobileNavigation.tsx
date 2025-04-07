@@ -192,21 +192,21 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               {/* Stories Section */}
               <div className="mt-2 mb-1 font-medium text-gray-500">Stories:</div>
               <Link 
-                to="/blog?category=solo-travel" 
+                to="/solo-travel" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Lessons from Solo Travel
               </Link>
               <Link 
-                to="/blog?category=personal-growth" 
+                to="/personal-growth" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Overcoming Challenges
               </Link>
               <Link 
-                to="/blog?category=blogging" 
+                to="/blogging" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
@@ -216,21 +216,21 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
               {/* Resources Section */}
               <div className="mt-2 mb-1 font-medium text-gray-500">Resources:</div>
               <Link 
-                to="/shop" 
+                to="/tools-for-bloggers" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Tools for Bloggers
               </Link>
               <Link 
-                to="/shop" 
+                to="/travel-essentials" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >
                 Travel Essentials
               </Link>
               <Link 
-                to="/shop" 
+                to="/lifestyle-products" 
                 className="text-lg font-medium text-charcoal w-full py-2 pl-2"
                 onClick={onClose}
               >

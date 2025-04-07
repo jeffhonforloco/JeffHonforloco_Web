@@ -19,6 +19,7 @@ import ExploreTravel from "./pages/ExploreTravel";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
+import DynamicWordPressPage from "./pages/DynamicWordPressPage";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,11 @@ const App = () => (
               <Route path="/explore-travel" element={<ExploreTravel />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              
+              {/* Dynamic WordPress routes */}
+              <Route path="/:slug" element={<DynamicWordPressPage />} />
+              
+              {/* 404 route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
