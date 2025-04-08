@@ -41,7 +41,7 @@ const ThemeToggle = ({ minimal = false }: ThemeToggleProps) => {
     <div className="flex items-center gap-2">
       {!minimal && (
         <>
-          <Sun className={`h-4 w-4 ${isDark ? 'text-gray-400' : 'text-yellow-500'}`} />
+          <Sun className={`h-4 w-4 ${isDark ? 'text-gray-400' : 'text-blue-500'}`} />
           <Switch 
             checked={isDark} 
             onCheckedChange={toggleTheme} 
@@ -58,7 +58,7 @@ const ThemeToggle = ({ minimal = false }: ThemeToggleProps) => {
           aria-label="Toggle dark mode"
         >
           {isDark ? (
-            <Sun className="h-5 w-5 text-yellow-500" />
+            <Sun className="h-5 w-5 text-blue-500" />
           ) : (
             <Moon className="h-5 w-5 text-blue-500" />
           )}

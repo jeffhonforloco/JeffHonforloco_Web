@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -39,4 +40,45 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Adam Enfroy style colors */
+:root {
+  --enfroy-bg: #f8f9fa;
+  --enfroy-text: #212529;
+  --enfroy-primary: #1a73e8;
+  --enfroy-secondary: #6c757d;
+  --enfroy-accent: #f1f3f4;
+  --enfroy-border: #e9ecef;
+}
+
+.enfroy-section {
+  background-color: var(--enfroy-bg);
+  color: var(--enfroy-text);
+}
+
+.enfroy-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.enfroy-card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  transform: translateY(-5px);
+}
+
+.enfroy-btn {
+  background-color: var(--enfroy-primary);
+  color: white;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.enfroy-btn:hover {
+  background-color: #1567d3;
+  transform: translateY(-1px);
 }

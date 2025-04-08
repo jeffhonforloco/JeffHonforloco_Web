@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
@@ -61,6 +62,14 @@ const config = {
 				gold: '#D4AF37',
 				charcoal: '#222222',
 				offwhite: '#F8F8F8',
+				enfroy: {
+					bg: '#f8f9fa',
+					text: '#212529',
+					primary: '#1a73e8',
+					secondary: '#6c757d',
+					accent: '#f1f3f4',
+					border: '#e9ecef',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
