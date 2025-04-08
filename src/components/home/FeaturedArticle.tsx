@@ -88,16 +88,14 @@ const FeaturedArticle = () => {
             </span>
           </div>
           
-          <h1 className="article-title mb-6">
-            {featuredArticle.title}
-          </h1>
+          <h1 className="article-title mb-6" dangerouslySetInnerHTML={{ __html: featuredArticle.title }} />
           
           <Link to={`/post/${featuredArticle.slug}`} className="block mb-6">
             <div className="rounded-lg overflow-hidden shadow-md">
               <img 
                 src={featuredArticle.featuredImage} 
-                alt={featuredArticle.title}
-                className="w-full h-auto object-cover transition-transform hover:scale-105 duration-700" 
+                alt={typeof featuredArticle.title === 'string' ? featuredArticle.title : 'Featured article'} 
+                className="w-full h-auto object-cover transition-transform hover:scale-105 duration-700"
               />
             </div>
           </Link>

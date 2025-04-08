@@ -95,13 +95,18 @@ export const getPosts = async (args: {
   categories?: number[];
   search?: string;
   slug?: string;
+  tags?: number[];
 } = {}): Promise<Post[]> => {
-  const { page = 1, perPage = 10, categories, search, slug } = args;
+  const { page = 1, perPage = 10, categories, search, slug, tags } = args;
   
   let url = `${API_URL}/posts?_embed&page=${page}&per_page=${perPage}`;
   
   if (categories && categories.length > 0) {
     url += `&categories=${categories.join(',')}`;
+  }
+  
+  if (tags && tags.length > 0) {
+    url += `&tags=${tags.join(',')}`;
   }
   
   if (search) {
@@ -113,6 +118,7 @@ export const getPosts = async (args: {
   }
   
   try {
+    console.log(`Fetching posts with URL: ${url}`);
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -120,6 +126,7 @@ export const getPosts = async (args: {
     }
     
     const posts: Post[] = await response.json();
+    console.log(`Found ${posts.length} posts`);
     return posts;
   } catch (error) {
     console.error('Error fetching posts:', error);
@@ -201,6 +208,7 @@ export const getPostsByCategory = async (
 // Get a page by slug
 export const getPageBySlug = async (slug: string): Promise<Page | null> => {
   try {
+    console.log(`Fetching page with slug: ${slug}`);
     const response = await fetch(`${API_URL}/pages?_embed&slug=${encodeURIComponent(slug)}`);
     
     if (!response.ok) {
@@ -208,10 +216,47 @@ export const getPageBySlug = async (slug: string): Promise<Page | null> => {
     }
     
     const pages: Page[] = await response.json();
+    if (pages.length > 0) {
+      console.log(`Found page with slug ${slug}`);
+    } else {
+      console.log(`No page found with slug ${slug}`);
+    }
     return pages.length > 0 ? pages[0] : null;
   } catch (error) {
     console.error(`Error fetching page with slug ${slug}:`, error);
     return null;
+  }
+};
+
+// Get posts by tag slug
+export const getPostsByTag = async (
+  tagSlug: string,
+  page: number = 1,
+  perPage: number = 10
+): Promise<Post[]> => {
+  try {
+    const response = await fetch(`${API_URL}/tags?slug=${encodeURIComponent(tagSlug)}`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch tag with slug ${tagSlug}: ${response.status}`);
+    }
+    
+    const tags = await response.json();
+    if (tags.length === 0) {
+      return [];
+    }
+    
+    const tagId = tags[0].id;
+    const posts = await getPosts({
+      tags: [tagId],
+      page,
+      perPage,
+    });
+    
+    return posts;
+  } catch (error) {
+    console.error(`Error fetching posts for tag ${tagSlug}:`, error);
+    return [];
   }
 };
 

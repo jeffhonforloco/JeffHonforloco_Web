@@ -80,7 +80,7 @@ const FeaturedPosts = () => {
                 <Link to={`/post/${post.slug}`} className="block relative aspect-video overflow-hidden">
                   <img 
                     src={post.featuredImage} 
-                    alt={post.title}
+                    alt={typeof post.title === 'string' ? post.title : 'Featured post'} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                   />
                   <div className="absolute top-4 left-4">
@@ -92,9 +92,8 @@ const FeaturedPosts = () => {
                 
                 <div className="p-6">
                   <h3 className="font-serif text-xl font-bold mb-2 line-clamp-2">
-                    <Link to={`/post/${post.slug}`} className="hover:text-gold transition-colors">
-                      {post.title}
-                    </Link>
+                    <Link to={`/post/${post.slug}`} className="hover:text-gold transition-colors" 
+                         dangerouslySetInnerHTML={{ __html: post.title }} />
                   </h3>
                   
                   <div className="text-gray-600 mb-4 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.excerpt }} />

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { getPageBySlug, getPostsByCategory, getCategoryBySlug } from '@/lib/wordpress';
+import { getPageBySlug, getPostsByCategory, getCategoryBySlug, getPosts } from '@/lib/wordpress';
 import { useToast } from '@/components/ui/use-toast';
 import Layout from '@/components/layout/Layout';
 import SEO from '@/components/shared/SEO';
@@ -16,8 +16,9 @@ const DynamicWordPressPage = () => {
   const [content, setContent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [pageType, setPageType] = useState<'page' | 'category' | null>(null);
+  const [pageType, setPageType] = useState<'page' | 'category' | 'posts' | null>(null);
   const [posts, setPosts] = useState<any[]>([]);
+  const [pageTitle, setPageTitle] = useState('');
 
   // Extract path segments to determine what type of content to fetch
   const pathSegments = location.pathname.split('/').filter(Boolean);
@@ -84,6 +85,49 @@ const DynamicWordPressPage = () => {
             setPageType('category');
             setLoading(false);
             return;
+          }
+        }
+
+        // Special handling for common sections where we should display posts with specific types or tags
+        if (contentType) {
+          let sectionTitle = '';
+          let searchQuery = '';
+          
+          switch (contentType) {
+            case 'stories':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Stories` : 'Stories';
+              searchQuery = 'story';
+              break;
+            case 'guides':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Guides` : 'Guides';
+              searchQuery = 'guide';
+              break;
+            case 'affiliate':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Resources` : 'Affiliate Resources';
+              searchQuery = contentSlug || 'affiliate';
+              break;
+            case 'recommendations':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Recommendations` : 'Recommendations';
+              searchQuery = contentSlug || 'recommendation';
+              break;
+            case 'resources':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Resources` : 'Resources';
+              searchQuery = contentSlug || 'resource';
+              break;
+          }
+          
+          if (searchQuery) {
+            console.log(`Fetching posts with search query: ${searchQuery}`);
+            const fetchedPosts = await getPosts({ search: searchQuery, perPage: 10 });
+            
+            if (fetchedPosts && fetchedPosts.length > 0) {
+              console.log(`Found ${fetchedPosts.length} posts for section ${sectionTitle}`);
+              setPageTitle(sectionTitle);
+              setPosts(fetchedPosts);
+              setPageType('posts');
+              setLoading(false);
+              return;
+            }
           }
         }
         
@@ -178,6 +222,27 @@ const DynamicWordPressPage = () => {
               <p className="text-xl">No posts found in this category.</p>
             </div>
           )}
+        </div>
+      </Layout>
+    );
+  }
+
+  // Render posts section (for stories, guides, affiliates, etc.)
+  if (pageType === 'posts' && posts.length > 0) {
+    return (
+      <Layout>
+        <SEO 
+          title={pageTitle} 
+          description={`Browse all ${pageTitle.toLowerCase()}`}
+        />
+        <div className="container max-w-7xl py-12">
+          <h1 className="text-4xl font-bold mb-8">{pageTitle}</h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
         </div>
       </Layout>
     );
