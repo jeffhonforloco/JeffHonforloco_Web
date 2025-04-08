@@ -105,6 +105,13 @@ const DynamicWordPressPage = () => {
     fetchContent();
   }, [location.pathname, categoryParam, contentSlug, contentType, toast]);
 
+  // Handle error state - Use useEffect for navigation to prevent render-phase updates
+  useEffect(() => {
+    if (error && !loading) {
+      navigate('/not-found', { replace: true });
+    }
+  }, [error, loading, navigate]);
+
   // Handle loading state
   if (loading) {
     return (
@@ -116,18 +123,12 @@ const DynamicWordPressPage = () => {
     );
   }
 
-  // Handle error state
-  if (error) {
-    navigate('/404');
-    return null;
-  }
-
   // Render page content
   if (pageType === 'page' && content) {
     // Safely get the title and content
-    const pageTitle = typeof content.title === 'string' ? content.title : content.title?.rendered || '';
-    const pageContent = typeof content.content === 'string' ? content.content : content.content?.rendered || '';
-    const pageExcerpt = typeof content.excerpt === 'string' ? content.excerpt : content.excerpt?.rendered || '';
+    const pageTitle = content.title?.rendered || '';
+    const pageContent = content.content?.rendered || '';
+    const pageExcerpt = content.excerpt?.rendered || '';
     
     return (
       <Layout>
@@ -174,6 +175,11 @@ const DynamicWordPressPage = () => {
         </div>
       </Layout>
     );
+  }
+
+  // Return empty fragment if we're navigating away due to an error
+  if (error) {
+    return null;
   }
 
   // Fallback (shouldn't reach here due to error handling)

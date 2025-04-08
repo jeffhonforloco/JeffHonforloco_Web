@@ -30,7 +30,9 @@ const FeaturedArticle = () => {
         const posts = await getPosts({ perPage: 1 });
         if (posts.length > 0) {
           const transformedPost = transformPost(posts[0]);
-          setFeaturedArticle(transformedPost);
+          if (transformedPost) {
+            setFeaturedArticle(transformedPost);
+          }
         }
       } catch (error) {
         console.error('Error fetching featured article:', error);

@@ -81,7 +81,8 @@ const App = () => (
               {/* Catch-all for dynamic WordPress pages */}
               <Route path="/:slug" element={<DynamicWordPressPage />} />
               
-              {/* 404 route */}
+              {/* 404 route - notice the path has been updated to /not-found */}
+              <Route path="/not-found" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

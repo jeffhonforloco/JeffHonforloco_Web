@@ -18,24 +18,27 @@ const NotFound = () => {
   const [loading, setLoading] = useState(false);
   
   useEffect(() => {
-    // Log detailed information about the 404 error
-    console.error("404 Error: Page not found -", location.pathname);
-    console.log("Query params:", location.search);
-    console.log("Referrer:", document.referrer);
-    
-    // Extract potential search term from URL path
-    const pathParts = location.pathname.split('/').filter(Boolean);
-    if (pathParts.length > 0) {
-      // Use the last part of the path as initial search query
-      setSearchQuery(pathParts[pathParts.length - 1].replace(/-/g, ' '));
+    // Avoid showing error toast for the not-found route itself
+    if (location.pathname !== '/not-found') {
+      // Log detailed information about the 404 error
+      console.error("404 Error: Page not found -", location.pathname);
+      console.log("Query params:", location.search);
+      console.log("Referrer:", document.referrer);
+      
+      // Extract potential search term from URL path
+      const pathParts = location.pathname.split('/').filter(Boolean);
+      if (pathParts.length > 0) {
+        // Use the last part of the path as initial search query
+        setSearchQuery(pathParts[pathParts.length - 1].replace(/-/g, ' '));
+      }
+      
+      // Show toast notification
+      toast({
+        title: "Page not found",
+        description: `We couldn't find the page "${location.pathname}"`,
+        variant: "destructive",
+      });
     }
-    
-    // Show toast notification
-    toast({
-      title: "Page not found",
-      description: `We couldn't find the page "${location.pathname}"`,
-      variant: "destructive",
-    });
   }, [location.pathname, location.search, toast]);
 
   const handleSearch = async (e: React.FormEvent) => {
