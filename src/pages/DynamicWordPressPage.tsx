@@ -57,7 +57,7 @@ const DynamicWordPressPage = () => {
         }
         
         if (pageResult) {
-          console.log('Found page:', pageResult.title.rendered);
+          console.log('Found page:', pageResult.title?.rendered || pageResult.title);
           setContent(pageResult);
           setPageType('page');
           setLoading(false);
@@ -124,17 +124,22 @@ const DynamicWordPressPage = () => {
 
   // Render page content
   if (pageType === 'page' && content) {
+    // Safely get the title and content
+    const pageTitle = typeof content.title === 'string' ? content.title : content.title?.rendered || '';
+    const pageContent = typeof content.content === 'string' ? content.content : content.content?.rendered || '';
+    const pageExcerpt = typeof content.excerpt === 'string' ? content.excerpt : content.excerpt?.rendered || '';
+    
     return (
       <Layout>
         <SEO 
-          title={content.title.rendered} 
-          description={`${content.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160)}...`}
+          title={pageTitle} 
+          description={`${pageExcerpt.replace(/<[^>]*>/g, '').substring(0, 160)}...`}
         />
         <div className="container max-w-4xl py-12">
-          <h1 className="text-4xl font-bold mb-8" dangerouslySetInnerHTML={{ __html: content.title.rendered }} />
+          <h1 className="text-4xl font-bold mb-8" dangerouslySetInnerHTML={{ __html: pageTitle }} />
           <div 
             className="prose prose-lg dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: content.content.rendered }} 
+            dangerouslySetInnerHTML={{ __html: pageContent }} 
           />
         </div>
       </Layout>

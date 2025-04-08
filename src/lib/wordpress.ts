@@ -234,16 +234,23 @@ export const getMenu = async (menuSlug: string = 'main-menu'): Promise<Menu | nu
 
 // Helper to transform WordPress post to simplified format
 export const transformPost = (post: Post) => {
+  if (!post) return null;
+  
   const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'placeholder.svg';
   const categories = post._embedded?.['wp:term']?.[0] || [];
   const category = categories.length > 0 ? categories[0] : { name: 'Uncategorized', slug: 'uncategorized' };
   
+  // Ensure we're handling the excerpt and content correctly
+  const excerpt = typeof post.excerpt === 'string' ? post.excerpt : post.excerpt?.rendered || '';
+  const content = typeof post.content === 'string' ? post.content : post.content?.rendered || '';
+  const title = typeof post.title === 'string' ? post.title : post.title?.rendered || '';
+
   return {
     id: post.id,
     slug: post.slug,
-    title: post.title.rendered,
-    excerpt: stripHtml(post.excerpt.rendered),
-    content: post.content.rendered,
+    title: title,
+    excerpt: excerpt,
+    content: content,
     featuredImage,
     category: category.name,
     categorySlug: category.slug,

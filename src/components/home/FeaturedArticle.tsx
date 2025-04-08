@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Award, Calendar, Clock } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
 import { getPosts, transformPost } from '@/lib/wordpress';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -100,9 +100,7 @@ const FeaturedArticle = () => {
             </div>
           </Link>
           
-          <div className="article-body mb-8">
-            {featuredArticle.excerpt}
-          </div>
+          <div className="article-body mb-8" dangerouslySetInnerHTML={{ __html: featuredArticle.excerpt }} />
           
           <Link to={`/post/${featuredArticle.slug}`}>
             <Button className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md group">

@@ -29,7 +29,7 @@ const TrendingArticles = () => {
         // In a real app, you might have a different endpoint for trending posts
         // For now, we'll just get the latest posts
         const posts = await getPosts({ perPage: 4, page: 2 });
-        const transformedPosts = posts.map(transformPost);
+        const transformedPosts = posts.map(transformPost).filter(Boolean) as Post[];
         setTrendingPosts(transformedPosts);
       } catch (error) {
         console.error('Error fetching trending posts:', error);

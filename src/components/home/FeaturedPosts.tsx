@@ -25,8 +25,8 @@ const FeaturedPosts = () => {
     const fetchFeaturedPosts = async () => {
       try {
         setLoading(true);
-        const posts = await getPosts({ perPage: 6 }); // Increased from 3 to 6 posts
-        const transformedPosts = posts.map(transformPost);
+        const posts = await getPosts({ perPage: 6 });
+        const transformedPosts = posts.map(transformPost).filter(Boolean) as Post[];
         setFeaturedPosts(transformedPosts);
       } catch (error) {
         console.error('Error fetching featured posts:', error);
@@ -97,9 +97,7 @@ const FeaturedPosts = () => {
                     </Link>
                   </h3>
                   
-                  <p className="text-gray-600 mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
+                  <div className="text-gray-600 mb-4 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.excerpt }} />
                   
                   <div className="flex justify-between items-center text-sm text-gray-500">
                     <span>{post.date}</span>
