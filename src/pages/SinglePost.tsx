@@ -152,20 +152,20 @@ const SinglePost = () => {
         category={post.category}
       />
       
-      <article className="pt-24 pb-16">
+      <article className="pt-24 pb-16 bg-enfroy-bg">
         {/* Post Header */}
         <header className="container-lg mb-10">
           <div className="max-w-4xl mx-auto">
             <Link 
               to={`/category/${post.categorySlug}`}
-              className="inline-block bg-gold text-white text-sm px-3 py-1 rounded-full mb-4 hover:bg-opacity-90 transition-opacity"
+              className="inline-block bg-enfroy-primary text-white text-sm px-3 py-1 rounded-md mb-4 hover:bg-opacity-90 transition-opacity"
             >
               {post.category}
             </Link>
             
-            <h1 className="title-xl mb-6">{post.title}</h1>
+            <h1 className="font-serif text-4xl md:text-5xl font-bold mb-6 text-enfroy-text leading-tight">{post.title}</h1>
             
-            <div className="flex items-center justify-between flex-wrap gap-4 text-gray-600">
+            <div className="flex items-center justify-between flex-wrap gap-4 text-enfroy-secondary">
               <div className="flex items-center">
                 <div>
                   <div className="flex items-center text-sm">
@@ -180,28 +180,28 @@ const SinglePost = () => {
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => shareOnSocial('facebook')}
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="p-2 bg-enfroy-accent rounded-full hover:bg-gray-300 transition-colors"
                   aria-label="Share on Facebook"
                 >
                   <Facebook className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={() => shareOnSocial('twitter')}
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="p-2 bg-enfroy-accent rounded-full hover:bg-gray-300 transition-colors"
                   aria-label="Share on Twitter"
                 >
                   <Twitter className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={() => shareOnSocial('linkedin')}
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="p-2 bg-enfroy-accent rounded-full hover:bg-gray-300 transition-colors"
                   aria-label="Share on LinkedIn"
                 >
                   <Linkedin className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={copyToClipboard}
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="p-2 bg-enfroy-accent rounded-full hover:bg-gray-300 transition-colors"
                   aria-label="Copy link to clipboard"
                 >
                   <Copy className="h-4 w-4" />
@@ -214,7 +214,7 @@ const SinglePost = () => {
         {/* Featured Image */}
         <div className="container-lg mb-10">
           <div className="max-w-5xl mx-auto">
-            <div className="aspect-[16/9] rounded-lg overflow-hidden">
+            <div className="aspect-[16/9] rounded-lg overflow-hidden shadow-md">
               <img 
                 src={post.featuredImage}
                 alt={post.title}
@@ -228,42 +228,42 @@ const SinglePost = () => {
         <div className="container-lg mb-12">
           <div className="max-w-4xl mx-auto">
             <div 
-              className="prose lg:prose-lg mx-auto"
+              className="article-content"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </div>
         </div>
         
         {/* Share & Tags */}
-        <div className="container-lg border-t border-b py-6 mb-12">
+        <div className="container-lg border-t border-b border-enfroy-border py-6 mb-12">
           <div className="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-4">
             <div className="flex items-center">
-              <span className="mr-2 font-medium">Share:</span>
+              <span className="mr-2 font-medium text-enfroy-text">Share:</span>
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => shareOnSocial('facebook')}
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="p-2 bg-enfroy-accent rounded-full hover:bg-gray-300 transition-colors"
                   aria-label="Share on Facebook"
                 >
                   <Facebook className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={() => shareOnSocial('twitter')}
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="p-2 bg-enfroy-accent rounded-full hover:bg-gray-300 transition-colors"
                   aria-label="Share on Twitter"
                 >
                   <Twitter className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={() => shareOnSocial('linkedin')}
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="p-2 bg-enfroy-accent rounded-full hover:bg-gray-300 transition-colors"
                   aria-label="Share on LinkedIn"
                 >
                   <Linkedin className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={copyToClipboard}
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="p-2 bg-enfroy-accent rounded-full hover:bg-gray-300 transition-colors"
                   aria-label="Copy link to clipboard"
                 >
                   <Copy className="h-4 w-4" />
@@ -278,9 +278,9 @@ const SinglePost = () => {
         
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
-          <section className="container-lg py-12">
+          <section className="container-lg py-12 bg-white">
             <div className="max-w-5xl mx-auto">
-              <h2 className="title-md mb-8">You Might Also Like</h2>
+              <h2 className="font-serif text-2xl md:text-3xl font-bold mb-8 text-enfroy-text">You Might Also Like</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedPosts.map((post) => (
