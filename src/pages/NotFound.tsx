@@ -18,8 +18,8 @@ const NotFound = () => {
   const [loading, setLoading] = useState(false);
   
   useEffect(() => {
-    // Avoid showing error toast for the not-found route itself
-    if (location.pathname !== '/not-found') {
+    // Avoid showing error toast for the 404 route itself
+    if (location.pathname !== '/404') {
       // Log detailed information about the 404 error
       console.error("404 Error: Page not found -", location.pathname);
       console.log("Query params:", location.search);

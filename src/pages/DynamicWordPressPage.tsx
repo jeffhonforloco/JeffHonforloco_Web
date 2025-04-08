@@ -29,6 +29,12 @@ const DynamicWordPressPage = () => {
   const categoryParam = searchParams.get('category');
 
   useEffect(() => {
+    // Skip fetching if we're on a special route like /404
+    if (location.pathname === '/404') {
+      setLoading(false);
+      return;
+    }
+
     const fetchContent = async () => {
       setLoading(true);
       setError(null);
@@ -107,10 +113,10 @@ const DynamicWordPressPage = () => {
 
   // Handle error state - Use useEffect for navigation to prevent render-phase updates
   useEffect(() => {
-    if (error && !loading) {
-      navigate('/not-found', { replace: true });
+    if (error && !loading && location.pathname !== '/404') {
+      navigate('/404', { replace: true });
     }
-  }, [error, loading, navigate]);
+  }, [error, loading, navigate, location.pathname]);
 
   // Handle loading state
   if (loading) {

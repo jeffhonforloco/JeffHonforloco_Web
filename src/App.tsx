@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { ShopProvider } from "@/context/ShopContext";
 import Index from "./pages/Index";
@@ -81,8 +81,8 @@ const App = () => (
               {/* Catch-all for dynamic WordPress pages */}
               <Route path="/:slug" element={<DynamicWordPressPage />} />
               
-              {/* 404 route - notice the path has been updated to /not-found */}
-              <Route path="/not-found" element={<NotFound />} />
+              {/* 404 route */}
+              <Route path="/404" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
