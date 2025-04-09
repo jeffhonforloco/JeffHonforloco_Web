@@ -15,14 +15,47 @@ interface Post {
   _embedded?: {
     'wp:featuredmedia'?: Array<{
       source_url: string;
+      alt_text?: string;
+      caption?: {
+        rendered: string;
+      };
     }>;
     'wp:term'?: Array<Array<{
       id: number;
       name: string;
       slug: string;
+      description?: string;
     }>>;
+    author?: Array<{
+      name: string;
+      url?: string;
+    }>;
   };
   date: string;
+  modified?: string;
+  yoast_head_json?: {
+    title?: string;
+    description?: string;
+    robots?: {
+      index?: string;
+      follow?: string;
+    };
+    canonical?: string;
+    og_title?: string;
+    og_description?: string;
+    og_image?: Array<{
+      url: string;
+      width?: number;
+      height?: number;
+    }>;
+    twitter_card?: string;
+    twitter_title?: string;
+    twitter_description?: string;
+    twitter_image?: string;
+    schema?: {
+      '@graph': any[];
+    };
+  };
 }
 
 interface Category {
@@ -31,6 +64,15 @@ interface Category {
   slug: string;
   description: string;
   count: number;
+  yoast_head_json?: {
+    title?: string;
+    description?: string;
+    robots?: {
+      index?: string;
+      follow?: string;
+    };
+    canonical?: string;
+  };
 }
 
 interface Page {
@@ -49,7 +91,18 @@ interface Page {
   _embedded?: {
     'wp:featuredmedia'?: Array<{
       source_url: string;
+      alt_text?: string;
     }>;
+  };
+  modified?: string;
+  yoast_head_json?: {
+    title?: string;
+    description?: string;
+    robots?: {
+      index?: string;
+      follow?: string;
+    };
+    canonical?: string;
   };
 }
 
@@ -74,18 +127,37 @@ const MENU_API_URL = 'https://www.jeffhonforloco.com/wp-json/menus/v1/menus';
 
 // Helper function to strip HTML tags
 export const stripHtml = (html: string): string => {
+  if (!html) return '';
   const doc = new DOMParser().parseFromString(html, 'text/html');
   return doc.body.textContent || '';
 };
 
 // Helper function to format date
 export const formatDate = (dateString: string): string => {
+  if (!dateString) return '';
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
+};
+
+// Helper for more comprehensive date formatting
+export const formatDateWithSchema = (dateString: string): { 
+  display: string; 
+  schema: string; 
+} => {
+  if (!dateString) return { display: '', schema: '' };
+  const date = new Date(dateString);
+  return {
+    display: date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
+    schema: date.toISOString()
+  };
 };
 
 // Get all posts with optional arguments
@@ -96,10 +168,25 @@ export const getPosts = async (args: {
   search?: string;
   slug?: string;
   tags?: number[];
+  orderBy?: string;
+  order?: 'asc' | 'desc';
+  before?: string;
+  after?: string;
 } = {}): Promise<Post[]> => {
-  const { page = 1, perPage = 10, categories, search, slug, tags } = args;
+  const { 
+    page = 1, 
+    perPage = 10, 
+    categories, 
+    search, 
+    slug, 
+    tags,
+    orderBy = 'date',
+    order = 'desc',
+    before,
+    after
+  } = args;
   
-  let url = `${API_URL}/posts?_embed&page=${page}&per_page=${perPage}`;
+  let url = `${API_URL}/posts?_embed&page=${page}&per_page=${perPage}&orderby=${orderBy}&order=${order}`;
   
   if (categories && categories.length > 0) {
     url += `&categories=${categories.join(',')}`;
@@ -115,6 +202,14 @@ export const getPosts = async (args: {
   
   if (slug) {
     url += `&slug=${encodeURIComponent(slug)}`;
+  }
+  
+  if (before) {
+    url += `&before=${encodeURIComponent(before)}`;
+  }
+  
+  if (after) {
+    url += `&after=${encodeURIComponent(after)}`;
   }
   
   try {
@@ -184,24 +279,30 @@ export const getPostsByCategory = async (
   categorySlug: string,
   page: number = 1,
   perPage: number = 10
-): Promise<{ posts: Post[]; category: Category | null }> => {
+): Promise<{ posts: Post[]; category: Category | null; totalPages: number }> => {
   try {
     const category = await getCategoryBySlug(categorySlug);
     
     if (!category) {
-      return { posts: [], category: null };
+      return { posts: [], category: null, totalPages: 0 };
     }
     
-    const posts = await getPosts({
-      categories: [category.id],
-      page,
-      perPage,
-    });
+    const response = await fetch(`${API_URL}/posts?_embed&categories=${category.id}&page=${page}&per_page=${perPage}`);
     
-    return { posts, category };
+    if (!response.ok) {
+      throw new Error(`Failed to fetch posts for category ${categorySlug}: ${response.status}`);
+    }
+    
+    const posts: Post[] = await response.json();
+    
+    // Extract total pages from headers
+    const totalPosts = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '0', 10);
+    
+    return { posts, category, totalPages };
   } catch (error) {
     console.error(`Error fetching posts for category ${categorySlug}:`, error);
-    return { posts: [], category: null };
+    return { posts: [], category: null, totalPages: 0 };
   }
 };
 
@@ -233,7 +334,7 @@ export const getPostsByTag = async (
   tagSlug: string,
   page: number = 1,
   perPage: number = 10
-): Promise<Post[]> => {
+): Promise<{ posts: Post[]; totalPages: number }> => {
   try {
     const response = await fetch(`${API_URL}/tags?slug=${encodeURIComponent(tagSlug)}`);
     
@@ -243,20 +344,25 @@ export const getPostsByTag = async (
     
     const tags = await response.json();
     if (tags.length === 0) {
-      return [];
+      return { posts: [], totalPages: 0 };
     }
     
     const tagId = tags[0].id;
-    const posts = await getPosts({
-      tags: [tagId],
-      page,
-      perPage,
-    });
+    const postsResponse = await fetch(`${API_URL}/posts?_embed&tags=${tagId}&page=${page}&per_page=${perPage}`);
     
-    return posts;
+    if (!postsResponse.ok) {
+      throw new Error(`Failed to fetch posts for tag ${tagSlug}: ${postsResponse.status}`);
+    }
+    
+    const posts: Post[] = await postsResponse.json();
+    
+    // Extract total pages from headers
+    const totalPages = parseInt(postsResponse.headers.get('X-WP-TotalPages') || '0', 10);
+    
+    return { posts, totalPages };
   } catch (error) {
     console.error(`Error fetching posts for tag ${tagSlug}:`, error);
-    return [];
+    return { posts: [], totalPages: 0 };
   }
 };
 
@@ -277,18 +383,77 @@ export const getMenu = async (menuSlug: string = 'main-menu'): Promise<Menu | nu
   }
 };
 
+// Get trending posts 
+export const getTrendingPosts = async (count: number = 5): Promise<Post[]> => {
+  try {
+    // For now, we'll mimic trending posts by getting the most recent
+    // In a real implementation, you might use view counts or other metrics
+    return getPosts({ 
+      perPage: count,
+      orderBy: 'date',
+      order: 'desc'
+    });
+  } catch (error) {
+    console.error('Error fetching trending posts:', error);
+    return [];
+  }
+};
+
+// Get featured posts
+export const getFeaturedPosts = async (count: number = 6): Promise<Post[]> => {
+  try {
+    // In a real implementation, you might have a "featured" tag or category
+    // For now, we'll use the most recent posts
+    return getPosts({
+      perPage: count, 
+      orderBy: 'date', 
+      order: 'desc'
+    });
+  } catch (error) {
+    console.error('Error fetching featured posts:', error);
+    return [];
+  }
+};
+
 // Helper to transform WordPress post to simplified format
 export const transformPost = (post: Post) => {
   if (!post) return null;
   
-  const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'placeholder.svg';
+  const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
+  const featuredImage = featuredMedia?.source_url || '/placeholder.svg';
+  const featuredImageAlt = featuredMedia?.alt_text || '';
+  
   const categories = post._embedded?.['wp:term']?.[0] || [];
   const category = categories.length > 0 ? categories[0] : { name: 'Uncategorized', slug: 'uncategorized' };
+  
+  const tags = post._embedded?.['wp:term']?.[1] || [];
+  
+  // Get author information
+  const author = post._embedded?.author?.[0]?.name || 'Jeff HonForLoco';
   
   // Ensure we're handling the excerpt and content correctly
   const excerpt = typeof post.excerpt === 'string' ? post.excerpt : post.excerpt?.rendered || '';
   const content = typeof post.content === 'string' ? post.content : post.content?.rendered || '';
   const title = typeof post.title === 'string' ? post.title : post.title?.rendered || '';
+
+  // Get modified date if available
+  const modified = post.modified || post.date;
+  
+  // Format both dates
+  const formattedDate = formatDate(post.date);
+  const formattedModified = formatDate(modified);
+  
+  // Get SEO data from Yoast if available
+  const seoTitle = post.yoast_head_json?.title || title;
+  const seoDescription = post.yoast_head_json?.description || stripHtml(excerpt).substring(0, 160);
+  const seoCanonical = post.yoast_head_json?.canonical || `https://www.jeffhonforloco.com/post/${post.slug}`;
+  const seoRobots = post.yoast_head_json?.robots || { index: 'index', follow: 'follow' };
+  
+  // Calculate word count for content
+  const wordCount = stripHtml(content).split(/\s+/).length;
+  
+  // Calculate reading time (average 225 words per minute)
+  const readingTime = Math.ceil(wordCount / 225);
 
   return {
     id: post.id,
@@ -297,9 +462,23 @@ export const transformPost = (post: Post) => {
     excerpt: excerpt,
     content: content,
     featuredImage,
+    featuredImageAlt,
     category: category.name,
     categorySlug: category.slug,
-    date: formatDate(post.date),
+    tags: tags.map(tag => tag.name),
+    tagSlugs: tags.map(tag => tag.slug),
+    author,
+    date: formattedDate,
+    modified: formattedModified,
     rawDate: post.date,
+    rawModified: modified,
+    wordCount,
+    readingTime: `${readingTime} min read`,
+    seo: {
+      title: seoTitle,
+      description: seoDescription,
+      canonical: seoCanonical,
+      robots: seoRobots
+    }
   };
 };

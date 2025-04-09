@@ -1,10 +1,10 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import SEO from '../components/shared/SEO';
 import PostCard from '../components/blog/PostCard';
-import { Calendar, Clock, Share2, Facebook, Twitter, Linkedin, Copy } from 'lucide-react';
+import { Calendar, Clock, Share2, Facebook, Twitter, Linkedin, Copy, AlertTriangle } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import AdSection from '../components/home/AdSection';
 import { getPostBySlug, getPosts, transformPost } from '../lib/wordpress';
@@ -22,6 +22,9 @@ interface TransformedPost {
   featuredImage: string;
   date: string;
   rawDate: string;
+  tags?: string[];
+  readingTime?: string;
+  wordCount?: number;
 }
 
 const SinglePost = () => {
@@ -32,6 +35,41 @@ const SinglePost = () => {
   const [post, setPost] = useState<TransformedPost | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<TransformedPost[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Calculate reading time based on content
+  const calculateReadingTime = useCallback((content: string): { minutes: string, count: number } => {
+    const text = content.replace(/<[^>]*>/g, '');
+    const wordCount = text.split(/\s+/).length;
+    const readingTime = Math.ceil(wordCount / 225); // Average reading speed
+    return { 
+      minutes: `${readingTime} min read`,
+      count: wordCount
+    };
+  }, []);
+  
+  // Extract tags from content
+  const extractKeywords = useCallback((content: string, title: string, category: string): string[] => {
+    // Combine all text
+    const allText = `${title} ${category} ${content.replace(/<[^>]*>/g, '')}`;
+    
+    // Get all words
+    const words = allText.toLowerCase().split(/\W+/).filter(word => 
+      word.length > 3 && 
+      !['this', 'that', 'with', 'from', 'have', 'more', 'other'].includes(word)
+    );
+    
+    // Count occurrences
+    const wordCounts: Record<string, number> = {};
+    words.forEach(word => {
+      wordCounts[word] = (wordCounts[word] || 0) + 1;
+    });
+    
+    // Get top 5 keywords
+    return Object.entries(wordCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([word]) => word);
+  }, []);
   
   useEffect(() => {
     const fetchPost = async () => {
@@ -45,7 +83,21 @@ const SinglePost = () => {
         }
         
         const transformedPost = transformPost(fetchedPost);
-        setPost(transformedPost);
+        if (!transformedPost) {
+          navigate('/404');
+          return;
+        }
+        
+        // Calculate reading time and extract tags
+        const { minutes, count } = calculateReadingTime(transformedPost.content);
+        const keywords = extractKeywords(transformedPost.content, transformedPost.title, transformedPost.category);
+        
+        setPost({
+          ...transformedPost,
+          readingTime: minutes,
+          wordCount: count,
+          tags: keywords
+        });
         
         // Fetch related posts from the same category
         const categoryId = fetchedPost._embedded?.['wp:term']?.[0]?.[0]?.id;
@@ -58,19 +110,34 @@ const SinglePost = () => {
           // Filter out the current post
           const filteredRelatedPosts = relatedPostsData
             .filter(p => p.id !== fetchedPost.id)
-            .map(transformPost);
+            .map(transformPost)
+            .filter(Boolean) as TransformedPost[];
           
           setRelatedPosts(filteredRelatedPosts);
         }
+        
+        // Add structured data to the page
+        document.title = `${transformedPost.title} | Jeff HonForLoco`;
+        
+        // Log page view for analytics (if implemented)
+        console.log(`Page view: ${transformedPost.title}`);
       } catch (error) {
         console.error('Error fetching post:', error);
+        toast({
+          title: "Error loading article",
+          description: "We couldn't load the article you requested. Please try again.",
+          variant: "destructive"
+        });
       } finally {
         setLoading(false);
       }
     };
     
     fetchPost();
-  }, [slug, navigate]);
+    
+    // Scroll to top when navigating to a new post
+    window.scrollTo(0, 0);
+  }, [slug, navigate, toast, calculateReadingTime, extractKeywords]);
   
   const copyToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -101,7 +168,7 @@ const SinglePost = () => {
         return;
     }
     
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
   
   if (loading) {
@@ -145,14 +212,28 @@ const SinglePost = () => {
     <Layout>
       <SEO 
         title={post.title}
-        description={post.excerpt}
+        description={post.excerpt.replace(/<[^>]*>/g, '').substring(0, 160)}
         type="article"
         image={post.featuredImage}
         publishedAt={post.rawDate}
+        updatedAt={post.rawDate}
         category={post.category}
+        tags={post.tags}
+        readingTime={post.readingTime}
+        wordCount={post.wordCount}
+        keywords={post.tags?.join(', ')}
+        canonical={`https://www.jeffhonforloco.com/post/${post.slug}`}
       />
       
-      <article className="pt-24 pb-16 bg-enfroy-bg">
+      <article className="pt-24 pb-16 bg-enfroy-bg" itemScope itemType="https://schema.org/BlogPosting">
+        {/* Hidden schema.org metadata */}
+        <meta itemProp="headline" content={post.title} />
+        <meta itemProp="author" content="Jeff HonForLoco" />
+        <meta itemProp="datePublished" content={post.rawDate} />
+        <meta itemProp="dateModified" content={post.rawDate} />
+        <meta itemProp="image" content={post.featuredImage} />
+        <meta itemProp="publisher" content="Jeff HonForLoco" />
+        
         {/* Post Header */}
         <header className="container-lg mb-10">
           <div className="max-w-4xl mx-auto">
@@ -163,7 +244,7 @@ const SinglePost = () => {
               {post.category}
             </Link>
             
-            <h1 className="font-serif text-4xl md:text-5xl font-bold mb-6 text-enfroy-text leading-tight">{post.title}</h1>
+            <h1 className="font-serif text-4xl md:text-5xl font-bold mb-6 text-enfroy-text leading-tight" itemProp="headline">{post.title}</h1>
             
             <div className="flex items-center justify-between flex-wrap gap-4 text-enfroy-secondary">
               <div className="flex items-center">
@@ -171,8 +252,14 @@ const SinglePost = () => {
                   <div className="flex items-center text-sm">
                     <span className="flex items-center mr-4">
                       <Calendar className="h-4 w-4 mr-1" />
-                      {post.date}
+                      <time dateTime={post.rawDate} itemProp="datePublished">{post.date}</time>
                     </span>
+                    {post.readingTime && (
+                      <span className="flex items-center">
+                        <Clock className="h-4 w-4 mr-1" />
+                        {post.readingTime}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -214,13 +301,14 @@ const SinglePost = () => {
         {/* Featured Image */}
         <div className="container-lg mb-10">
           <div className="max-w-5xl mx-auto">
-            <div className="aspect-[16/9] rounded-lg overflow-hidden shadow-md">
+            <figure className="aspect-[16/9] rounded-lg overflow-hidden shadow-md">
               <img 
                 src={post.featuredImage}
                 alt={post.title}
                 className="w-full h-full object-cover"
+                itemProp="image"
               />
-            </div>
+            </figure>
           </div>
         </div>
         
@@ -230,9 +318,30 @@ const SinglePost = () => {
             <div 
               className="article-content"
               dangerouslySetInnerHTML={{ __html: post.content }}
+              itemProp="articleBody"
             />
           </div>
         </div>
+        
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="container-lg mb-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex flex-wrap gap-2">
+                <span className="text-sm font-medium text-enfroy-secondary">Tags:</span>
+                {post.tags.map(tag => (
+                  <Link 
+                    key={tag} 
+                    to={`/tag/${tag}`}
+                    className="text-sm bg-enfroy-accent px-3 py-1 rounded-full text-enfroy-text hover:bg-enfroy-border transition-colors"
+                  >
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Share & Tags */}
         <div className="container-lg border-t border-b border-enfroy-border py-6 mb-12">

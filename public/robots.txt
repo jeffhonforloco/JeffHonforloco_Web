@@ -1,7 +1,18 @@
+
+User-agent: *
+Allow: /
+
+# Allow all crawlers
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
+Allow: /
+
+User-agent: Yandexbot
+Allow: /
+
+User-agent: Baiduspider
 Allow: /
 
 User-agent: Twitterbot
@@ -10,5 +21,9 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# Sitemap location
+Sitemap: https://www.jeffhonforloco.com/sitemap.xml
+
+# Specify crawl delay for bots (optional)
 User-agent: *
-Allow: /
+Crawl-delay: 10
