@@ -61,6 +61,14 @@ const Index = () => {
     script.text = JSON.stringify(structuredData);
     document.head.appendChild(script);
 
+    // For testing, clear previously set local storage values for popups
+    if (process.env.NODE_ENV === 'development') {
+      localStorage.removeItem('newsletter-subscribed');
+      localStorage.removeItem('ebook-downloaded');
+      localStorage.removeItem('ebook-popup-shown');
+      console.log('Reset popup state for testing');
+    }
+
     // Clean up
     return () => {
       const script = document.getElementById('homepage-structured-data');

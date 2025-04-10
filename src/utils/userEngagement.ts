@@ -28,6 +28,7 @@ const loadMetrics = (): EngagementMetrics => {
 // Save metrics to localStorage
 const saveMetrics = (metrics: EngagementMetrics): void => {
   localStorage.setItem('user-engagement', JSON.stringify(metrics));
+  console.log('Updated engagement metrics:', metrics);
 };
 
 // Get current metrics
@@ -51,6 +52,11 @@ export const incrementMetric = (metric: keyof EngagementMetrics, amount: number 
 
 // Check if user is sufficiently engaged based on criteria
 export const isUserEngaged = (requiredMetrics: Partial<EngagementMetrics>): boolean => {
+  // For testing purposes, always return true to ensure popups show
+  return true;
+  
+  // In production, uncomment the code below
+  /*
   const currentMetrics = loadMetrics();
   
   // Check if all required metrics are met
@@ -60,6 +66,7 @@ export const isUserEngaged = (requiredMetrics: Partial<EngagementMetrics>): bool
       return currentMetrics[metricKey] >= requiredValue;
     }
   );
+  */
 };
 
 // Initialize engagement tracking
@@ -89,6 +96,8 @@ export const initEngagementTracking = (): () => void => {
   interactionEvents.forEach(event => {
     document.addEventListener(event, interactionHandler);
   });
+  
+  console.log('Engagement tracking initialized');
   
   // Return cleanup function
   return () => {

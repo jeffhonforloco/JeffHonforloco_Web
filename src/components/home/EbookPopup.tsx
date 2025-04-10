@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { subscribeEmail } from '@/utils/emailService';
-import { isUserEngaged, initEngagementTracking } from '@/utils/userEngagement';
+import { isUserEngaged } from '@/utils/userEngagement';
 
 const EbookPopup = () => {
   const [open, setOpen] = useState(false);
@@ -23,29 +23,24 @@ const EbookPopup = () => {
   const { toast } = useToast();
   
   useEffect(() => {
-    // Initialize engagement tracking
-    const cleanupTracking = initEngagementTracking();
-    
-    // Show popup after engagement criteria are met and timeout
+    // Show popup after a short timeout - simplified for testing
     const timer = setTimeout(() => {
       // Check if user has already downloaded the ebook
       const hasDownloaded = localStorage.getItem('ebook-downloaded');
       
-      // Only show if they haven't downloaded and are engaged
-      if (!hasDownloaded && isUserEngaged({
-        timeOnPage: 20, // At least 20 seconds on page
-        scrollPercentage: 15, // Scrolled at least 15% of the page
-        interactionCount: 2  // Had at least 2 interactions
-      })) {
+      // For testing - always show popup unless downloaded
+      if (!hasDownloaded) {
         // Mark that we've shown the ebook popup to properly space them
         localStorage.setItem('ebook-popup-shown', Date.now().toString());
         setOpen(true);
+        console.log('Ebook popup triggered');
+      } else {
+        console.log('Ebook already downloaded, popup not shown');
       }
-    }, 8000);
+    }, 5000); // Reduced to 5 seconds for testing
 
     return () => {
       clearTimeout(timer);
-      cleanupTracking();
     };
   }, []);
 
