@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { 
   Facebook, Instagram, Youtube, Linkedin, 
   Twitter, Share2, ExternalLink,
-  ChevronLeft, ChevronRight, PinterestIcon 
+  ChevronLeft, ChevronRight, Pinterest 
 } from 'lucide-react';
 import TiktokIcon from '../icons/TiktokIcon';
 import { 

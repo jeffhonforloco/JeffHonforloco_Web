@@ -26,6 +26,7 @@ const TiktokIcon: React.FC<TiktokIconProps> = ({
       className={className}
     >
       <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+      <path d="M15 9V7a5 5 0 0 0-5-5"></path>
     </svg>
   );
 };

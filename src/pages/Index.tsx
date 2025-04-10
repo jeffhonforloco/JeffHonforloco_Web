@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
@@ -13,6 +12,7 @@ import TrendingArticles from '../components/home/TrendingArticles';
 import EbookPopup from '../components/home/EbookPopup';
 import NewsletterPopup from '../components/home/NewsletterPopup';
 import SocialMediaFeed from '../components/home/SocialMediaFeed';
+import SocialMediaIcons from '../components/home/SocialMediaIcons';
 import { initEngagementTracking } from '@/utils/userEngagement';
 import { ArrowUp } from 'lucide-react';
 
@@ -21,14 +21,12 @@ const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   
   useEffect(() => {
-    // Handle scroll events
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 500);
     };
     
     window.addEventListener('scroll', handleScroll);
     
-    // Set loaded state after a short delay for animations
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
@@ -40,7 +38,6 @@ const Index = () => {
   }, []);
   
   useEffect(() => {
-    // Initialize engagement tracking with proper error handling
     let cleanupTracking: (() => void) | undefined;
     
     try {
@@ -50,7 +47,6 @@ const Index = () => {
       console.error('Error initializing engagement tracking:', error);
     }
     
-    // Add structured data directly to the page
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
@@ -90,20 +86,17 @@ const Index = () => {
     };
 
     try {
-      // Remove any existing script tags with the same ID
       const existingScript = document.getElementById('homepage-structured-data');
       if (existingScript) {
         existingScript.remove();
       }
   
-      // Add the new script tag
       const script = document.createElement('script');
       script.id = 'homepage-structured-data';
       script.type = 'application/ld+json';
       script.text = JSON.stringify(structuredData);
       document.head.appendChild(script);
   
-      // For testing, clear previously set local storage values for popups
       if (process.env.NODE_ENV === 'development') {
         localStorage.removeItem('newsletter-subscribed');
         localStorage.removeItem('ebook-downloaded');
@@ -112,13 +105,11 @@ const Index = () => {
         console.log('Reset popup state and content section tracking for testing');
       }
   
-      // Mark content sections as loaded for dynamic content
       localStorage.setItem('content-sections-loaded', 'true');
     } catch (error) {
       console.error('Error setting up structured data:', error);
     }
 
-    // Clean up
     return () => {
       try {
         const script = document.getElementById('homepage-structured-data');
@@ -152,7 +143,6 @@ const Index = () => {
         type="website"
       />
       
-      {/* Scroll to top button */}
       {showScrollTop && (
         <button
           className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-gold text-white shadow-lg hover:bg-gold/90 transition-all duration-300"
@@ -179,7 +169,10 @@ const Index = () => {
         <TrendingArticles />
       </div>
       
-      {/* Add the Social Media Feed section here */}
+      <div>
+        <SocialMediaIcons />
+      </div>
+      
       <div>
         <SocialMediaFeed />
       </div>
