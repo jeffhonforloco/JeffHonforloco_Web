@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getPageBySlug, getPostsByCategory, getCategoryBySlug, getPosts, getPostBySlug } from '@/lib/wordpress';
@@ -24,32 +23,25 @@ const DynamicWordPressPage = () => {
   const [pageDescription, setPageDescription] = useState('');
   const [pageKeywords, setPageKeywords] = useState<string[]>([]);
 
-  // Extract path segments to determine what type of content to fetch
   const pathSegments = location.pathname.split('/').filter(Boolean);
   const contentType = pathSegments[0];
   const contentSlug = slug || categorySlug || storySlug || guideSlug || recommendationSlug || resourceSlug || affiliateSlug || pathSegments[pathSegments.length - 1];
 
-  // Extract category from query params if present
   const searchParams = new URLSearchParams(location.search);
   const categoryParam = searchParams.get('category');
 
-  // Generate canonical URL
   const canonicalUrl = getCanonicalUrl(location.pathname);
 
-  // Log current path info for debugging
   console.log(`DynamicWordPressPage: Path: ${location.pathname}, Type: ${contentType}, Slug: ${contentSlug}`);
 
   useEffect(() => {
-    // Skip fetching if we're on a special route like /404
     if (location.pathname === '/404') {
       setLoading(false);
       return;
     }
 
-    // Track page view
     console.log(`Dynamic page view: ${location.pathname}`);
 
-    // Track content section views for analytics
     if (contentType === 'stories' || contentType === 'story') {
       trackSectionView('stories');
     } else if (contentType === 'affiliate') {
@@ -68,7 +60,6 @@ const DynamicWordPressPage = () => {
         console.log(`Fetching content for path: ${location.pathname}`);
         console.log(`Content type: ${contentType}, slug: ${contentSlug}`);
         
-        // Special handling for specific content types (stories, affiliate, recommendations, resources)
         if (['stories', 'story', 'affiliate', 'recommendations', 'recommendation', 'resources', 'resource'].includes(contentType)) {
           console.log(`Special content type detected: ${contentType}`);
           
@@ -110,7 +101,6 @@ const DynamicWordPressPage = () => {
               break;
           }
           
-          // Try to fetch a specific page for this content type first
           const specificPage = await getPageBySlug(`${contentType}/${contentSlug || ''}`);
           
           if (specificPage) {
@@ -118,17 +108,17 @@ const DynamicWordPressPage = () => {
             setContent(specificPage);
             setPageType('page');
             
-            // Extract page title and description for SEO
             const pageTitle = specificPage.title?.rendered || specificPage.title || '';
             const pageContent = specificPage.content?.rendered || '';
             const pageExcerpt = specificPage.excerpt?.rendered || '';
             
-            setPageTitle(pageTitle);
-            setPageDescription(pageExcerpt.replace(/<[^>]*>/g, '').substring(0, 160));
+            setPageTitle(typeof pageTitle === 'string' ? pageTitle : pageTitle.rendered || '');
+            setPageDescription(typeof pageExcerpt === 'string' ? pageExcerpt.substring(0, 160) : pageExcerpt.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || '');
             
-            // Extract keywords from content
             if (pageContent) {
-              const keywords = extractKeywords(pageContent, pageTitle, '');
+              const keywords = extractKeywords(typeof pageContent === 'string' ? pageContent : pageContent.rendered || '', 
+                                             typeof pageTitle === 'string' ? pageTitle : pageTitle.rendered || '', 
+                                             '');
               setPageKeywords(keywords);
             }
             
@@ -136,7 +126,6 @@ const DynamicWordPressPage = () => {
             return;
           }
           
-          // If no specific page, fetch related posts
           console.log(`Fetching posts for ${contentType} with search query: ${searchQuery}`);
           const fetchedPosts = await getPosts({ 
             search: searchQuery, 
@@ -157,14 +146,12 @@ const DynamicWordPressPage = () => {
           } else {
             console.log(`No posts found for ${contentType}. Creating default content.`);
             
-            // Create default content for this section if no posts found
             setPageTitle(sectionTitle);
             setPageDescription(sectionDescription);
             setPageKeywords([contentType, 'jeff honforloco', 'blog']);
             setPageType(pageTypeValue);
-            setPosts([]); // Empty posts array
+            setPosts([]);
             
-            // Set a simple content object with title and description
             setContent({
               title: { rendered: sectionTitle },
               content: { rendered: `<p>${sectionDescription}</p><p>Content for this section is coming soon. Check back later for updates!</p>` }
@@ -175,7 +162,6 @@ const DynamicWordPressPage = () => {
           }
         }
         
-        // Special case for post URLs (handle /post/slug directly)
         if (contentType === 'post' && contentSlug) {
           console.log(`Trying to fetch post with slug: ${contentSlug}`);
           const post = await getPostBySlug(contentSlug);
@@ -185,7 +171,6 @@ const DynamicWordPressPage = () => {
             setContent(post);
             setPageType('post');
             
-            // Set SEO information
             const postTitle = post.title?.rendered || '';
             const postContent = post.content?.rendered || '';
             const postExcerpt = post.excerpt?.rendered || '';
@@ -193,7 +178,6 @@ const DynamicWordPressPage = () => {
             setPageTitle(postTitle);
             setPageDescription(postExcerpt.replace(/<[^>]*>/g, '').substring(0, 160));
             
-            // Extract keywords
             if (postContent) {
               const keywords = extractKeywords(postContent, postTitle, '');
               setPageKeywords(keywords);
@@ -204,9 +188,7 @@ const DynamicWordPressPage = () => {
           }
         }
         
-        // Special case for nested paths like travel/budget-tips
         if (pathSegments.length >= 2) {
-          // Try with the full path first (minus leading slash)
           const fullPath = location.pathname.startsWith('/') ? location.pathname.substring(1) : location.pathname;
           console.log(`Trying to fetch page with full path: ${fullPath}`);
           const pageByFullPath = await getPageBySlug(fullPath);
@@ -231,8 +213,6 @@ const DynamicWordPressPage = () => {
             return;
           }
           
-          // If not found, try with parent/child combination
-          // For example, for /travel/budget-tips, try "travel-budget-tips"
           const combinedSlug = pathSegments.join('-');
           console.log(`Trying to fetch page with combined slug: ${combinedSlug}`);
           const pageByCombinedSlug = await getPageBySlug(combinedSlug);
@@ -257,7 +237,6 @@ const DynamicWordPressPage = () => {
             return;
           }
           
-          // For travel/tips type pages, redirect to the dedicated TravelTips component
           if (pathSegments[0] === 'travel' && (pathSegments[1] === 'tips' || pathSegments[1] === 'budget-tips')) {
             const tipCategory = pathSegments[2] || (pathSegments[1] === 'budget-tips' ? 'budget' : '');
             if (tipCategory) {
@@ -269,20 +248,16 @@ const DynamicWordPressPage = () => {
           }
         }
         
-        // Try to fetch as a page first
         let pageResult;
         
-        // Try with the direct slug
         if (contentSlug) {
           pageResult = await getPageBySlug(contentSlug);
         }
         
-        // If not found and we have a content type and slug, try with a combined path
         if (!pageResult && contentType && contentSlug && contentType !== contentSlug) {
           pageResult = await getPageBySlug(`${contentType}/${contentSlug}`);
         }
         
-        // If still not found, try with the full path minus the leading slash
         if (!pageResult && location.pathname) {
           const fullPath = location.pathname.startsWith('/') ? location.pathname.substring(1) : location.pathname;
           pageResult = await getPageBySlug(fullPath);
@@ -293,7 +268,6 @@ const DynamicWordPressPage = () => {
           setContent(pageResult);
           setPageType('page');
           
-          // Extract page title and description for SEO
           const pageTitle = pageResult.title?.rendered || pageResult.title || '';
           const pageContent = pageResult.content?.rendered || '';
           const pageExcerpt = pageResult.excerpt?.rendered || '';
@@ -301,7 +275,6 @@ const DynamicWordPressPage = () => {
           setPageTitle(pageTitle);
           setPageDescription(pageExcerpt.replace(/<[^>]*>/g, '').substring(0, 160));
           
-          // Extract keywords from content
           if (pageContent) {
             const keywords = extractKeywords(pageContent, pageTitle, '');
             setPageKeywords(keywords);
@@ -311,7 +284,6 @@ const DynamicWordPressPage = () => {
           return;
         }
         
-        // If not found as page, try as category
         let categoryToUse = categoryParam || contentSlug;
         
         if (categoryToUse) {
@@ -324,7 +296,6 @@ const DynamicWordPressPage = () => {
             setPosts(categoryPosts);
             setPageType('category');
             
-            // Set SEO information for category
             setPageTitle(category.name);
             setPageDescription(category.description || `Browse all posts in ${category.name}`);
             setPageKeywords([category.name.toLowerCase(), 'blog', 'articles', 'posts']);
@@ -333,8 +304,7 @@ const DynamicWordPressPage = () => {
             return;
           }
         }
-
-        // Special handling for common sections where we should display posts with specific types or tags
+        
         if (contentType) {
           let sectionTitle = '';
           let searchQuery = '';
@@ -365,7 +335,6 @@ const DynamicWordPressPage = () => {
           }
         }
         
-        // If we get here, nothing was found
         console.error(`Content not found for ${location.pathname}`);
         setError(`The requested content was not found.`);
         toast({
@@ -389,14 +358,12 @@ const DynamicWordPressPage = () => {
     fetchContent();
   }, [location.pathname, categoryParam, contentSlug, contentType, toast, navigate, pathSegments]);
 
-  // Handle error state - Use useEffect for navigation to prevent render-phase updates
   useEffect(() => {
     if (error && !loading && location.pathname !== '/404') {
       navigate('/404', { replace: true });
     }
   }, [error, loading, navigate, location.pathname]);
 
-  // Add structured data
   useEffect(() => {
     if (!loading && pageType && pageTitle) {
       let structuredData: any = null;
@@ -439,13 +406,11 @@ const DynamicWordPressPage = () => {
       }
       
       if (structuredData) {
-        // Remove any existing script tags with the same ID
         const existingScript = document.getElementById('dynamic-page-structured-data');
         if (existingScript) {
           existingScript.remove();
         }
 
-        // Add the new script tag
         const script = document.createElement('script');
         script.id = 'dynamic-page-structured-data';
         script.type = 'application/ld+json';
@@ -453,7 +418,6 @@ const DynamicWordPressPage = () => {
         document.head.appendChild(script);
       }
       
-      // Clean up
       return () => {
         const script = document.getElementById('dynamic-page-structured-data');
         if (script) {
@@ -463,7 +427,6 @@ const DynamicWordPressPage = () => {
     }
   }, [loading, pageType, pageTitle, pageDescription, canonicalUrl, posts, content]);
 
-  // Handle loading state
   if (loading) {
     return (
       <Layout>
@@ -475,13 +438,11 @@ const DynamicWordPressPage = () => {
     );
   }
 
-  // Render special content types with appropriate styling and layout
   if (['story', 'affiliate', 'recommendation', 'resource'].includes(pageType as string) && posts.length > 0) {
     let sectionTitle = pageTitle;
     let sectionDescription = pageDescription;
     let sectionIcon = null;
     
-    // Select appropriate icon or styling based on pageType
     switch (pageType) {
       case 'story':
         sectionIcon = "📖";
@@ -522,9 +483,7 @@ const DynamicWordPressPage = () => {
     );
   }
 
-  // Render page content
   if (pageType === 'page' && content) {
-    // Safely get the title and content
     const title = typeof content.title === 'string' ? content.title : content.title?.rendered || '';
     const contentHtml = typeof content.content === 'string' ? content.content : content.content?.rendered || '';
     
@@ -547,9 +506,7 @@ const DynamicWordPressPage = () => {
     );
   }
 
-  // Render post content directly in the dynamic page component
   if (pageType === 'post' && content) {
-    // Use similar rendering as in the SinglePost component
     const title = typeof content.title === 'string' ? content.title : content.title?.rendered || '';
     const contentHtml = typeof content.content === 'string' ? content.content : content.content?.rendered || '';
     const excerpt = typeof content.excerpt === 'string' ? content.excerpt : content.excerpt?.rendered || '';
@@ -591,7 +548,6 @@ const DynamicWordPressPage = () => {
     );
   }
 
-  // Render category/archive page
   if (pageType === 'category' && content) {
     return (
       <Layout>
@@ -623,7 +579,6 @@ const DynamicWordPressPage = () => {
     );
   }
 
-  // Render posts section (for guides, etc.)
   if (pageType === 'posts' && posts.length > 0) {
     return (
       <Layout>
@@ -646,12 +601,10 @@ const DynamicWordPressPage = () => {
     );
   }
 
-  // Return empty fragment if we're navigating away due to an error
   if (error) {
     return null;
   }
 
-  // Fallback
   return (
     <Layout>
       <div className="container max-w-4xl py-12 text-center">

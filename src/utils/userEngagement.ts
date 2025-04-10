@@ -29,7 +29,21 @@ const loadMetrics = (): EngagementMetrics => {
   const saved = localStorage.getItem('user-engagement');
   if (saved) {
     try {
-      return JSON.parse(saved);
+      const parsedMetrics = JSON.parse(saved);
+      
+      // Ensure the metrics object has all required properties
+      // This handles cases where the saved metrics might be missing properties
+      return {
+        timeOnPage: parsedMetrics.timeOnPage || 0,
+        scrollPercentage: parsedMetrics.scrollPercentage || 0,
+        interactionCount: parsedMetrics.interactionCount || 0,
+        sectionViews: {
+          stories: parsedMetrics.sectionViews?.stories || 0,
+          affiliate: parsedMetrics.sectionViews?.affiliate || 0,
+          recommendations: parsedMetrics.sectionViews?.recommendations || 0,
+          resources: parsedMetrics.sectionViews?.resources || 0
+        }
+      };
     } catch (e) {
       console.error('Error loading engagement metrics:', e);
     }
@@ -61,10 +75,28 @@ export const updateMetric = (metric: keyof EngagementMetrics, value: number | ob
 
 // Track section view
 export const trackSectionView = (section: keyof EngagementMetrics['sectionViews']): void => {
-  const metrics = loadMetrics();
-  metrics.sectionViews[section]++;
-  saveMetrics(metrics);
-  console.log(`Tracked view of ${section} section`);
+  try {
+    const metrics = loadMetrics();
+    
+    // Make sure sectionViews exists and has the right structure
+    if (!metrics.sectionViews) {
+      metrics.sectionViews = { ...DEFAULT_METRICS.sectionViews };
+    }
+    
+    // Ensure the specific section counter exists
+    if (typeof metrics.sectionViews[section] !== 'number') {
+      metrics.sectionViews[section] = 0;
+    }
+    
+    metrics.sectionViews[section]++;
+    saveMetrics(metrics);
+    console.log(`Tracked view of ${section} section`);
+  } catch (error) {
+    console.error(`Error tracking section view for ${section}:`, error);
+    // Reset the metrics to resolve persistent errors
+    localStorage.removeItem('user-engagement');
+    saveMetrics({ ...DEFAULT_METRICS });
+  }
 };
 
 // Increment a metric by a given amount (default: 1)
