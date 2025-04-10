@@ -11,6 +11,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { subscribeEmail } from '@/utils/emailService';
 
 const EbookPopup = () => {
   const [open, setOpen] = useState(false);
@@ -38,23 +39,29 @@ const EbookPopup = () => {
     setIsSubmitting(true);
     
     try {
-      // In a real app, this would be an API call to your email service
-      // Simulating an API call with setTimeout
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Use the email service to store the subscription
+      const success = await subscribeEmail(
+        email,
+        'ebook-popup',
+        name,
+        ['ebook', 'lead-magnet', 'ai-money-guide']
+      );
       
-      console.log(`Ebook request from ${name} (${email}) - for "How To Make Money With AI and ChatGPT"`);
-      
-      // Save status to localStorage
-      localStorage.setItem('ebook-downloaded', 'true');
-      
-      // Show download option
-      setHasSubmitted(true);
-      
-      // Show success toast
-      toast({
-        title: "Thank you for subscribing!",
-        description: "Your free ebook is ready to download.",
-      });
+      if (success) {
+        // Save status to localStorage
+        localStorage.setItem('ebook-downloaded', 'true');
+        
+        // Show download option
+        setHasSubmitted(true);
+        
+        // Show success toast
+        toast({
+          title: "Thank you for subscribing!",
+          description: "Your free ebook is ready to download.",
+        });
+      } else {
+        throw new Error("Failed to subscribe");
+      }
     } catch (error) {
       toast({
         title: "Submission failed",

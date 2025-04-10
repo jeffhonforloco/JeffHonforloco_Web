@@ -9,6 +9,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { useToast } from "@/hooks/use-toast";
+import { subscribeEmail } from '@/utils/emailService';
 
 const NewsletterPopup = () => {
   const [open, setOpen] = useState(false);
@@ -37,23 +38,29 @@ const NewsletterPopup = () => {
     setIsSubmitting(true);
     
     try {
-      // In a real app, this would be an API call
-      // Simulating an API call with setTimeout
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Use the email service to store the subscription
+      const success = await subscribeEmail(
+        email,
+        'newsletter-popup',
+        undefined,
+        ['newsletter', 'popup']
+      );
       
-      console.log(`Popup subscription from ${email} sent to info@jeffhonforloco.com`);
-      
-      // Save subscription status to localStorage
-      localStorage.setItem('newsletter-subscribed', 'true');
-      
-      // Close the popup
-      setOpen(false);
-      
-      // Show success toast
-      toast({
-        title: "Subscription successful!",
-        description: "Thank you for subscribing to our newsletter.",
-      });
+      if (success) {
+        // Save subscription status to localStorage
+        localStorage.setItem('newsletter-subscribed', 'true');
+        
+        // Close the popup
+        setOpen(false);
+        
+        // Show success toast
+        toast({
+          title: "Subscription successful!",
+          description: "Thank you for subscribing to our newsletter.",
+        });
+      } else {
+        throw new Error("Failed to subscribe");
+      }
     } catch (error) {
       toast({
         title: "Subscription failed",

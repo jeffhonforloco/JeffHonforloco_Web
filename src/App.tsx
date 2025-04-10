@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,8 +19,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import DynamicWordPressPage from "./pages/DynamicWordPressPage";
+import EmailSubscribers from "./pages/admin/EmailSubscribers";
 
-// Define routes that should be handled by specific components
 const HANDLED_ROUTES = [
   "/", "/blog", "/about", "/contact", "/shop", "/cart", 
   "/travel", "/explore-travel", "/privacy-policy", "/terms-of-service"
@@ -51,6 +50,9 @@ const App = () => (
               <Route path="/explore-travel" element={<ExploreTravel />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              
+              {/* Admin pages */}
+              <Route path="/admin/email-subscribers" element={<EmailSubscribers />} />
               
               {/* Category Pages */}
               <Route path="/category/:categorySlug/*" element={<DynamicWordPressPage />} />

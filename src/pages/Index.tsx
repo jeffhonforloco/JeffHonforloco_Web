@@ -11,6 +11,7 @@ import SEO from '../components/shared/SEO';
 import FeaturedArticle from '../components/home/FeaturedArticle';
 import TrendingArticles from '../components/home/TrendingArticles';
 import EbookPopup from '../components/home/EbookPopup';
+import NewsletterPopup from '../components/home/NewsletterPopup';
 
 const Index = () => {
   useEffect(() => {
@@ -83,6 +84,7 @@ const Index = () => {
       <AdSection />
       <NewsletterCTA />
       <EbookPopup />
+      <NewsletterPopup />
     </Layout>
   );
 };

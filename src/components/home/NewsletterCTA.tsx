@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Mail } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { subscribeEmail } from '@/utils/emailService';
 
 const NewsletterCTA = () => {
   const [email, setEmail] = useState('');
@@ -13,23 +14,26 @@ const NewsletterCTA = () => {
     setIsSubmitting(true);
     
     try {
-      // In a real app, this would be an API call
-      // Simulating an API call with setTimeout
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Use the email service to store the subscription
+      const success = await subscribeEmail(
+        email,
+        'newsletter-footer',
+        undefined,
+        ['newsletter']
+      );
       
-      console.log(`Subscription from ${email} sent to info@jeffhonforloco.com`);
-      
-      // Save subscription status to localStorage
-      localStorage.setItem('newsletter-subscribed', 'true');
-      
-      // Reset form
-      setEmail('');
-      
-      // Show success toast
-      toast({
-        title: "Subscription successful!",
-        description: "Thank you for subscribing to our newsletter.",
-      });
+      if (success) {
+        // Reset form
+        setEmail('');
+        
+        // Show success toast
+        toast({
+          title: "Subscription successful!",
+          description: "Thank you for subscribing to our newsletter.",
+        });
+      } else {
+        throw new Error("Failed to subscribe");
+      }
     } catch (error) {
       toast({
         title: "Subscription failed",
