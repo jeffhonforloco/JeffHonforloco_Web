@@ -126,7 +126,7 @@ const DynamicWordPressPage = () => {
             
             const excerptText = typeof safeExcerpt === 'string' 
               ? safeExcerpt.substring(0, 160) 
-              : (safeExcerpt && typeof safeExcerpt.replace === 'function') 
+              : (typeof safeExcerpt === 'object' && safeExcerpt !== null && 'replace' in safeExcerpt && typeof safeExcerpt.replace === 'function')
                 ? safeExcerpt.replace(/<[^>]*>/g, '').substring(0, 160) 
                 : '';
                 

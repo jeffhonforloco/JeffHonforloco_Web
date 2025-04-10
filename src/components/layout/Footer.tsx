@@ -1,6 +1,11 @@
 
 import React from 'react';
-import { Facebook, Twitter, Instagram, Youtube, Mail } from 'lucide-react';
+import { 
+  Facebook, Twitter, Instagram, Youtube, 
+  Linkedin, PinterestIcon, 
+  MessageCircle, Mail, Globe
+} from 'lucide-react';
+import TiktokIcon from '../icons/TiktokIcon';
 import { Link } from 'react-router-dom';
 
 // Define our main categories for the footer
@@ -10,6 +15,21 @@ const footerCategories = [
   { id: 3, name: "Product Reviews", slug: "product-reviews" },
   { id: 4, name: "How-To Guides", slug: "how-to-guides" },
   { id: 5, name: "Motivation & Stories", slug: "motivation-stories" }
+];
+
+// Social media links
+const socialLinks = [
+  { name: "Facebook", icon: <Facebook className="h-5 w-5" />, url: "https://www.facebook.com/people/Jeff-Honforloco/61551819509232/" },
+  { name: "Instagram", icon: <Instagram className="h-5 w-5" />, url: "https://www.instagram.com/jeffhonforloco" },
+  { name: "TikTok", icon: <TiktokIcon className="h-5 w-5" />, url: "https://www.tiktok.com/@jeffhonforloco" },
+  { name: "Twitter/X", icon: <Twitter className="h-5 w-5" />, url: "https://x.com/jeffhonforloco" },
+  { name: "YouTube", icon: <Youtube className="h-5 w-5" />, url: "https://www.youtube.com/@jeffhonforloco" },
+  { name: "LinkedIn", icon: <Linkedin className="h-5 w-5" />, url: "https://www.linkedin.com/in/jeffhonforloco/" },
+  { name: "Pinterest", icon: <PinterestIcon className="h-5 w-5" />, url: "https://www.pinterest.com/jeffhonforloco/" },
+  { name: "BlueSky", icon: <Globe className="h-5 w-5" />, url: "https://bsky.app/profile/jeffhonforloco.bsky.social" },
+  { name: "Reddit", icon: <MessageCircle className="h-5 w-5" />, url: "https://www.reddit.com/user/jeffhonforloco/" },
+  { name: "Threads", icon: <MessageCircle className="h-5 w-5" />, url: "https://www.threads.net/@jeffhonforloco" },
+  { name: "Tumblr", icon: <MessageCircle className="h-5 w-5" />, url: "https://www.tumblr.com/jeffhonforloco" }
 ];
 
 const Footer = () => {
@@ -34,19 +54,22 @@ const Footer = () => {
             <p className="text-gray-300 mb-6">
               Exploring life through travel, lifestyle, and personal growth experiences.
             </p>
-            <div className="flex space-x-4 justify-center md:justify-start">
-              <a href="https://www.facebook.com/people/Jeff-Honforloco/61551819509232/" className="hover:text-gold transition-colors" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="https://twitter.com" className="hover:text-gold transition-colors" aria-label="Twitter">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="https://instagram.com" className="hover:text-gold transition-colors" aria-label="Instagram">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="https://youtube.com" className="hover:text-gold transition-colors" aria-label="YouTube">
-                <Youtube className="h-5 w-5" />
-              </a>
+            
+            {/* Social Icons */}
+            <div className="grid grid-cols-5 gap-3 mb-6">
+              {socialLinks.slice(0, 10).map((social, index) => (
+                <a 
+                  key={index}
+                  href={social.url} 
+                  className="hover:text-gold transition-colors flex justify-center" 
+                  aria-label={social.name} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  title={social.name}
+                >
+                  {social.icon}
+                </a>
+              ))}
             </div>
           </div>
           

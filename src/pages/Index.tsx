@@ -12,6 +12,7 @@ import FeaturedArticle from '../components/home/FeaturedArticle';
 import TrendingArticles from '../components/home/TrendingArticles';
 import EbookPopup from '../components/home/EbookPopup';
 import NewsletterPopup from '../components/home/NewsletterPopup';
+import SocialMediaFeed from '../components/home/SocialMediaFeed';
 import { initEngagementTracking } from '@/utils/userEngagement';
 import { ArrowUp } from 'lucide-react';
 
@@ -73,6 +74,19 @@ const Index = () => {
         target: 'https://www.jeffhonforloco.com/search?q={search_term_string}',
         'query-input': 'required name=search_term_string',
       },
+      sameAs: [
+        'https://www.facebook.com/people/Jeff-Honforloco/61551819509232/',
+        'https://www.instagram.com/jeffhonforloco',
+        'https://www.youtube.com/@jeffhonforloco',
+        'https://x.com/jeffhonforloco',
+        'https://www.tiktok.com/@jeffhonforloco',
+        'https://www.linkedin.com/in/jeffhonforloco/',
+        'https://www.pinterest.com/jeffhonforloco/',
+        'https://bsky.app/profile/jeffhonforloco.bsky.social',
+        'https://www.reddit.com/user/jeffhonforloco/',
+        'https://www.threads.net/@jeffhonforloco',
+        'https://www.tumblr.com/jeffhonforloco'
+      ]
     };
 
     try {
@@ -133,7 +147,7 @@ const Index = () => {
       <SEO 
         title="Home" 
         description="Explore lifestyle, travel, and personal growth with Jeff HonForLoco. Discover insights, tips, and stories to inspire your journey."
-        keywords="lifestyle blog, travel adventures, personal growth, jeff honforloco, blogging tips, digital nomad, travel stories"
+        keywords="lifestyle blog, travel adventures, personal growth, jeff honforloco, blogging tips, digital nomad, travel stories, social media"
         image="/homepage-og.jpg"
         type="website"
       />
@@ -163,6 +177,11 @@ const Index = () => {
       
       <div>
         <TrendingArticles />
+      </div>
+      
+      {/* Add the Social Media Feed section here */}
+      <div>
+        <SocialMediaFeed />
       </div>
       
       <div>
