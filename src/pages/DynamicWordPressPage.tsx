@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { getPageBySlug, getPostsByCategory, getCategoryBySlug, getPosts } from '@/lib/wordpress';
+import { getPageBySlug, getPostsByCategory, getCategoryBySlug, getPosts, getPostBySlug } from '@/lib/wordpress';
 import { useToast } from '@/components/ui/use-toast';
 import Layout from '@/components/layout/Layout';
 import SEO from '@/components/shared/SEO';
@@ -17,7 +17,7 @@ const DynamicWordPressPage = () => {
   const [content, setContent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [pageType, setPageType] = useState<'page' | 'category' | 'posts' | null>(null);
+  const [pageType, setPageType] = useState<'page' | 'category' | 'posts' | 'post' | null>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [pageTitle, setPageTitle] = useState('');
   const [pageDescription, setPageDescription] = useState('');
@@ -52,6 +52,35 @@ const DynamicWordPressPage = () => {
       try {
         console.log(`Fetching content for path: ${location.pathname}`);
         console.log(`Content type: ${contentType}, slug: ${contentSlug}`);
+        
+        // Special case for post URLs (handle /post/slug directly)
+        if (contentType === 'post' && contentSlug) {
+          console.log(`Trying to fetch post with slug: ${contentSlug}`);
+          const post = await getPostBySlug(contentSlug);
+          
+          if (post) {
+            console.log('Found post:', post.title?.rendered);
+            setContent(post);
+            setPageType('post');
+            
+            // Set SEO information
+            const postTitle = post.title?.rendered || '';
+            const postContent = post.content?.rendered || '';
+            const postExcerpt = post.excerpt?.rendered || '';
+            
+            setPageTitle(postTitle);
+            setPageDescription(postExcerpt.replace(/<[^>]*>/g, '').substring(0, 160));
+            
+            // Extract keywords
+            if (postContent) {
+              const keywords = extractKeywords(postContent, postTitle, '');
+              setPageKeywords(keywords);
+            }
+            
+            setLoading(false);
+            return;
+          }
+        }
         
         // Try to fetch as a page first
         let pageResult;
@@ -205,14 +234,24 @@ const DynamicWordPressPage = () => {
     if (!loading && pageType && pageTitle) {
       let structuredData: any = null;
       
-      if (pageType === 'page') {
+      if (pageType === 'page' || pageType === 'post') {
         structuredData = {
           '@context': 'https://schema.org',
-          '@type': 'WebPage',
+          '@type': pageType === 'post' ? 'BlogPosting' : 'WebPage',
           name: pageTitle,
           description: pageDescription,
           url: canonicalUrl,
         };
+        
+        if (pageType === 'post') {
+          structuredData.datePublished = content.date;
+          structuredData.dateModified = content.modified || content.date;
+          structuredData.headline = pageTitle;
+          structuredData.author = {
+            '@type': 'Person',
+            name: 'Jeff HonForLoco'
+          };
+        }
       } else if (pageType === 'category' || pageType === 'posts') {
         structuredData = {
           '@context': 'https://schema.org',
@@ -255,7 +294,7 @@ const DynamicWordPressPage = () => {
         }
       };
     }
-  }, [loading, pageType, pageTitle, pageDescription, canonicalUrl, posts]);
+  }, [loading, pageType, pageTitle, pageDescription, canonicalUrl, posts, content]);
 
   // Handle loading state
   if (loading) {
@@ -291,6 +330,50 @@ const DynamicWordPressPage = () => {
             dangerouslySetInnerHTML={{ __html: pageContent }} 
           />
         </div>
+      </Layout>
+    );
+  }
+
+  // Render post content directly in the dynamic page component
+  if (pageType === 'post' && content) {
+    // Use similar rendering as in the SinglePost component
+    const postTitle = content.title?.rendered || '';
+    const postContent = content.content?.rendered || '';
+    const postExcerpt = content.excerpt?.rendered || '';
+    const featuredMedia = content._embedded?.['wp:featuredmedia']?.[0];
+    const featuredImage = featuredMedia?.source_url || '/placeholder.svg';
+    
+    return (
+      <Layout>
+        <SEO 
+          title={postTitle} 
+          description={pageDescription}
+          keywords={pageKeywords.join(', ')}
+          canonical={canonicalUrl}
+          image={featuredImage}
+          publishedAt={content.date}
+          type="article"
+        />
+        <article className="pt-12 pb-16">
+          <div className="container max-w-4xl mx-auto">
+            <h1 className="text-4xl font-bold mb-6" dangerouslySetInnerHTML={{ __html: postTitle }} />
+            
+            {featuredImage && (
+              <figure className="mb-8 rounded-lg overflow-hidden">
+                <img 
+                  src={featuredImage} 
+                  alt={postTitle} 
+                  className="w-full h-auto" 
+                />
+              </figure>
+            )}
+            
+            <div 
+              className="prose prose-lg dark:prose-invert max-w-none article-content"
+              dangerouslySetInnerHTML={{ __html: postContent }} 
+            />
+          </div>
+        </article>
       </Layout>
     );
   }
@@ -355,8 +438,15 @@ const DynamicWordPressPage = () => {
     return null;
   }
 
-  // Fallback (shouldn't reach here due to error handling)
-  return null;
+  // Fallback
+  return (
+    <Layout>
+      <div className="container max-w-4xl py-12 text-center">
+        <h1 className="text-4xl font-bold mb-8">Content Not Found</h1>
+        <p className="text-lg mb-8">The page you are looking for doesn't exist or has been moved.</p>
+      </div>
+    </Layout>
+  );
 };
 
 export default DynamicWordPressPage;
