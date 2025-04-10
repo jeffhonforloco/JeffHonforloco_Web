@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getPageBySlug, getPostsByCategory, getCategoryBySlug, getPosts, getPostBySlug } from '@/lib/wordpress';
@@ -38,6 +39,19 @@ const DynamicWordPressPage = () => {
     if (typeof url === 'string') {
       return url.replace(/^\/+|\/+$/g, '');
     }
+    return '';
+  };
+
+  // Helper function to safely extract text from rendered content
+  const safeProcessHtml = (content: any): string => {
+    if (typeof content === 'string') {
+      return content.replace(/<[^>]*>/g, '').substring(0, 160);
+    }
+    
+    if (content && typeof content === 'object' && 'rendered' in content && typeof content.rendered === 'string') {
+      return content.rendered.replace(/<[^>]*>/g, '').substring(0, 160);
+    }
+    
     return '';
   };
 
@@ -189,12 +203,8 @@ const DynamicWordPressPage = () => {
                 
             setPageTitle(titleText);
             
-            const excerptText = typeof safeExcerpt === 'string' 
-              ? safeExcerpt.substring(0, 160) 
-              : (typeof safeExcerpt === 'object' && safeExcerpt !== null && 'replace' in safeExcerpt && typeof safeExcerpt.replace === 'function')
-                ? safeExcerpt.replace(/<[^>]*>/g, '').substring(0, 160) 
-                : '';
-                
+            // Fixed excerpt processing with proper type handling
+            const excerptText = safeProcessHtml(safeExcerpt);
             setPageDescription(excerptText);
             
             if (safeContent) {
@@ -257,11 +267,9 @@ const DynamicWordPressPage = () => {
             
             const postTitle = post.title?.rendered || '';
             const postContent = post.content?.rendered || '';
-            const postExcerpt = post.excerpt?.rendered || '';
             
             setPageTitle(postTitle);
-            setPageDescription(postExcerpt && typeof postExcerpt === 'string' ? 
-              postExcerpt.replace(/<[^>]*>/g, '').substring(0, 160) : '');
+            setPageDescription(safeProcessHtml(post.excerpt));
             
             if (postContent) {
               const keywords = extractKeywords(postContent, postTitle, '');
@@ -287,7 +295,7 @@ const DynamicWordPressPage = () => {
             const pageContent = pageByFullPath.content?.rendered || '';
             
             setPageTitle(pageTitle);
-            setPageDescription(pageByFullPath.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || '');
+            setPageDescription(safeProcessHtml(pageByFullPath.excerpt));
             
             if (pageContent) {
               const keywords = extractKeywords(pageContent, pageTitle, '');
@@ -311,7 +319,7 @@ const DynamicWordPressPage = () => {
             const pageContent = pageByCombinedSlug.content?.rendered || '';
             
             setPageTitle(pageTitle);
-            setPageDescription(pageByCombinedSlug.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || '');
+            setPageDescription(safeProcessHtml(pageByCombinedSlug.excerpt));
             
             if (pageContent) {
               const keywords = extractKeywords(pageContent, pageTitle, '');
@@ -355,10 +363,9 @@ const DynamicWordPressPage = () => {
           
           const pageTitle = pageResult.title?.rendered || pageResult.title || '';
           const pageContent = pageResult.content?.rendered || '';
-          const pageExcerpt = pageResult.excerpt?.rendered || '';
           
           setPageTitle(pageTitle);
-          setPageDescription(pageExcerpt.replace(/<[^>]*>/g, '').substring(0, 160));
+          setPageDescription(safeProcessHtml(pageResult.excerpt));
           
           if (pageContent) {
             const keywords = extractKeywords(pageContent, pageTitle, '');
@@ -630,13 +637,6 @@ const DynamicWordPressPage = () => {
       ? contentBody 
       : typeof contentBody.rendered === 'string'
         ? contentBody.rendered 
-        : '';
-        
-    const excerptContent = content.excerpt || {};
-    const excerpt = typeof excerptContent === 'string' 
-      ? excerptContent 
-      : typeof excerptContent.rendered === 'string'
-        ? excerptContent.rendered 
         : '';
         
     const featuredMedia = content._embedded?.['wp:featuredmedia']?.[0];
