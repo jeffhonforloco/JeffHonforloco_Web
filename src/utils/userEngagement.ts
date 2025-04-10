@@ -46,6 +46,9 @@ const loadMetrics = (): EngagementMetrics => {
       };
     } catch (e) {
       console.error('Error loading engagement metrics:', e);
+      // If there's an error parsing, return defaults and reset storage
+      localStorage.removeItem('user-engagement');
+      return { ...DEFAULT_METRICS };
     }
   }
   return { ...DEFAULT_METRICS };
@@ -53,8 +56,12 @@ const loadMetrics = (): EngagementMetrics => {
 
 // Save metrics to localStorage
 const saveMetrics = (metrics: EngagementMetrics): void => {
-  localStorage.setItem('user-engagement', JSON.stringify(metrics));
-  console.log('Updated engagement metrics:', metrics);
+  try {
+    localStorage.setItem('user-engagement', JSON.stringify(metrics));
+    console.log('Updated engagement metrics:', metrics);
+  } catch (error) {
+    console.error('Error saving engagement metrics:', error);
+  }
 };
 
 // Get current metrics
@@ -64,31 +71,42 @@ export const getEngagementMetrics = (): EngagementMetrics => {
 
 // Update a specific metric
 export const updateMetric = (metric: keyof EngagementMetrics, value: number | object): void => {
-  const metrics = loadMetrics();
-  if (metric === 'sectionViews' && typeof value === 'object') {
-    metrics.sectionViews = { ...metrics.sectionViews, ...value };
-  } else if (typeof value === 'number') {
-    (metrics[metric] as number) = value;
+  try {
+    const metrics = loadMetrics();
+    if (metric === 'sectionViews' && typeof value === 'object') {
+      metrics.sectionViews = { ...metrics.sectionViews, ...value };
+    } else if (typeof value === 'number') {
+      (metrics[metric] as number) = value;
+    }
+    saveMetrics(metrics);
+  } catch (error) {
+    console.error(`Error updating metric ${metric}:`, error);
+    saveMetrics({ ...DEFAULT_METRICS });
   }
-  saveMetrics(metrics);
 };
 
-// Track section view
+// Track section view - Enhanced with better error handling
 export const trackSectionView = (section: keyof EngagementMetrics['sectionViews']): void => {
   try {
     const metrics = loadMetrics();
     
-    // Make sure sectionViews exists and has the right structure
+    // Initialize sectionViews if it doesn't exist
     if (!metrics.sectionViews) {
       metrics.sectionViews = { ...DEFAULT_METRICS.sectionViews };
     }
     
-    // Ensure the specific section counter exists
-    if (typeof metrics.sectionViews[section] !== 'number') {
-      metrics.sectionViews[section] = 0;
+    // Check if section exists in the sectionViews object
+    if (!(section in metrics.sectionViews)) {
+      metrics.sectionViews = { ...metrics.sectionViews, [section]: 0 };
     }
     
-    metrics.sectionViews[section]++;
+    // Now safely increment the counter, with fallback if it's not a number
+    if (typeof metrics.sectionViews[section] !== 'number') {
+      metrics.sectionViews[section] = 1;
+    } else {
+      metrics.sectionViews[section]++;
+    }
+    
     saveMetrics(metrics);
     console.log(`Tracked view of ${section} section`);
   } catch (error) {
@@ -101,10 +119,15 @@ export const trackSectionView = (section: keyof EngagementMetrics['sectionViews'
 
 // Increment a metric by a given amount (default: 1)
 export const incrementMetric = (metric: keyof EngagementMetrics, amount: number = 1): void => {
-  const metrics = loadMetrics();
-  if (typeof metrics[metric] === 'number') {
-    (metrics[metric] as number) += amount;
-    saveMetrics(metrics);
+  try {
+    const metrics = loadMetrics();
+    if (typeof metrics[metric] === 'number') {
+      (metrics[metric] as number) += amount;
+      saveMetrics(metrics);
+    }
+  } catch (error) {
+    console.error(`Error incrementing metric ${metric}:`, error);
+    saveMetrics({ ...DEFAULT_METRICS });
   }
 };
 
