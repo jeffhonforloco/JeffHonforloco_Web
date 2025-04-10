@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import MediaManager from '@/components/wordpress/MediaManager';
 import ContentPreview from '@/components/wordpress/ContentPreview';
 import SelectiveSync from '@/components/wordpress/SelectiveSync';
+import SeoWritingAI from '@/components/wordpress/SeoWritingAI';
 
 const WordPressContent = () => {
   return (
@@ -31,6 +32,7 @@ const WordPressContent = () => {
             <TabsTrigger value="preview">Content Preview</TabsTrigger>
             <TabsTrigger value="selective">Selective Sync</TabsTrigger>
             <TabsTrigger value="media">Media Library</TabsTrigger>
+            <TabsTrigger value="seo-ai">SEO Writing AI</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
           
@@ -48,6 +50,10 @@ const WordPressContent = () => {
           
           <TabsContent value="media" className="space-y-6">
             <MediaManager />
+          </TabsContent>
+          
+          <TabsContent value="seo-ai" className="space-y-6">
+            <SeoWritingAI />
           </TabsContent>
           
           <TabsContent value="settings">
@@ -69,6 +75,13 @@ const WordPressContent = () => {
                   <span className="text-sm text-gray-500 dark:text-gray-400">Authentication</span>
                   <code className="bg-gray-100 dark:bg-gray-900 px-3 py-2 rounded text-sm mt-1">
                     Basic Authentication (Username: developer)
+                  </code>
+                </div>
+                
+                <div className="flex flex-col mt-4">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">SEO Writing AI</span>
+                  <code className="bg-gray-100 dark:bg-gray-900 px-3 py-2 rounded text-sm mt-1">
+                    Integration Active (www.seowriting.ai)
                   </code>
                 </div>
                 

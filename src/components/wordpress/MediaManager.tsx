@@ -1,307 +1,217 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { getMedia } from '@/lib/wordpress';
-import { Loader2, Search, Image, FileText, Film, Music, File, X } from 'lucide-react';
+import { Pagination } from '@/components/ui/pagination';
+import { PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { Loader2, Image as ImageIcon } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-interface Media {
+// Define the Media type here to avoid conflicts with imported types
+interface MediaItem {
   id: number;
-  title: { rendered: string };
-  source_url: string;
-  mime_type: string;
-  media_details?: {
-    width?: number;
-    height?: number;
-    sizes?: Record<string, { source_url: string }>;
-  };
   date: string;
+  slug: string;
+  type: string;
+  link: string;
+  title: {
+    rendered: string;
+  };
+  source_url: string;
   alt_text?: string;
+  media_details?: {
+    width: number;
+    height: number;
+    file: string;
+    sizes?: Record<string, {
+      file: string;
+      width: number;
+      height: number;
+      source_url: string;
+    }>;
+  };
 }
 
 const MediaManager = () => {
-  const [media, setMedia] = useState<Media[]>([]);
-  const [filteredMedia, setFilteredMedia] = useState<Media[]>([]);
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
+  const [filteredItems, setFilteredItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [mediaType, setMediaType] = useState('all');
-  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedType, setSelectedType] = useState('all');
+  const { toast } = useToast();
 
-  // Fetch media items
   useEffect(() => {
     const fetchMedia = async () => {
       setLoading(true);
       try {
-        const response = await getMedia(currentPage, 20);
-        setMedia(response.media);
-        setFilteredMedia(response.media);
-        setTotalPages(response.totalPages);
+        const { media, totalPages: pages } = await getMedia(currentPage, 12);
+        setMediaItems(media as unknown as MediaItem[]);
+        setFilteredItems(media as unknown as MediaItem[]);
+        setTotalPages(pages);
       } catch (error) {
         console.error('Error fetching media:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load media from WordPress.",
+          variant: "destructive",
+        });
       } finally {
         setLoading(false);
       }
     };
 
     fetchMedia();
-  }, [currentPage]);
+  }, [currentPage, toast]);
 
-  // Filter media based on search term and media type
   useEffect(() => {
-    let filtered = media;
+    // Filter items based on search term and selected type
+    let filtered = [...mediaItems];
     
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(item => 
-        item.title.rendered.toLowerCase().includes(searchTerm.toLowerCase())
+        item.title.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.slug.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
-    // Filter by media type
-    if (mediaType !== 'all') {
-      filtered = filtered.filter(item => item.mime_type.startsWith(mediaType));
+    if (selectedType && selectedType !== 'all') {
+      filtered = filtered.filter(item => item.type === selectedType);
     }
     
-    setFilteredMedia(filtered);
-  }, [searchTerm, mediaType, media]);
+    setFilteredItems(filtered);
+  }, [searchTerm, selectedType, mediaItems]);
 
-  // Handle media selection
-  const handleSelectMedia = (item: Media) => {
-    setSelectedMedia(item);
-    setIsModalOpen(true);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
-  // Get appropriate icon for media type
-  const getMediaIcon = (mimeType: string) => {
-    if (mimeType.startsWith('image/')) return <Image className="h-5 w-5" />;
-    if (mimeType.startsWith('video/')) return <Film className="h-5 w-5" />;
-    if (mimeType.startsWith('audio/')) return <Music className="h-5 w-5" />;
-    if (mimeType.startsWith('text/')) return <FileText className="h-5 w-5" />;
-    return <File className="h-5 w-5" />;
-  };
-
-  // Get formatted date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
+  const getFileType = (item: MediaItem) => {
+    if (item.type === 'image') return 'Image';
+    if (item.type === 'video') return 'Video';
+    if (item.type === 'audio') return 'Audio';
+    if (item.type === 'application') return 'Document';
+    return 'File';
   };
 
   return (
-    <>
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Media Library</CardTitle>
-          <CardDescription>
-            Browse and manage media items from your WordPress site.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <Input 
-                  placeholder="Search media..." 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Select value={mediaType} onValueChange={setMediaType}>
-                <SelectTrigger className="w-full sm:w-[180px]">
-                  <SelectValue placeholder="Filter by type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Media</SelectItem>
-                  <SelectItem value="image">Images</SelectItem>
-                  <SelectItem value="video">Videos</SelectItem>
-                  <SelectItem value="audio">Audio</SelectItem>
-                  <SelectItem value="application">Documents</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {loading ? (
-              <div className="flex items-center justify-center h-60">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : filteredMedia.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {filteredMedia.map((item) => (
-                  <div 
-                    key={item.id} 
-                    className="border rounded-lg overflow-hidden hover:border-primary cursor-pointer transition-colors"
-                    onClick={() => handleSelectMedia(item)}
-                  >
-                    <div className="aspect-square bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
-                      {item.mime_type.startsWith('image/') ? (
-                        <img 
-                          src={item.source_url} 
-                          alt={item.title.rendered} 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center p-4">
-                          {getMediaIcon(item.mime_type)}
-                          <span className="text-xs mt-2 text-center text-gray-500 truncate max-w-full">
-                            {item.mime_type.split('/')[1].toUpperCase()}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-2">
-                      <h3 className="text-sm font-medium truncate" title={item.title.rendered}>
-                        {item.title.rendered}
-                      </h3>
-                      <p className="text-xs text-gray-500">{formatDate(item.date)}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-60 text-gray-500">
-                <File className="h-10 w-10 mb-2 opacity-50" />
-                <p>No media items found</p>
-                {(searchTerm || mediaType !== 'all') && (
-                  <Button 
-                    variant="link" 
-                    onClick={() => {
-                      setSearchTerm('');
-                      setMediaType('all');
-                    }}
-                  >
-                    Clear filters
-                  </Button>
-                )}
-              </div>
-            )}
-            
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center space-x-2 mt-4">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                >
-                  Previous
-                </Button>
-                <span className="text-sm">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
+    <Card>
+      <CardHeader>
+        <CardTitle>WordPress Media Library</CardTitle>
+        <CardDescription>
+          Browse and manage media from your WordPress site. Changes made in WordPress will be reflected here after syncing.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-6 flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <input
+              type="search"
+              placeholder="Search media..."
+              className="w-full px-4 py-2 border rounded-md"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-        </CardContent>
-      </Card>
-      
-      {/* Media Detail Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Media Details</DialogTitle>
-            <DialogDescription>
-              View and manage media item information
-            </DialogDescription>
-          </DialogHeader>
-          
-          {selectedMedia && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-gray-100 dark:bg-gray-800 rounded p-4 flex items-center justify-center">
-                {selectedMedia.mime_type.startsWith('image/') ? (
-                  <img 
-                    src={selectedMedia.source_url} 
-                    alt={selectedMedia.title.rendered} 
-                    className="max-w-full max-h-[300px] object-contain"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center justify-center p-8">
-                    {getMediaIcon(selectedMedia.mime_type)}
-                    <span className="text-lg mt-4">{selectedMedia.mime_type}</span>
+          <select
+            className="px-4 py-2 border rounded-md bg-white dark:bg-gray-800"
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)}
+          >
+            <option value="all">All Types</option>
+            <option value="image">Images</option>
+            <option value="video">Videos</option>
+            <option value="audio">Audio</option>
+            <option value="application">Documents</option>
+          </select>
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : filteredItems.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filteredItems.map((item) => (
+                <div key={item.id} className="border rounded-md overflow-hidden bg-white dark:bg-gray-800">
+                  <div className="h-32 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                    {item.type === 'image' ? (
+                      <img
+                        src={item.source_url}
+                        alt={item.alt_text || item.title.rendered}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-gray-500">
+                        <ImageIcon className="h-12 w-12" />
+                        <span className="text-sm mt-2">{getFileType(item)}</span>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-bold">
-                    {selectedMedia.title.rendered}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    Uploaded on {formatDate(selectedMedia.date)}
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm font-medium">URL:</span>
-                    <span className="text-sm text-gray-500 truncate max-w-[250px]">
-                      {selectedMedia.source_url}
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <span className="text-sm font-medium">Type:</span>
-                    <span className="text-sm text-gray-500">
-                      {selectedMedia.mime_type}
-                    </span>
-                  </div>
-                  
-                  {selectedMedia.media_details?.width && (
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Dimensions:</span>
-                      <span className="text-sm text-gray-500">
-                        {selectedMedia.media_details.width} × {selectedMedia.media_details.height} pixels
-                      </span>
-                    </div>
-                  )}
-                  
-                  <div className="flex justify-between">
-                    <span className="text-sm font-medium">Alt Text:</span>
-                    <span className="text-sm text-gray-500">
-                      {selectedMedia.alt_text || 'None'}
-                    </span>
+                  <div className="p-3">
+                    <h3 className="text-sm font-medium truncate" title={item.title.rendered}>
+                      {item.title.rendered}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {new Date(item.date).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
-                
-                <div className="pt-4">
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => {
-                      navigator.clipboard.writeText(selectedMedia.source_url);
-                      navigator.clipboard.writeText(selectedMedia.source_url).then(() => {
-                        alert('URL copied to clipboard!');
-                      });
-                    }}
-                  >
-                    Copy Media URL
-                  </Button>
-                </div>
-              </div>
+              ))}
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
+
+            <Pagination className="mt-6">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  
+                  return (
+                    <PaginationItem key={pageNum}>
+                      <PaginationLink
+                        onClick={() => handlePageChange(pageNum)}
+                        isActive={currentPage === pageNum}
+                      >
+                        {pageNum}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500">No media items found.</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
