@@ -42,6 +42,10 @@ const DesktopNavigation = () => {
                   href="/category/motivation-stories"
                 />
                 <NavigationItem 
+                  title="Overcoming Challenges" 
+                  href="/category/motivation-stories/overcoming-challenges"
+                />
+                <NavigationItem 
                   title="All Lifestyle Content" 
                   href="/category/lifestyle-growth"
                 />

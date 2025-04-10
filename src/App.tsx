@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -52,6 +53,7 @@ const App = () => (
               
               {/* Specific Category Routes - Add motivation-stories explicitly */}
               <Route path="/category/motivation-stories" element={<CategoryPage />} />
+              <Route path="/category/motivation-stories/overcoming-challenges" element={<DynamicWordPressPage />} />
               
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
@@ -101,6 +103,7 @@ const App = () => (
               <Route path="/stories" element={<DynamicWordPressPage />} />
               <Route path="/stories/:storySlug" element={<DynamicWordPressPage />} />
               <Route path="/motivation-stories" element={<DynamicWordPressPage />} />
+              <Route path="/overcoming-challenges" element={<DynamicWordPressPage />} />
               
               {/* Post URL fallback - Important for direct post URLs */}
               <Route path="/post/:postSlug/*" element={<DynamicWordPressPage />} />

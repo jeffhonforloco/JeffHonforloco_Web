@@ -72,7 +72,7 @@ const DynamicWordPressPage = () => {
       try {
         console.log(`Fetching content for path: ${location.pathname}`);
         console.log(`Content type: ${contentType}, slug: ${contentSlug}`);
-        
+
         if (location.pathname === '/category/motivation-stories' || 
             location.pathname === '/category/motivation-stories/') {
           console.log('Handling motivation-stories category');
@@ -91,7 +91,46 @@ const DynamicWordPressPage = () => {
             return;
           }
         }
-        
+
+        if (location.pathname === '/category/motivation-stories/overcoming-challenges' || 
+            location.pathname === '/category/motivation-stories/overcoming-challenges/') {
+          console.log('Handling overcoming-challenges subcategory');
+          const category = await getCategoryBySlug('overcoming-challenges');
+          
+          if (category) {
+            console.log('Found overcoming-challenges category:', category);
+            const { posts: categoryPosts } = await getPostsByCategory('overcoming-challenges');
+            setContent(category);
+            setPosts(categoryPosts);
+            setPageType('category');
+            setPageTitle(category.name || 'Overcoming Challenges');
+            setPageDescription(category.description || 'Read stories about overcoming challenges and obstacles from Jeff HonForLoco.');
+            setPageKeywords(['overcoming challenges', 'motivation', 'stories', 'inspiration', 'obstacles', 'personal development']);
+            setLoading(false);
+            return;
+          } else {
+            console.log('Category not found, searching for posts with overcoming challenges theme');
+            const fetchedPosts = await getPosts({ 
+              search: 'overcoming challenges', 
+              perPage: 12,
+              orderBy: 'date',
+              order: 'desc'
+            });
+            
+            setPageTitle('Overcoming Challenges');
+            setPageDescription('Stories about overcoming obstacles and challenges in life.');
+            setPageKeywords(['overcoming challenges', 'obstacles', 'motivation', 'stories', 'inspiration']);
+            setPosts(fetchedPosts);
+            setPageType('category');
+            setContent({
+              name: 'Overcoming Challenges',
+              description: 'Stories about overcoming obstacles and challenges in life.'
+            });
+            setLoading(false);
+            return;
+          }
+        }
+
         if (['stories', 'story', 'affiliate', 'recommendations', 'recommendation', 'resources', 'resource'].includes(contentType)) {
           console.log(`Special content type detected: ${contentType}`);
           
@@ -221,7 +260,8 @@ const DynamicWordPressPage = () => {
             const postExcerpt = post.excerpt?.rendered || '';
             
             setPageTitle(postTitle);
-            setPageDescription(postExcerpt.replace(/<[^>]*>/g, '').substring(0, 160));
+            setPageDescription(postExcerpt && typeof postExcerpt === 'string' ? 
+              postExcerpt.replace(/<[^>]*>/g, '').substring(0, 160) : '');
             
             if (postContent) {
               const keywords = extractKeywords(postContent, postTitle, '');
@@ -232,7 +272,7 @@ const DynamicWordPressPage = () => {
             return;
           }
         }
-        
+
         if (pathSegments.length >= 2) {
           const fullPath = location.pathname.startsWith('/') ? location.pathname.substring(1) : location.pathname;
           console.log(`Trying to fetch page with full path: ${fullPath}`);
