@@ -34,6 +34,13 @@ const DynamicWordPressPage = () => {
 
   console.log(`DynamicWordPressPage: Path: ${location.pathname}, Type: ${contentType}, Slug: ${contentSlug}`);
 
+  const processUrl = (url: string | null | undefined): string => {
+    if (typeof url === 'string') {
+      return url.replace(/^\/+|\/+$/g, '');
+    }
+    return '';
+  };
+
   useEffect(() => {
     if (location.pathname === '/404') {
       setLoading(false);

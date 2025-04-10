@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { 
   Facebook, Instagram, Youtube, Linkedin, 
   Twitter, Share2, ExternalLink,
-  ChevronLeft, ChevronRight, Pinterest 
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 import TiktokIcon from '../icons/TiktokIcon';
+import PinterestIcon from '../icons/PinterestIcon';
 import { 
   Carousel,
   CarouselContent,

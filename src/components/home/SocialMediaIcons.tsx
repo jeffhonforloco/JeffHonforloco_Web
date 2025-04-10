@@ -2,9 +2,10 @@
 import React from 'react';
 import { 
   Facebook, Twitter, Instagram, Youtube, 
-  Linkedin, Pinterest, Globe, MessagesSquare
+  Linkedin, Globe, MessagesSquare
 } from 'lucide-react';
 import TiktokIcon from '../icons/TiktokIcon';
+import PinterestIcon from '../icons/PinterestIcon';
 
 const socialLinks = [
   { 
@@ -45,7 +46,7 @@ const socialLinks = [
   },
   { 
     name: "Pinterest", 
-    icon: <Pinterest className="h-6 w-6" />, 
+    icon: <PinterestIcon className="h-6 w-6" />, 
     url: "https://www.pinterest.com/jeffhonforloco/",
     color: "bg-red-500 hover:bg-red-600"
   },

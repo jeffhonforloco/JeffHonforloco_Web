@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { 
   Facebook, Twitter, Instagram, Youtube, 
-  Linkedin, Pinterest, 
-  MessageCircle, Mail, Globe
+  Linkedin, MessageCircle, Mail, Globe
 } from 'lucide-react';
 import TiktokIcon from '../icons/TiktokIcon';
+import PinterestIcon from '../icons/PinterestIcon';
 import { Link } from 'react-router-dom';
 
 // Define our main categories for the footer
@@ -24,7 +25,7 @@ const socialLinks = [
   { name: "Twitter/X", icon: <Twitter className="h-5 w-5" />, url: "https://x.com/jeffhonforloco" },
   { name: "YouTube", icon: <Youtube className="h-5 w-5" />, url: "https://www.youtube.com/@jeffhonforloco" },
   { name: "LinkedIn", icon: <Linkedin className="h-5 w-5" />, url: "https://www.linkedin.com/in/jeffhonforloco/" },
-  { name: "Pinterest", icon: <Pinterest className="h-5 w-5" />, url: "https://www.pinterest.com/jeffhonforloco/" },
+  { name: "Pinterest", icon: <PinterestIcon className="h-5 w-5" />, url: "https://www.pinterest.com/jeffhonforloco/" },
   { name: "BlueSky", icon: <Globe className="h-5 w-5" />, url: "https://bsky.app/profile/jeffhonforloco.bsky.social" },
   { name: "Reddit", icon: <MessageCircle className="h-5 w-5" />, url: "https://www.reddit.com/user/jeffhonforloco/" },
   { name: "Threads", icon: <MessageCircle className="h-5 w-5" />, url: "https://www.threads.net/@jeffhonforloco" },
