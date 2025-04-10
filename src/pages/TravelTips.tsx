@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
@@ -29,9 +28,30 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
       setLoading(true);
       setError(null);
       try {
-        // First try searching for posts with category in the title
-        console.log(`Searching for posts with category: ${category}`);
-        let searchTerms = [`${category} travel`, `${category} tips`, 'travel tips'];
+        // Define search terms based on category
+        const searchTerms = [];
+        
+        // Budget-specific search terms when category is budget
+        if (category === 'budget') {
+          searchTerms.push(
+            'budget travel', 
+            'budget tips', 
+            'cheap travel', 
+            'affordable travel', 
+            'travel on a budget', 
+            'money saving travel'
+          );
+        } else {
+          // Category-specific search terms for other categories
+          searchTerms.push(
+            `${category} travel`, 
+            `${category} tips`, 
+            `${category} guide`, 
+            'travel tips'
+          );
+        }
+        
+        console.log(`Searching for ${category} travel tips with terms:`, searchTerms);
         
         // Try each search term until we find some posts
         let fetchedPosts = [];
@@ -44,12 +64,19 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
           
           if (posts && posts.length > 0) {
             fetchedPosts = posts.map(transformPost);
-            break;
+            if (fetchedPosts.length >= 3) {
+              break; // We have enough posts, stop searching
+            }
+            // If we have some but not enough, continue searching but keep what we found
           }
         }
         
-        if (fetchedPosts.length === 0) {
-          // If still no posts, try general travel category
+        // If we found at least some posts with our specific search terms
+        if (fetchedPosts.length > 0) {
+          console.log(`Found ${fetchedPosts.length} posts for ${category} travel tips`);
+          setPosts(fetchedPosts);
+        } else {
+          // If still no posts, try general travel category as a fallback
           console.log('No specific posts found, fetching general travel posts');
           const generalPosts = await getPosts({ 
             search: 'travel',
@@ -58,12 +85,11 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
           
           if (generalPosts && generalPosts.length > 0) {
             fetchedPosts = generalPosts.map(transformPost);
+            setPosts(fetchedPosts);
           } else {
             setError('No travel tips found. Please check back later.');
           }
         }
-        
-        setPosts(fetchedPosts);
       } catch (error) {
         console.error(`Error fetching ${category} travel tips:`, error);
         setError('Failed to load travel tips. Please try again later.');
@@ -80,7 +106,7 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
       <SEO 
         title={pageTitle}
         description={pageDescription}
-        keywords={`${category} travel tips, travel advice, travel blog, budget travel, travel planning`}
+        keywords={`${category} travel tips, travel advice, travel blog, budget travel, travel planning, affordable travel`}
         type="website"
       />
       
@@ -90,6 +116,15 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
           <p className="text-lg text-gray-600 dark:text-gray-300">
             {pageDescription}
           </p>
+          
+          {category === 'budget' && (
+            <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <p className="text-md">
+                Traveling on a budget doesn't mean sacrificing experiences. 
+                Discover smart ways to save money while making the most of your adventures.
+              </p>
+            </div>
+          )}
         </div>
         
         {loading ? (
@@ -127,6 +162,14 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
             </p>
             <Link to="/travel" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
               Explore All Travel Content
+            </Link>
+          </div>
+        )}
+        
+        {posts.length > 0 && (
+          <div className="mt-12 text-center">
+            <Link to="/travel" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
+              Explore More Travel Content
             </Link>
           </div>
         )}
