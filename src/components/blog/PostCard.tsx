@@ -33,8 +33,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, size = 'medium' }) => {
   // Handle both string and object formats for title and excerpt
   const title = typeof post.title === 'string' ? post.title : post.title.rendered;
   const excerpt = typeof post.excerpt === 'string' ? post.excerpt : post.excerpt.rendered;
-  const cleanTitle = typeof title === 'string' ? title : '';
-  const cleanExcerpt = typeof excerpt === 'string' ? excerpt : '';
+  const cleanTitle = title || '';
+  const cleanExcerpt = excerpt || '';
 
   return (
     <article className="article-card group bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">

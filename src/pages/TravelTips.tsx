@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
@@ -31,24 +32,63 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
         // Define search terms based on category
         const searchTerms = [];
         
-        // Budget-specific search terms when category is budget
-        if (category === 'budget') {
-          searchTerms.push(
-            'budget travel', 
-            'budget tips', 
-            'cheap travel', 
-            'affordable travel', 
-            'travel on a budget', 
-            'money saving travel'
-          );
-        } else {
-          // Category-specific search terms for other categories
-          searchTerms.push(
-            `${category} travel`, 
-            `${category} tips`, 
-            `${category} guide`, 
-            'travel tips'
-          );
+        // Category-specific search terms
+        switch(category) {
+          case 'budget':
+            searchTerms.push(
+              'budget travel', 
+              'budget tips', 
+              'cheap travel', 
+              'affordable travel', 
+              'travel on a budget', 
+              'money saving travel',
+              'backpacking budget',
+              'frugal travel'
+            );
+            break;
+          case 'luxury':
+            searchTerms.push(
+              'luxury travel',
+              'premium travel',
+              'high-end travel',
+              'exclusive travel',
+              'luxury destinations'
+            );
+            break;
+          case 'family':
+            searchTerms.push(
+              'family travel',
+              'travel with kids',
+              'family-friendly travel',
+              'family vacation tips',
+              'traveling with children'
+            );
+            break;
+          case 'adventure':
+            searchTerms.push(
+              'adventure travel',
+              'extreme travel',
+              'outdoor adventures',
+              'action travel',
+              'adventure tourism'
+            );
+            break;
+          case 'solo':
+            searchTerms.push(
+              'solo travel',
+              'traveling alone',
+              'solo traveler',
+              'independent travel',
+              'solo adventures'
+            );
+            break;
+          default:
+            searchTerms.push(
+              `${category} travel`, 
+              `${category} tips`, 
+              `${category} guide`, 
+              'travel tips'
+            );
         }
         
         console.log(`Searching for ${category} travel tips with terms:`, searchTerms);
@@ -63,8 +103,22 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
           });
           
           if (posts && posts.length > 0) {
-            fetchedPosts = posts.map(transformPost);
-            if (fetchedPosts.length >= 3) {
+            const transformedPosts = posts.map(transformPost).filter(Boolean);
+            fetchedPosts = [...fetchedPosts, ...transformedPosts];
+            
+            // Remove duplicates by slug
+            const uniquePosts = fetchedPosts.reduce((acc, current) => {
+              const x = acc.find(item => item.slug === current.slug);
+              if (!x) {
+                return acc.concat([current]);
+              } else {
+                return acc;
+              }
+            }, []);
+            
+            fetchedPosts = uniquePosts;
+            
+            if (fetchedPosts.length >= 6) {
               break; // We have enough posts, stop searching
             }
             // If we have some but not enough, continue searching but keep what we found
@@ -84,7 +138,7 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
           });
           
           if (generalPosts && generalPosts.length > 0) {
-            fetchedPosts = generalPosts.map(transformPost);
+            fetchedPosts = generalPosts.map(transformPost).filter(Boolean);
             setPosts(fetchedPosts);
           } else {
             setError('No travel tips found. Please check back later.');
@@ -101,12 +155,65 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
     fetchPosts();
   }, [category]);
   
+  // Get content for the special info box based on category
+  const getCategoryInfoBox = () => {
+    switch(category) {
+      case 'budget':
+        return (
+          <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+            <p className="text-md">
+              Traveling on a budget doesn't mean sacrificing experiences. 
+              Discover smart ways to save money while making the most of your adventures.
+            </p>
+          </div>
+        );
+      case 'luxury':
+        return (
+          <div className="mt-6 bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+            <p className="text-md">
+              Indulge in premium travel experiences with our luxury travel tips.
+              Find the best high-end destinations, accommodations and exclusive activities.
+            </p>
+          </div>
+        );
+      case 'family':
+        return (
+          <div className="mt-6 bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+            <p className="text-md">
+              Family travel should be fun for everyone! Learn how to keep kids entertained
+              while creating memorable experiences the whole family will cherish.
+            </p>
+          </div>
+        );
+      case 'adventure':
+        return (
+          <div className="mt-6 bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
+            <p className="text-md">
+              Push your limits with exciting adventure travel. From trekking remote mountains
+              to diving deep seas, find inspiration for your next thrilling experience.
+            </p>
+          </div>
+        );
+      case 'solo':
+        return (
+          <div className="mt-6 bg-teal-50 dark:bg-teal-900/20 p-4 rounded-lg">
+            <p className="text-md">
+              Embarking on a journey alone can be transformative. Discover safety tips,
+              social opportunities, and how to make the most of your solo adventures.
+            </p>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+  
   return (
     <Layout>
       <SEO 
         title={pageTitle}
         description={pageDescription}
-        keywords={`${category} travel tips, travel advice, travel blog, budget travel, travel planning, affordable travel`}
+        keywords={`${category} travel tips, travel advice, travel blog, ${category} travel, travel planning, affordable travel, travel hacks`}
         type="website"
       />
       
@@ -117,14 +224,7 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
             {pageDescription}
           </p>
           
-          {category === 'budget' && (
-            <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <p className="text-md">
-                Traveling on a budget doesn't mean sacrificing experiences. 
-                Discover smart ways to save money while making the most of your adventures.
-              </p>
-            </div>
-          )}
+          {getCategoryInfoBox()}
         </div>
         
         {loading ? (

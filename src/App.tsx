@@ -51,6 +51,10 @@ const App = () => (
               {/* Travel Specific Routes */}
               <Route path="/travel/tips" element={<TravelTips />} />
               <Route path="/travel/budget-tips" element={<TravelTips category="budget" />} />
+              <Route path="/travel/luxury-tips" element={<TravelTips category="luxury" />} />
+              <Route path="/travel/family-tips" element={<TravelTips category="family" />} />
+              <Route path="/travel/adventure-tips" element={<TravelTips category="adventure" />} />
+              <Route path="/travel/solo-tips" element={<TravelTips category="solo" />} />
               <Route path="/travel/tips/:category" element={<TravelTips />} />
               <Route path="/travel/guides" element={<DynamicWordPressPage />} />
               <Route path="/travel/guides/:slug" element={<DynamicWordPressPage />} />
@@ -59,6 +63,9 @@ const App = () => (
               <Route path="/travel/backpacking-guides" element={<DynamicWordPressPage />} />
               <Route path="/travel/adventure" element={<DynamicWordPressPage />} />
               <Route path="/travel/budget" element={<TravelTips category="budget" />} />
+              <Route path="/travel/luxury" element={<TravelTips category="luxury" />} />
+              <Route path="/travel/family" element={<TravelTips category="family" />} />
+              <Route path="/travel/solo" element={<TravelTips category="solo" />} />
               <Route path="/travel/:slug" element={<DynamicWordPressPage />} />
               
               {/* Admin pages */}
