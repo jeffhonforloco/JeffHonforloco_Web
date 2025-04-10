@@ -11,6 +11,7 @@ import SEO from '../components/shared/SEO';
 import FeaturedArticle from '../components/home/FeaturedArticle';
 import TrendingArticles from '../components/home/TrendingArticles';
 import EbookPopup from '../components/home/EbookPopup';
+import NewsletterPopup from '../components/home/NewsletterPopup';
 import { initEngagementTracking } from '@/utils/userEngagement';
 
 const Index = () => {
@@ -88,6 +89,7 @@ const Index = () => {
       <AdSection />
       <NewsletterCTA />
       <EbookPopup />
+      <NewsletterPopup />
     </Layout>
   );
 };

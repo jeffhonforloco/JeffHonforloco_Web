@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,12 +28,9 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1, // Only retry failed queries once
       staleTime: 60 * 1000, // Consider data fresh for 1 minute
-      cacheTime: 10 * 60 * 1000, // Keep unused data in cache for 10 minutes
+      gcTime: 10 * 60 * 1000, // Keep unused data in cache for 10 minutes (replaced cacheTime)
       refetchOnWindowFocus: false, // Don't refetch when window regains focus
       refetchOnMount: false, // Don't refetch when component mounts if data is fresh
-      onError: (error) => {
-        console.error("Query error:", error);
-      }
     },
   },
 });
