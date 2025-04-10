@@ -33,19 +33,21 @@ const PostCard: React.FC<PostCardProps> = ({ post, size = 'medium' }) => {
   // Handle both string and object formats for title and excerpt
   const title = typeof post.title === 'string' ? post.title : post.title.rendered;
   const excerpt = typeof post.excerpt === 'string' ? post.excerpt : post.excerpt.rendered;
+  const cleanTitle = typeof title === 'string' ? title : '';
+  const cleanExcerpt = typeof excerpt === 'string' ? excerpt : '';
 
   return (
-    <article className="article-card">
+    <article className="article-card group bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
       <Link to={`/post/${post.slug}`} className={`block relative ${imageSizeClass} overflow-hidden`}>
         <img 
           src={post.featuredImage} 
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+          alt={cleanTitle}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
         />
         <div className="absolute top-4 left-4">
           <Link 
             to={`/category/${post.categorySlug}`}
-            className="article-category"
+            className="bg-gold px-3 py-1 text-xs font-medium text-white rounded-full hover:bg-gold/90 transition-colors"
           >
             {post.category}
           </Link>
@@ -54,21 +56,21 @@ const PostCard: React.FC<PostCardProps> = ({ post, size = 'medium' }) => {
       
       <div className="p-6">
         <h3 className={`font-serif ${titleSizeClass} font-bold mb-3 line-clamp-2 hover:text-blue-600 transition-colors`}>
-          <Link to={`/post/${post.slug}`} dangerouslySetInnerHTML={{ __html: title }} />
+          <Link to={`/post/${post.slug}`} dangerouslySetInnerHTML={{ __html: cleanTitle }} />
         </h3>
         
         {size !== 'small' && (
-          <p className="text-gray-700 mb-4 line-clamp-2" dangerouslySetInnerHTML={{ __html: excerpt }} />
+          <div className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2" dangerouslySetInnerHTML={{ __html: cleanExcerpt }} />
         )}
         
-        <div className="flex justify-between items-center text-sm text-gray-500">
+        <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
           <span className="flex items-center">
             <Calendar className="h-4 w-4 mr-1" />
             {post.date}
           </span>
           <Link 
             to={`/post/${post.slug}`} 
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-500 dark:hover:text-blue-400 font-medium"
           >
             Read more →
           </Link>

@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import SEO from '../components/shared/SEO';
 import PostCard from '../components/blog/PostCard';
-import { getPosts } from '@/lib/wordpress';
+import { getPosts, transformPost } from '@/lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface TravelTipsProps {
@@ -17,6 +17,7 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
   
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   // Format the category for display
   const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
@@ -26,27 +27,46 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
+      setError(null);
       try {
-        // Fetch posts related to this travel category
-        const searchTerms = [`${category} travel`, `${category} tips`, 'travel tips'];
+        // First try searching for posts with category in the title
+        console.log(`Searching for posts with category: ${category}`);
+        let searchTerms = [`${category} travel`, `${category} tips`, 'travel tips'];
         
         // Try each search term until we find some posts
         let fetchedPosts = [];
         for (const term of searchTerms) {
           console.log(`Searching for posts with term: ${term}`);
-          fetchedPosts = await getPosts({ 
+          const posts = await getPosts({ 
             search: term,
             perPage: 9
           });
           
-          if (fetchedPosts.length > 0) {
+          if (posts && posts.length > 0) {
+            fetchedPosts = posts.map(transformPost);
             break;
+          }
+        }
+        
+        if (fetchedPosts.length === 0) {
+          // If still no posts, try general travel category
+          console.log('No specific posts found, fetching general travel posts');
+          const generalPosts = await getPosts({ 
+            search: 'travel',
+            perPage: 6
+          });
+          
+          if (generalPosts && generalPosts.length > 0) {
+            fetchedPosts = generalPosts.map(transformPost);
+          } else {
+            setError('No travel tips found. Please check back later.');
           }
         }
         
         setPosts(fetchedPosts);
       } catch (error) {
         console.error(`Error fetching ${category} travel tips:`, error);
+        setError('Failed to load travel tips. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -83,6 +103,16 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
               </div>
             ))}
           </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-semibold mb-4">Error</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              {error}
+            </p>
+            <Link to="/travel" className="btn-primary">
+              Explore All Travel Content
+            </Link>
+          </div>
         ) : posts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
@@ -95,9 +125,9 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               We couldn't find any posts related to {category} travel tips at the moment.
             </p>
-            <p>
-              Please check back later or explore our other travel content.
-            </p>
+            <Link to="/travel" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
+              Explore All Travel Content
+            </Link>
           </div>
         )}
       </div>
