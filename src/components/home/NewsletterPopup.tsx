@@ -17,14 +17,17 @@ const NewsletterPopup = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Show popup after 5 seconds
+    // Show popup after 15 seconds (increased from 5 seconds to not conflict with ebook popup)
     const timer = setTimeout(() => {
       // Check if user has already subscribed (using localStorage)
       const hasSubscribed = localStorage.getItem('newsletter-subscribed');
-      if (!hasSubscribed) {
+      // Also check if they downloaded the ebook (to avoid too many popups)
+      const hasDownloadedEbook = localStorage.getItem('ebook-downloaded');
+      
+      if (!hasSubscribed && !hasDownloadedEbook) {
         setOpen(true);
       }
-    }, 5000);
+    }, 15000);
 
     return () => clearTimeout(timer);
   }, []);
