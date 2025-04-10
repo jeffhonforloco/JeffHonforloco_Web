@@ -126,7 +126,9 @@ const DynamicWordPressPage = () => {
             
             const excerptText = typeof safeExcerpt === 'string' 
               ? safeExcerpt.substring(0, 160) 
-              : safeExcerpt.replace?.(/<[^>]*>/g, '').substring(0, 160) || '';
+              : (safeExcerpt && typeof safeExcerpt.replace === 'function') 
+                ? safeExcerpt.replace(/<[^>]*>/g, '').substring(0, 160) 
+                : '';
                 
             setPageDescription(excerptText);
             
@@ -448,7 +450,11 @@ const DynamicWordPressPage = () => {
     try {
       if (typeof slug === 'string') {
         const normalizedSlug = slug.replace(/\//g, '-');
-        trackSectionView(normalizedSlug);
+        if (['affiliate', 'stories', 'recommendations', 'resources'].includes(normalizedSlug)) {
+          trackSectionView(normalizedSlug as "affiliate" | "stories" | "recommendations" | "resources");
+        } else {
+          console.log(`Section view: ${normalizedSlug}`);
+        }
       }
     } catch (error) {
       console.error('Error tracking section view:', error);

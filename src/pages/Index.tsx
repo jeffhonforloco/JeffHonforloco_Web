@@ -14,7 +14,6 @@ import EbookPopup from '../components/home/EbookPopup';
 import NewsletterPopup from '../components/home/NewsletterPopup';
 import { initEngagementTracking } from '@/utils/userEngagement';
 import { ArrowUp } from 'lucide-react';
-import { motion } from '@/components/home/MotionWrapper';
 
 const Index = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -139,83 +138,48 @@ const Index = () => {
         type="website"
       />
       
-      {/* Animated scroll to top button */}
+      {/* Scroll to top button */}
       {showScrollTop && (
-        <motion.button
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
+        <button
           className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-gold text-white shadow-lg hover:bg-gold/90 transition-all duration-300"
           onClick={scrollToTop}
           aria-label="Scroll to top"
         >
           <ArrowUp className="h-5 w-5" />
-        </motion.button>
+        </button>
       )}
       
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div>
         <Hero />
-      </motion.div>
+      </div>
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
+      <div>
         <FeaturedArticle />
-      </motion.div>
+      </div>
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
+      <div>
         <FeaturedPosts />
-      </motion.div>
+      </div>
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
+      <div>
         <TrendingArticles />
-      </motion.div>
+      </div>
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
+      <div>
         <CategoryFeature />
-      </motion.div>
+      </div>
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-      >
+      <div>
         <FeaturedDestinations />
-      </motion.div>
+      </div>
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-      >
+      <div>
         <AdSection />
-      </motion.div>
+      </div>
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-        transition={{ duration: 0.5, delay: 0.7 }}
-      >
+      <div>
         <NewsletterCTA />
-      </motion.div>
+      </div>
       
       <EbookPopup />
       <NewsletterPopup />
