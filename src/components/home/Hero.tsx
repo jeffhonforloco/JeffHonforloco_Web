@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getPosts, transformPost } from '@/lib/wordpress';
 import { Button } from '@/components/ui/button';
@@ -29,6 +29,7 @@ const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [heroImages, setHeroImages] = useState<HeroImage[]>(fallbackImages);
   const [loading, setLoading] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const fetchPostImages = async () => {
@@ -68,10 +69,23 @@ const Hero = () => {
     // Automatically advance the slider every 5 seconds
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+      setImageLoaded(false);
     }, 5000);
     
     return () => clearInterval(interval);
   }, [heroImages.length]);
+  
+  // Preload images for smoother transitions
+  useEffect(() => {
+    heroImages.forEach(image => {
+      const img = new Image();
+      img.src = image.url;
+    });
+  }, [heroImages]);
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
 
   return (
     <section className="relative bg-gradient-to-r from-charcoal to-gray-800 text-white min-h-[90vh] flex items-center overflow-hidden">
@@ -88,7 +102,8 @@ const Hero = () => {
             <img 
               src={image.url} 
               alt={image.alt}
-              className="object-cover w-full h-full" 
+              className={`object-cover w-full h-full transition-transform duration-7000 ${imageLoaded && index === currentIndex ? 'scale-105' : 'scale-100'}`}
+              onLoad={index === currentIndex ? handleImageLoad : undefined}
             />
           </div>
         ))}
@@ -110,25 +125,42 @@ const Hero = () => {
       
       <div className="container-lg relative z-10">
         <div className="max-w-2xl animate-fade-in">
-          <span className="inline-block px-4 py-1 bg-gold text-white text-sm font-bold rounded-full mb-6">
+          <span className="inline-block px-4 py-1 bg-gradient-to-r from-gold to-amber-400 text-white text-sm font-bold rounded-full mb-6 transform hover:scale-105 transition-transform duration-300">
             Welcome to Jeff HonForLoco
           </span>
-          <h1 className="title-xl mb-8 leading-tight">Explore. Experience. Evolve.</h1>
+          <h1 className="title-xl mb-8 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
+            Explore. Experience. <span className="text-gold">Evolve.</span>
+          </h1>
           <p className="text-xl md:text-2xl mb-10 text-gray-100 leading-relaxed max-w-xl">
             Join me on a journey through lifestyle, travel, and personal growth. 
             Discover insights, tips, and stories to inspire your own path.
           </p>
           <div className="flex flex-wrap gap-5">
             <Link to="/explore-travel">
-              <Button size="lg" className="bg-gold hover:bg-gold/90 text-white font-medium">
-                Explore Travel <ChevronRight className="ml-2 h-4 w-4" />
+              <Button size="lg" className="bg-gold hover:bg-gold/90 text-white font-medium group overflow-hidden relative">
+                <span className="relative z-10 flex items-center">
+                  Explore Travel 
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-amber-400 to-gold transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
               </Button>
             </Link>
             <Link to="/blog">
-              <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">
-                Read Blog <ChevronRight className="ml-2 h-4 w-4" />
+              <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 group">
+                Read Blog 
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
+          </div>
+          
+          {/* Animated scroll indicator */}
+          <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 hidden md:block">
+            <div className="flex flex-col items-center">
+              <span className="text-sm text-white/70 mb-2 animate-bounce">Scroll Down</span>
+              <div className="w-5 h-10 border-2 border-white/50 rounded-full flex justify-center">
+                <div className="w-1 h-2 bg-white rounded-full mt-1 animate-pulse"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

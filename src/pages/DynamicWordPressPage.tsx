@@ -444,6 +444,17 @@ const DynamicWordPressPage = () => {
     }
   }, [loading, pageType, pageTitle, pageDescription, canonicalUrl, posts, content]);
 
+  useEffect(() => {
+    try {
+      if (typeof slug === 'string') {
+        const normalizedSlug = slug.replace(/\//g, '-');
+        trackSectionView(normalizedSlug);
+      }
+    } catch (error) {
+      console.error('Error tracking section view:', error);
+    }
+  }, [slug]);
+
   if (loading) {
     return (
       <Layout>

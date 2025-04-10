@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
 import FeaturedPosts from '../components/home/FeaturedPosts';
@@ -13,8 +13,32 @@ import TrendingArticles from '../components/home/TrendingArticles';
 import EbookPopup from '../components/home/EbookPopup';
 import NewsletterPopup from '../components/home/NewsletterPopup';
 import { initEngagementTracking } from '@/utils/userEngagement';
+import { ArrowUp } from 'lucide-react';
+import { motion } from '@/components/home/MotionWrapper';
 
 const Index = () => {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  useEffect(() => {
+    // Handle scroll events
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 500);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Set loaded state after a short delay for animations
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+    };
+  }, []);
+  
   useEffect(() => {
     // Initialize engagement tracking with proper error handling
     let cleanupTracking: (() => void) | undefined;
@@ -98,6 +122,13 @@ const Index = () => {
     };
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <Layout>
       <SEO 
@@ -107,14 +138,85 @@ const Index = () => {
         image="/homepage-og.jpg"
         type="website"
       />
-      <Hero />
-      <FeaturedArticle />
-      <FeaturedPosts />
-      <TrendingArticles />
-      <CategoryFeature />
-      <FeaturedDestinations />
-      <AdSection />
-      <NewsletterCTA />
+      
+      {/* Animated scroll to top button */}
+      {showScrollTop && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-gold text-white shadow-lg hover:bg-gold/90 transition-all duration-300"
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </motion.button>
+      )}
+      
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Hero />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <FeaturedArticle />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <FeaturedPosts />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <TrendingArticles />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
+        <CategoryFeature />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+      >
+        <FeaturedDestinations />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        <AdSection />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.5, delay: 0.7 }}
+      >
+        <NewsletterCTA />
+      </motion.div>
+      
       <EbookPopup />
       <NewsletterPopup />
     </Layout>
