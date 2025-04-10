@@ -6,6 +6,7 @@ import SEO from '../components/shared/SEO';
 import PostCard from '../components/blog/PostCard';
 import { getPosts, transformPost } from '@/lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/components/ui/use-toast';
 
 interface TravelTipsProps {
   category?: string;
@@ -18,6 +19,7 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
   
   // Format the category for display
   const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
@@ -25,9 +27,13 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
   const pageDescription = `Discover the best ${category} travel tips to help you plan your next adventure with confidence and save money.`;
   
   useEffect(() => {
+    const controller = new AbortController(); // For cancelling fetch requests when component unmounts
+    const signal = controller.signal;
+    
     const fetchPosts = async () => {
-      setLoading(true);
+      if (!loading) setLoading(true);
       setError(null);
+      
       try {
         // Define search terms based on category
         const searchTerms = [];
@@ -43,7 +49,8 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
               'travel on a budget', 
               'money saving travel',
               'backpacking budget',
-              'frugal travel'
+              'frugal travel',
+              'budget destinations'
             );
             break;
           case 'luxury':
@@ -52,7 +59,9 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
               'premium travel',
               'high-end travel',
               'exclusive travel',
-              'luxury destinations'
+              'luxury destinations',
+              'luxury hotels',
+              'luxury experiences'
             );
             break;
           case 'family':
@@ -61,7 +70,9 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
               'travel with kids',
               'family-friendly travel',
               'family vacation tips',
-              'traveling with children'
+              'traveling with children',
+              'family destinations',
+              'child-friendly travel'
             );
             break;
           case 'adventure':
@@ -70,7 +81,9 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
               'extreme travel',
               'outdoor adventures',
               'action travel',
-              'adventure tourism'
+              'adventure tourism',
+              'hiking adventures',
+              'adventure destinations'
             );
             break;
           case 'solo':
@@ -79,7 +92,9 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
               'traveling alone',
               'solo traveler',
               'independent travel',
-              'solo adventures'
+              'solo adventures',
+              'solo safety',
+              'solo travel tips'
             );
             break;
           default:
@@ -93,42 +108,65 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
         
         console.log(`Searching for ${category} travel tips with terms:`, searchTerms);
         
-        // Try each search term until we find some posts
-        let fetchedPosts = [];
-        for (const term of searchTerms) {
-          console.log(`Searching for posts with term: ${term}`);
-          const posts = await getPosts({ 
+        // Fetch posts for main search terms first (in parallel)
+        const fetchPromises = searchTerms.slice(0, 3).map(term => 
+          getPosts({ 
             search: term,
             perPage: 9
-          });
-          
+          })
+        );
+        
+        const results = await Promise.all(fetchPromises);
+        
+        // Combine and deduplicate posts
+        let fetchedPosts = [];
+        for (const posts of results) {
           if (posts && posts.length > 0) {
             const transformedPosts = posts.map(transformPost).filter(Boolean);
             fetchedPosts = [...fetchedPosts, ...transformedPosts];
-            
-            // Remove duplicates by slug
-            const uniquePosts = fetchedPosts.reduce((acc, current) => {
-              const x = acc.find(item => item.slug === current.slug);
-              if (!x) {
-                return acc.concat([current]);
-              } else {
-                return acc;
-              }
-            }, []);
-            
-            fetchedPosts = uniquePosts;
-            
-            if (fetchedPosts.length >= 6) {
-              break; // We have enough posts, stop searching
-            }
-            // If we have some but not enough, continue searching but keep what we found
           }
         }
         
-        // If we found at least some posts with our specific search terms
-        if (fetchedPosts.length > 0) {
-          console.log(`Found ${fetchedPosts.length} posts for ${category} travel tips`);
-          setPosts(fetchedPosts);
+        // Remove duplicates by slug
+        const uniquePosts = Array.from(new Map(fetchedPosts.map(post => [post.slug, post])).values());
+        
+        // If we don't have enough posts, try more search terms
+        if (uniquePosts.length < 6 && searchTerms.length > 3) {
+          const additionalTerms = searchTerms.slice(3);
+          for (const term of additionalTerms) {
+            if (uniquePosts.length >= 9) break;
+            
+            const additionalPosts = await getPosts({ 
+              search: term,
+              perPage: 9 - uniquePosts.length
+            });
+            
+            if (additionalPosts && additionalPosts.length > 0) {
+              const transformedPosts = additionalPosts.map(transformPost).filter(Boolean);
+              
+              // Add new posts
+              for (const post of transformedPosts) {
+                if (!uniquePosts.some(p => p.slug === post.slug)) {
+                  uniquePosts.push(post);
+                }
+              }
+            }
+          }
+        }
+        
+        // If we found posts with our search terms
+        if (uniquePosts.length > 0) {
+          console.log(`Found ${uniquePosts.length} posts for ${category} travel tips`);
+          setPosts(uniquePosts);
+          
+          // Show success toast for first load
+          if (loading && uniquePosts.length > 0) {
+            toast({
+              title: `${formattedCategory} Travel Tips Loaded`,
+              description: `Showing ${uniquePosts.length} travel tips for ${formattedCategory.toLowerCase()} travelers.`,
+              duration: 3000,
+            });
+          }
         } else {
           // If still no posts, try general travel category as a fallback
           console.log('No specific posts found, fetching general travel posts');
@@ -138,22 +176,44 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
           });
           
           if (generalPosts && generalPosts.length > 0) {
-            fetchedPosts = generalPosts.map(transformPost).filter(Boolean);
-            setPosts(fetchedPosts);
+            const transformedPosts = generalPosts.map(transformPost).filter(Boolean);
+            setPosts(transformedPosts);
+            
+            toast({
+              description: `Showing general travel tips instead of specific ${category} tips.`,
+              duration: 3000,
+            });
           } else {
             setError('No travel tips found. Please check back later.');
+            
+            toast({
+              variant: "destructive",
+              title: "Content not available",
+              description: `We couldn't find any travel tips for "${category}".`,
+            });
           }
         }
       } catch (error) {
         console.error(`Error fetching ${category} travel tips:`, error);
         setError('Failed to load travel tips. Please try again later.');
+        
+        toast({
+          variant: "destructive",
+          title: "Error loading content",
+          description: "There was a problem fetching travel tips. Please try again.",
+        });
       } finally {
         setLoading(false);
       }
     };
     
     fetchPosts();
-  }, [category]);
+    
+    // Clean up function to cancel any ongoing fetch
+    return () => {
+      controller.abort();
+    };
+  }, [category, toast, loading]);
   
   // Get content for the special info box based on category
   const getCategoryInfoBox = () => {
@@ -161,45 +221,55 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
       case 'budget':
         return (
           <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+            <h3 className="font-semibold mb-2">Budget Travel Essentials</h3>
             <p className="text-md">
               Traveling on a budget doesn't mean sacrificing experiences. 
-              Discover smart ways to save money while making the most of your adventures.
+              Discover smart ways to save money while making the most of your adventures,
+              from finding affordable accommodations to eating like a local.
             </p>
           </div>
         );
       case 'luxury':
         return (
           <div className="mt-6 bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+            <h3 className="font-semibold mb-2">Luxury Travel Experiences</h3>
             <p className="text-md">
               Indulge in premium travel experiences with our luxury travel tips.
-              Find the best high-end destinations, accommodations and exclusive activities.
+              Find the best high-end destinations, accommodations, exclusive activities,
+              and learn how to maximize loyalty programs for upgrades.
             </p>
           </div>
         );
       case 'family':
         return (
           <div className="mt-6 bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+            <h3 className="font-semibold mb-2">Family-Friendly Adventures</h3>
             <p className="text-md">
               Family travel should be fun for everyone! Learn how to keep kids entertained
               while creating memorable experiences the whole family will cherish.
+              Get tips on kid-friendly destinations and activities.
             </p>
           </div>
         );
       case 'adventure':
         return (
           <div className="mt-6 bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
+            <h3 className="font-semibold mb-2">Thrilling Adventures</h3>
             <p className="text-md">
               Push your limits with exciting adventure travel. From trekking remote mountains
               to diving deep seas, find inspiration for your next thrilling experience.
+              Learn about safety precautions and gear essentials.
             </p>
           </div>
         );
       case 'solo':
         return (
           <div className="mt-6 bg-teal-50 dark:bg-teal-900/20 p-4 rounded-lg">
+            <h3 className="font-semibold mb-2">Solo Travel Freedom</h3>
             <p className="text-md">
               Embarking on a journey alone can be transformative. Discover safety tips,
               social opportunities, and how to make the most of your solo adventures.
+              Find destinations particularly welcoming to solo travelers.
             </p>
           </div>
         );
@@ -208,12 +278,21 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
     }
   };
   
+  // Related travel categories
+  const relatedCategories = [
+    { name: 'Budget', slug: 'budget' },
+    { name: 'Luxury', slug: 'luxury' },
+    { name: 'Family', slug: 'family' },
+    { name: 'Adventure', slug: 'adventure' },
+    { name: 'Solo', slug: 'solo' }
+  ].filter(cat => cat.slug !== category);
+  
   return (
     <Layout>
       <SEO 
         title={pageTitle}
         description={pageDescription}
-        keywords={`${category} travel tips, travel advice, travel blog, ${category} travel, travel planning, affordable travel, travel hacks`}
+        keywords={`${category} travel tips, travel advice, travel blog, ${category} travel, travel planning, affordable travel, travel hacks, jeff honforloco`}
         type="website"
       />
       
@@ -225,6 +304,19 @@ const TravelTips: React.FC<TravelTipsProps> = ({ category: propCategory }) => {
           </p>
           
           {getCategoryInfoBox()}
+          
+          {/* Related categories quick nav */}
+          <div className="mt-8 flex flex-wrap justify-center gap-2">
+            {relatedCategories.map(cat => (
+              <Link 
+                key={cat.slug}
+                to={`/travel/tips/${cat.slug}`}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full text-sm font-medium transition-colors"
+              >
+                {cat.name} Travel
+              </Link>
+            ))}
+          </div>
         </div>
         
         {loading ? (

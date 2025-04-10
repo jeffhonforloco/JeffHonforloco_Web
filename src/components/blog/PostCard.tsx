@@ -31,25 +31,31 @@ const PostCard: React.FC<PostCardProps> = ({ post, size = 'medium' }) => {
   }[size];
 
   // Handle both string and object formats for title and excerpt
-  const title = typeof post.title === 'string' ? post.title : post.title.rendered;
-  const excerpt = typeof post.excerpt === 'string' ? post.excerpt : post.excerpt.rendered;
-  const cleanTitle = title || '';
+  const title = typeof post.title === 'string' ? post.title : post.title?.rendered || '';
+  const excerpt = typeof post.excerpt === 'string' ? post.excerpt : post.excerpt?.rendered || '';
+  const cleanTitle = title.replace(/<[^>]*>/g, '') || 'Unnamed Post';
   const cleanExcerpt = excerpt || '';
+
+  // Use a placeholder image if featuredImage is not available
+  const imageUrl = post.featuredImage || '/placeholder.svg';
 
   return (
     <article className="article-card group bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
       <Link to={`/post/${post.slug}`} className={`block relative ${imageSizeClass} overflow-hidden`}>
         <img 
-          src={post.featuredImage} 
+          src={imageUrl} 
           alt={cleanTitle}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/placeholder.svg';
+          }}
         />
         <div className="absolute top-4 left-4">
           <Link 
             to={`/category/${post.categorySlug}`}
             className="bg-gold px-3 py-1 text-xs font-medium text-white rounded-full hover:bg-gold/90 transition-colors"
           >
-            {post.category}
+            {post.category || 'Uncategorized'}
           </Link>
         </div>
       </Link>

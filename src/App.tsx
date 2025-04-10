@@ -23,7 +23,21 @@ import DynamicWordPressPage from "./pages/DynamicWordPressPage";
 import EmailSubscribers from "./pages/admin/EmailSubscribers";
 import TravelTips from "./pages/TravelTips";
 
-const queryClient = new QueryClient();
+// Create a more optimized QueryClient with better caching settings
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1, // Only retry failed queries once
+      staleTime: 60 * 1000, // Consider data fresh for 1 minute
+      cacheTime: 10 * 60 * 1000, // Keep unused data in cache for 10 minutes
+      refetchOnWindowFocus: false, // Don't refetch when window regains focus
+      refetchOnMount: false, // Don't refetch when component mounts if data is fresh
+      onError: (error) => {
+        console.error("Query error:", error);
+      }
+    },
+  },
+});
 
 const App = () => (
   <HelmetProvider>
@@ -48,25 +62,34 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               
-              {/* Travel Specific Routes */}
-              <Route path="/travel/tips" element={<TravelTips />} />
-              <Route path="/travel/budget-tips" element={<TravelTips category="budget" />} />
-              <Route path="/travel/luxury-tips" element={<TravelTips category="luxury" />} />
-              <Route path="/travel/family-tips" element={<TravelTips category="family" />} />
-              <Route path="/travel/adventure-tips" element={<TravelTips category="adventure" />} />
-              <Route path="/travel/solo-tips" element={<TravelTips category="solo" />} />
-              <Route path="/travel/tips/:category" element={<TravelTips />} />
-              <Route path="/travel/guides" element={<DynamicWordPressPage />} />
-              <Route path="/travel/guides/:slug" element={<DynamicWordPressPage />} />
-              <Route path="/travel/destinations" element={<DynamicWordPressPage />} />
-              <Route path="/travel/destinations/:slug" element={<DynamicWordPressPage />} />
-              <Route path="/travel/backpacking-guides" element={<DynamicWordPressPage />} />
-              <Route path="/travel/adventure" element={<DynamicWordPressPage />} />
-              <Route path="/travel/budget" element={<TravelTips category="budget" />} />
-              <Route path="/travel/luxury" element={<TravelTips category="luxury" />} />
-              <Route path="/travel/family" element={<TravelTips category="family" />} />
-              <Route path="/travel/solo" element={<TravelTips category="solo" />} />
-              <Route path="/travel/:slug" element={<DynamicWordPressPage />} />
+              {/* Travel Specific Routes - Organized for better clarity */}
+              <Route path="/travel">
+                {/* Travel Tips */}
+                <Route path="tips" element={<TravelTips />} />
+                <Route path="tips/:category" element={<TravelTips />} />
+                <Route path="budget-tips" element={<TravelTips category="budget" />} />
+                <Route path="luxury-tips" element={<TravelTips category="luxury" />} />
+                <Route path="family-tips" element={<TravelTips category="family" />} />
+                <Route path="adventure-tips" element={<TravelTips category="adventure" />} />
+                <Route path="solo-tips" element={<TravelTips category="solo" />} />
+                
+                {/* Travel Categories */}
+                <Route path="budget" element={<TravelTips category="budget" />} />
+                <Route path="luxury" element={<TravelTips category="luxury" />} />
+                <Route path="family" element={<TravelTips category="family" />} />
+                <Route path="adventure" element={<DynamicWordPressPage />} />
+                <Route path="solo" element={<TravelTips category="solo" />} />
+                
+                {/* Travel Guides and Destinations */}
+                <Route path="guides" element={<DynamicWordPressPage />} />
+                <Route path="guides/:slug" element={<DynamicWordPressPage />} />
+                <Route path="destinations" element={<DynamicWordPressPage />} />
+                <Route path="destinations/:slug" element={<DynamicWordPressPage />} />
+                <Route path="backpacking-guides" element={<DynamicWordPressPage />} />
+                
+                {/* Catch-all for other travel pages */}
+                <Route path=":slug" element={<DynamicWordPressPage />} />
+              </Route>
               
               {/* Admin pages */}
               <Route path="/admin/email-subscribers" element={<EmailSubscribers />} />
