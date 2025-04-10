@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getPageBySlug, getPostsByCategory, getCategoryBySlug, getPosts, getPostBySlug } from '@/lib/wordpress';
@@ -381,23 +380,22 @@ const DynamicWordPressPage = () => {
   // Render page content
   if (pageType === 'page' && content) {
     // Safely get the title and content
-    const pageTitle = content.title?.rendered || '';
-    const pageContent = content.content?.rendered || '';
-    const pageExcerpt = content.excerpt?.rendered || '';
+    const title = typeof content.title === 'string' ? content.title : content.title?.rendered || '';
+    const contentHtml = typeof content.content === 'string' ? content.content : content.content?.rendered || '';
     
     return (
       <Layout>
         <SEO 
-          title={pageTitle} 
+          title={title} 
           description={pageDescription}
           keywords={pageKeywords.join(', ')}
           canonical={canonicalUrl}
         />
         <div className="container max-w-4xl py-12">
-          <h1 className="text-4xl font-bold mb-8" dangerouslySetInnerHTML={{ __html: pageTitle }} />
+          <h1 className="text-4xl font-bold mb-8" dangerouslySetInnerHTML={{ __html: title }} />
           <div 
             className="prose prose-lg dark:prose-invert max-w-none article-content"
-            dangerouslySetInnerHTML={{ __html: pageContent }} 
+            dangerouslySetInnerHTML={{ __html: contentHtml }} 
           />
         </div>
       </Layout>
@@ -407,16 +405,16 @@ const DynamicWordPressPage = () => {
   // Render post content directly in the dynamic page component
   if (pageType === 'post' && content) {
     // Use similar rendering as in the SinglePost component
-    const postTitle = content.title?.rendered || '';
-    const postContent = content.content?.rendered || '';
-    const postExcerpt = content.excerpt?.rendered || '';
+    const title = typeof content.title === 'string' ? content.title : content.title?.rendered || '';
+    const contentHtml = typeof content.content === 'string' ? content.content : content.content?.rendered || '';
+    const excerpt = typeof content.excerpt === 'string' ? content.excerpt : content.excerpt?.rendered || '';
     const featuredMedia = content._embedded?.['wp:featuredmedia']?.[0];
     const featuredImage = featuredMedia?.source_url || '/placeholder.svg';
     
     return (
       <Layout>
         <SEO 
-          title={postTitle} 
+          title={title} 
           description={pageDescription}
           keywords={pageKeywords.join(', ')}
           canonical={canonicalUrl}
@@ -426,13 +424,13 @@ const DynamicWordPressPage = () => {
         />
         <article className="pt-12 pb-16">
           <div className="container max-w-4xl mx-auto">
-            <h1 className="text-4xl font-bold mb-6" dangerouslySetInnerHTML={{ __html: postTitle }} />
+            <h1 className="text-4xl font-bold mb-6" dangerouslySetInnerHTML={{ __html: title }} />
             
             {featuredImage && (
               <figure className="mb-8 rounded-lg overflow-hidden">
                 <img 
                   src={featuredImage} 
-                  alt={postTitle} 
+                  alt={title} 
                   className="w-full h-auto" 
                 />
               </figure>
@@ -440,7 +438,7 @@ const DynamicWordPressPage = () => {
             
             <div 
               className="prose prose-lg dark:prose-invert max-w-none article-content"
-              dangerouslySetInnerHTML={{ __html: postContent }} 
+              dangerouslySetInnerHTML={{ __html: contentHtml }} 
             />
           </div>
         </article>
