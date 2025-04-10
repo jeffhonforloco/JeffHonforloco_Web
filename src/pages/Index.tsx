@@ -16,11 +16,15 @@ import { initEngagementTracking } from '@/utils/userEngagement';
 
 const Index = () => {
   useEffect(() => {
-    // Initialize engagement tracking
-    const cleanupTracking = initEngagementTracking();
+    // Initialize engagement tracking with proper error handling
+    let cleanupTracking: (() => void) | undefined;
     
-    // Track page view
-    console.log('Homepage view tracked');
+    try {
+      cleanupTracking = initEngagementTracking();
+      console.log('Homepage view tracked');
+    } catch (error) {
+      console.error('Error initializing engagement tracking:', error);
+    }
     
     // Add structured data directly to the page
     const structuredData = {
@@ -48,38 +52,49 @@ const Index = () => {
       },
     };
 
-    // Remove any existing script tags with the same ID
-    const existingScript = document.getElementById('homepage-structured-data');
-    if (existingScript) {
-      existingScript.remove();
+    try {
+      // Remove any existing script tags with the same ID
+      const existingScript = document.getElementById('homepage-structured-data');
+      if (existingScript) {
+        existingScript.remove();
+      }
+  
+      // Add the new script tag
+      const script = document.createElement('script');
+      script.id = 'homepage-structured-data';
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(structuredData);
+      document.head.appendChild(script);
+  
+      // For testing, clear previously set local storage values for popups
+      if (process.env.NODE_ENV === 'development') {
+        localStorage.removeItem('newsletter-subscribed');
+        localStorage.removeItem('ebook-downloaded');
+        localStorage.removeItem('ebook-popup-shown');
+        localStorage.removeItem('content-sections-loaded');
+        console.log('Reset popup state and content section tracking for testing');
+      }
+  
+      // Mark content sections as loaded for dynamic content
+      localStorage.setItem('content-sections-loaded', 'true');
+    } catch (error) {
+      console.error('Error setting up structured data:', error);
     }
-
-    // Add the new script tag
-    const script = document.createElement('script');
-    script.id = 'homepage-structured-data';
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(structuredData);
-    document.head.appendChild(script);
-
-    // For testing, clear previously set local storage values for popups
-    if (process.env.NODE_ENV === 'development') {
-      localStorage.removeItem('newsletter-subscribed');
-      localStorage.removeItem('ebook-downloaded');
-      localStorage.removeItem('ebook-popup-shown');
-      localStorage.removeItem('content-sections-loaded');
-      console.log('Reset popup state and content section tracking for testing');
-    }
-
-    // Mark content sections as loaded for dynamic content
-    localStorage.setItem('content-sections-loaded', 'true');
 
     // Clean up
     return () => {
-      const script = document.getElementById('homepage-structured-data');
-      if (script) {
-        script.remove();
+      try {
+        const script = document.getElementById('homepage-structured-data');
+        if (script) {
+          script.remove();
+        }
+        
+        if (cleanupTracking) {
+          cleanupTracking();
+        }
+      } catch (error) {
+        console.error('Error during cleanup:', error);
       }
-      cleanupTracking();
     };
   }, []);
 

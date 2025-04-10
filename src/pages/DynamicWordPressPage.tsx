@@ -43,14 +43,16 @@ const DynamicWordPressPage = () => {
     console.log(`Dynamic page view: ${location.pathname}`);
 
     try {
-      if (contentType === 'stories' || contentType === 'story') {
-        trackSectionView('stories');
-      } else if (contentType === 'affiliate') {
-        trackSectionView('affiliate');
-      } else if (contentType === 'recommendations' || contentType === 'recommendation') {
-        trackSectionView('recommendations');
-      } else if (contentType === 'resources' || contentType === 'resource') {
-        trackSectionView('resources');
+      if (contentType) {
+        if (contentType === 'stories' || contentType === 'story') {
+          trackSectionView('stories');
+        } else if (contentType === 'affiliate') {
+          trackSectionView('affiliate');
+        } else if (contentType === 'recommendations' || contentType === 'recommendation') {
+          trackSectionView('recommendations');
+        } else if (contentType === 'resources' || contentType === 'resource') {
+          trackSectionView('resources');
+        }
       }
     } catch (error) {
       console.error('Error tracking section view:', error);
@@ -112,32 +114,26 @@ const DynamicWordPressPage = () => {
             setContent(specificPage);
             setPageType('page');
             
-            const pageTitle = specificPage.title?.rendered || specificPage.title || '';
-            const pageContent = specificPage.content?.rendered || '';
-            const pageExcerpt = specificPage.excerpt?.rendered || '';
+            const safeTitle = specificPage.title?.rendered || specificPage.title || '';
+            const safeContent = specificPage.content?.rendered || '';
+            const safeExcerpt = specificPage.excerpt?.rendered || '';
             
-            const titleText = typeof pageTitle === 'string' 
-              ? pageTitle 
-              : typeof pageTitle?.rendered === 'string' 
-                ? pageTitle.rendered 
-                : '';
+            const titleText = typeof safeTitle === 'string' 
+              ? safeTitle 
+              : '';
                 
             setPageTitle(titleText);
             
-            const excerptText = typeof pageExcerpt === 'string' 
-              ? pageExcerpt.substring(0, 160) 
-              : typeof pageExcerpt?.rendered === 'string'
-                ? pageExcerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160) 
-                : '';
+            const excerptText = typeof safeExcerpt === 'string' 
+              ? safeExcerpt.substring(0, 160) 
+              : safeExcerpt.replace?.(/<[^>]*>/g, '').substring(0, 160) || '';
                 
             setPageDescription(excerptText);
             
-            if (pageContent) {
-              const contentText = typeof pageContent === 'string' 
-                ? pageContent 
-                : typeof pageContent?.rendered === 'string'
-                  ? pageContent.rendered 
-                  : '';
+            if (safeContent) {
+              const contentText = typeof safeContent === 'string' 
+                ? safeContent
+                : '';
                   
               const keywords = extractKeywords(contentText, titleText, '');
               setPageKeywords(keywords);
@@ -505,16 +501,18 @@ const DynamicWordPressPage = () => {
   }
 
   if (pageType === 'page' && content) {
-    const title = typeof content.title === 'string' 
-      ? content.title 
-      : typeof content.title?.rendered === 'string'
-        ? content.title.rendered 
+    const titleContent = content.title || {};
+    const title = typeof titleContent === 'string' 
+      ? titleContent 
+      : typeof titleContent.rendered === 'string'
+        ? titleContent.rendered 
         : '';
         
-    const contentHtml = typeof content.content === 'string' 
-      ? content.content 
-      : typeof content.content?.rendered === 'string'
-        ? content.content.rendered 
+    const contentBody = content.content || {};
+    const contentHtml = typeof contentBody === 'string' 
+      ? contentBody 
+      : typeof contentBody.rendered === 'string'
+        ? contentBody.rendered 
         : '';
     
     return (
@@ -537,22 +535,25 @@ const DynamicWordPressPage = () => {
   }
 
   if (pageType === 'post' && content) {
-    const title = typeof content.title === 'string' 
-      ? content.title 
-      : typeof content.title?.rendered === 'string'
-        ? content.title.rendered 
+    const titleContent = content.title || {};
+    const title = typeof titleContent === 'string' 
+      ? titleContent 
+      : typeof titleContent.rendered === 'string'
+        ? titleContent.rendered 
         : '';
         
-    const contentHtml = typeof content.content === 'string' 
-      ? content.content 
-      : typeof content.content?.rendered === 'string'
-        ? content.content.rendered 
+    const contentBody = content.content || {};
+    const contentHtml = typeof contentBody === 'string' 
+      ? contentBody 
+      : typeof contentBody.rendered === 'string'
+        ? contentBody.rendered 
         : '';
         
-    const excerpt = typeof content.excerpt === 'string' 
-      ? content.excerpt 
-      : typeof content.excerpt?.rendered === 'string'
-        ? content.excerpt.rendered 
+    const excerptContent = content.excerpt || {};
+    const excerpt = typeof excerptContent === 'string' 
+      ? excerptContent 
+      : typeof excerptContent.rendered === 'string'
+        ? excerptContent.rendered 
         : '';
         
     const featuredMedia = content._embedded?.['wp:featuredmedia']?.[0];

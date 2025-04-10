@@ -34,14 +34,14 @@ const loadMetrics = (): EngagementMetrics => {
       // Ensure the metrics object has all required properties
       // This handles cases where the saved metrics might be missing properties
       return {
-        timeOnPage: parsedMetrics.timeOnPage || 0,
-        scrollPercentage: parsedMetrics.scrollPercentage || 0,
-        interactionCount: parsedMetrics.interactionCount || 0,
+        timeOnPage: parsedMetrics?.timeOnPage || 0,
+        scrollPercentage: parsedMetrics?.scrollPercentage || 0,
+        interactionCount: parsedMetrics?.interactionCount || 0,
         sectionViews: {
-          stories: parsedMetrics.sectionViews?.stories || 0,
-          affiliate: parsedMetrics.sectionViews?.affiliate || 0,
-          recommendations: parsedMetrics.sectionViews?.recommendations || 0,
-          resources: parsedMetrics.sectionViews?.resources || 0
+          stories: parsedMetrics?.sectionViews?.stories || 0,
+          affiliate: parsedMetrics?.sectionViews?.affiliate || 0,
+          recommendations: parsedMetrics?.sectionViews?.recommendations || 0,
+          resources: parsedMetrics?.sectionViews?.resources || 0
         }
       };
     } catch (e) {
@@ -57,8 +57,21 @@ const loadMetrics = (): EngagementMetrics => {
 // Save metrics to localStorage
 const saveMetrics = (metrics: EngagementMetrics): void => {
   try {
-    localStorage.setItem('user-engagement', JSON.stringify(metrics));
-    console.log('Updated engagement metrics:', metrics);
+    // Ensure the metrics object has all required properties before saving
+    const safeMetrics = {
+      timeOnPage: metrics?.timeOnPage || 0,
+      scrollPercentage: metrics?.scrollPercentage || 0,
+      interactionCount: metrics?.interactionCount || 0,
+      sectionViews: {
+        stories: metrics?.sectionViews?.stories || 0,
+        affiliate: metrics?.sectionViews?.affiliate || 0,
+        recommendations: metrics?.sectionViews?.recommendations || 0,
+        resources: metrics?.sectionViews?.resources || 0
+      }
+    };
+    
+    localStorage.setItem('user-engagement', JSON.stringify(safeMetrics));
+    console.log('Updated engagement metrics:', safeMetrics);
   } catch (error) {
     console.error('Error saving engagement metrics:', error);
   }
@@ -74,6 +87,10 @@ export const updateMetric = (metric: keyof EngagementMetrics, value: number | ob
   try {
     const metrics = loadMetrics();
     if (metric === 'sectionViews' && typeof value === 'object') {
+      // Ensure sectionViews exists before updating
+      if (!metrics.sectionViews) {
+        metrics.sectionViews = { ...DEFAULT_METRICS.sectionViews };
+      }
       metrics.sectionViews = { ...metrics.sectionViews, ...value };
     } else if (typeof value === 'number') {
       (metrics[metric] as number) = value;
@@ -88,19 +105,21 @@ export const updateMetric = (metric: keyof EngagementMetrics, value: number | ob
 // Track section view - Enhanced with better error handling
 export const trackSectionView = (section: keyof EngagementMetrics['sectionViews']): void => {
   try {
+    // Get current metrics with guaranteed defaults
     const metrics = loadMetrics();
     
-    // Initialize sectionViews if it doesn't exist
+    // Ensure the section key is valid
+    if (!['stories', 'affiliate', 'recommendations', 'resources'].includes(section)) {
+      console.warn(`Invalid section name: ${section}. Skipping tracking.`);
+      return;
+    }
+    
+    // Double-check sectionViews exists
     if (!metrics.sectionViews) {
       metrics.sectionViews = { ...DEFAULT_METRICS.sectionViews };
     }
     
-    // Check if section exists in the sectionViews object
-    if (!(section in metrics.sectionViews)) {
-      metrics.sectionViews = { ...metrics.sectionViews, [section]: 0 };
-    }
-    
-    // Now safely increment the counter, with fallback if it's not a number
+    // Safely increment the counter with a type guard
     if (typeof metrics.sectionViews[section] !== 'number') {
       metrics.sectionViews[section] = 1;
     } else {
