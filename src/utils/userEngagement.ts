@@ -4,12 +4,24 @@ export interface EngagementMetrics {
   timeOnPage: number;
   scrollPercentage: number;
   interactionCount: number;
+  sectionViews: {
+    stories: number;
+    affiliate: number;
+    recommendations: number;
+    resources: number;
+  };
 }
 
 const DEFAULT_METRICS: EngagementMetrics = {
   timeOnPage: 0,
   scrollPercentage: 0,
   interactionCount: 0,
+  sectionViews: {
+    stories: 0,
+    affiliate: 0,
+    recommendations: 0,
+    resources: 0
+  }
 };
 
 // Load metrics from localStorage or use defaults
@@ -37,17 +49,31 @@ export const getEngagementMetrics = (): EngagementMetrics => {
 };
 
 // Update a specific metric
-export const updateMetric = (metric: keyof EngagementMetrics, value: number): void => {
+export const updateMetric = (metric: keyof EngagementMetrics, value: number | object): void => {
   const metrics = loadMetrics();
-  metrics[metric] = value;
+  if (metric === 'sectionViews' && typeof value === 'object') {
+    metrics.sectionViews = { ...metrics.sectionViews, ...value };
+  } else if (typeof value === 'number') {
+    (metrics[metric] as number) = value;
+  }
   saveMetrics(metrics);
+};
+
+// Track section view
+export const trackSectionView = (section: keyof EngagementMetrics['sectionViews']): void => {
+  const metrics = loadMetrics();
+  metrics.sectionViews[section]++;
+  saveMetrics(metrics);
+  console.log(`Tracked view of ${section} section`);
 };
 
 // Increment a metric by a given amount (default: 1)
 export const incrementMetric = (metric: keyof EngagementMetrics, amount: number = 1): void => {
   const metrics = loadMetrics();
-  metrics[metric] += amount;
-  saveMetrics(metrics);
+  if (typeof metrics[metric] === 'number') {
+    (metrics[metric] as number) += amount;
+    saveMetrics(metrics);
+  }
 };
 
 // Check if user is sufficiently engaged based on criteria

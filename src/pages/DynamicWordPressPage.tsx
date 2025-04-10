@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getPageBySlug, getPostsByCategory, getCategoryBySlug, getPosts, getPostBySlug } from '@/lib/wordpress';
@@ -7,6 +8,7 @@ import SEO from '@/components/shared/SEO';
 import PostCard from '@/components/blog/PostCard';
 import { Loader2 } from 'lucide-react';
 import { calculateReadingTime, extractKeywords, getCanonicalUrl } from '@/lib/seo-utils';
+import { trackSectionView } from '@/utils/userEngagement';
 
 const DynamicWordPressPage = () => {
   const { slug, categorySlug, storySlug, guideSlug, recommendationSlug, resourceSlug, affiliateSlug } = useParams();
@@ -16,7 +18,7 @@ const DynamicWordPressPage = () => {
   const [content, setContent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [pageType, setPageType] = useState<'page' | 'category' | 'posts' | 'post' | null>(null);
+  const [pageType, setPageType] = useState<'page' | 'category' | 'posts' | 'post' | 'story' | 'guide' | 'recommendation' | 'resource' | 'affiliate' | null>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [pageTitle, setPageTitle] = useState('');
   const [pageDescription, setPageDescription] = useState('');
@@ -34,6 +36,9 @@ const DynamicWordPressPage = () => {
   // Generate canonical URL
   const canonicalUrl = getCanonicalUrl(location.pathname);
 
+  // Log current path info for debugging
+  console.log(`DynamicWordPressPage: Path: ${location.pathname}, Type: ${contentType}, Slug: ${contentSlug}`);
+
   useEffect(() => {
     // Skip fetching if we're on a special route like /404
     if (location.pathname === '/404') {
@@ -44,6 +49,17 @@ const DynamicWordPressPage = () => {
     // Track page view
     console.log(`Dynamic page view: ${location.pathname}`);
 
+    // Track content section views for analytics
+    if (contentType === 'stories' || contentType === 'story') {
+      trackSectionView('stories');
+    } else if (contentType === 'affiliate') {
+      trackSectionView('affiliate');
+    } else if (contentType === 'recommendations' || contentType === 'recommendation') {
+      trackSectionView('recommendations');
+    } else if (contentType === 'resources' || contentType === 'resource') {
+      trackSectionView('resources');
+    }
+
     const fetchContent = async () => {
       setLoading(true);
       setError(null);
@@ -51,6 +67,113 @@ const DynamicWordPressPage = () => {
       try {
         console.log(`Fetching content for path: ${location.pathname}`);
         console.log(`Content type: ${contentType}, slug: ${contentSlug}`);
+        
+        // Special handling for specific content types (stories, affiliate, recommendations, resources)
+        if (['stories', 'story', 'affiliate', 'recommendations', 'recommendation', 'resources', 'resource'].includes(contentType)) {
+          console.log(`Special content type detected: ${contentType}`);
+          
+          let sectionTitle = '';
+          let searchQuery = '';
+          let sectionDescription = '';
+          let pageTypeValue: 'story' | 'affiliate' | 'recommendation' | 'resource' | 'posts' = 'posts';
+          
+          switch (contentType) {
+            case 'stories':
+            case 'story':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Stories` : 'Personal Stories';
+              searchQuery = contentSlug || 'story, personal experience';
+              sectionDescription = `Discover ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}personal stories and experiences from Jeff HonForLoco.`;
+              pageTypeValue = 'story';
+              break;
+              
+            case 'affiliate':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Resources` : 'Affiliate Resources';
+              searchQuery = contentSlug || 'affiliate';
+              sectionDescription = `Recommended ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}products and services that Jeff personally uses and trusts.`;
+              pageTypeValue = 'affiliate';
+              break;
+              
+            case 'recommendations':
+            case 'recommendation':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Recommendations` : 'Recommendations';
+              searchQuery = contentSlug || 'recommendation';
+              sectionDescription = `Top ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}recommendations and reviews from Jeff's personal experience.`;
+              pageTypeValue = 'recommendation';
+              break;
+              
+            case 'resources':
+            case 'resource':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Resources` : 'Resources';
+              searchQuery = contentSlug || 'resource';
+              sectionDescription = `Valuable ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}resources and tools to help you succeed.`;
+              pageTypeValue = 'resource';
+              break;
+          }
+          
+          // Try to fetch a specific page for this content type first
+          const specificPage = await getPageBySlug(`${contentType}/${contentSlug || ''}`);
+          
+          if (specificPage) {
+            console.log(`Found specific page for ${contentType}/${contentSlug || ''}`);
+            setContent(specificPage);
+            setPageType('page');
+            
+            // Extract page title and description for SEO
+            const pageTitle = specificPage.title?.rendered || specificPage.title || '';
+            const pageContent = specificPage.content?.rendered || '';
+            const pageExcerpt = specificPage.excerpt?.rendered || '';
+            
+            setPageTitle(pageTitle);
+            setPageDescription(pageExcerpt.replace(/<[^>]*>/g, '').substring(0, 160));
+            
+            // Extract keywords from content
+            if (pageContent) {
+              const keywords = extractKeywords(pageContent, pageTitle, '');
+              setPageKeywords(keywords);
+            }
+            
+            setLoading(false);
+            return;
+          }
+          
+          // If no specific page, fetch related posts
+          console.log(`Fetching posts for ${contentType} with search query: ${searchQuery}`);
+          const fetchedPosts = await getPosts({ 
+            search: searchQuery, 
+            perPage: 12,
+            orderBy: 'date',
+            order: 'desc'
+          });
+          
+          if (fetchedPosts && fetchedPosts.length > 0) {
+            console.log(`Found ${fetchedPosts.length} posts for section ${sectionTitle}`);
+            setPageTitle(sectionTitle);
+            setPageDescription(sectionDescription);
+            setPageKeywords([contentType, searchQuery, 'jeff honforloco', 'blog']);
+            setPosts(fetchedPosts);
+            setPageType(pageTypeValue);
+            setLoading(false);
+            return;
+          } else {
+            console.log(`No posts found for ${contentType}. Creating default content.`);
+            
+            // Create default content for this section if no posts found
+            setPageTitle(sectionTitle);
+            setPageDescription(sectionDescription);
+            setPageKeywords([contentType, 'jeff honforloco', 'blog']);
+            setPageType(pageTypeValue);
+            setPosts([]); // Empty posts array
+            
+            // Set a simple content object with title and description
+            setContent({
+              title: { rendered: sectionTitle },
+              content: { rendered: `<p>${sectionDescription}</p><p>Content for this section is coming soon. Check back later for updates!</p>` }
+            });
+            
+            setLoading(false);
+            return;
+          }
+        }
         
         // Special case for post URLs (handle /post/slug directly)
         if (contentType === 'post' && contentSlug) {
@@ -218,31 +341,6 @@ const DynamicWordPressPage = () => {
           let sectionDescription = '';
           
           switch (contentType) {
-            case 'stories':
-              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Stories` : 'Stories';
-              searchQuery = 'story';
-              sectionDescription = `Discover ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}stories and personal experiences from Jeff HonForLoco.`;
-              break;
-            case 'guides':
-              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Guides` : 'Guides';
-              searchQuery = 'guide';
-              sectionDescription = `Explore ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}guides and tutorials to help you on your journey.`;
-              break;
-            case 'affiliate':
-              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Resources` : 'Affiliate Resources';
-              searchQuery = contentSlug || 'affiliate';
-              sectionDescription = `Recommended ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}products and services that Jeff personally uses and trusts.`;
-              break;
-            case 'recommendations':
-              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Recommendations` : 'Recommendations';
-              searchQuery = contentSlug || 'recommendation';
-              sectionDescription = `Top ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}recommendations and reviews from Jeff's personal experience.`;
-              break;
-            case 'resources':
-              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Resources` : 'Resources';
-              searchQuery = contentSlug || 'resource';
-              sectionDescription = `Valuable ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}resources and tools to help you succeed.`;
-              break;
             case 'travel':
               sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Travel` : 'Travel';
               searchQuery = contentSlug ? `${contentSlug} travel` : 'travel';
@@ -321,7 +419,7 @@ const DynamicWordPressPage = () => {
             name: 'Jeff HonForLoco'
           };
         }
-      } else if (pageType === 'category' || pageType === 'posts') {
+      } else if (['category', 'posts', 'story', 'affiliate', 'recommendation', 'resource'].includes(pageType)) {
         structuredData = {
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
@@ -372,6 +470,53 @@ const DynamicWordPressPage = () => {
         <SEO title="Loading..." />
         <div className="container max-w-7xl py-12 flex items-center justify-center min-h-[50vh]">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
+  // Render special content types with appropriate styling and layout
+  if (['story', 'affiliate', 'recommendation', 'resource'].includes(pageType as string) && posts.length > 0) {
+    let sectionTitle = pageTitle;
+    let sectionDescription = pageDescription;
+    let sectionIcon = null;
+    
+    // Select appropriate icon or styling based on pageType
+    switch (pageType) {
+      case 'story':
+        sectionIcon = "📖";
+        break;
+      case 'affiliate':
+        sectionIcon = "🔗";
+        break;
+      case 'recommendation':
+        sectionIcon = "👍";
+        break;
+      case 'resource':
+        sectionIcon = "🛠️";
+        break;
+    }
+    
+    return (
+      <Layout>
+        <SEO 
+          title={pageTitle} 
+          description={pageDescription}
+          keywords={pageKeywords.join(', ')}
+          canonical={canonicalUrl}
+        />
+        <div className="container max-w-7xl py-12">
+          <div className="text-center mb-12">
+            {sectionIcon && <div className="text-4xl mb-4">{sectionIcon}</div>}
+            <h1 className="text-4xl font-bold mb-4">{sectionTitle}</h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">{sectionDescription}</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
         </div>
       </Layout>
     );
@@ -478,7 +623,7 @@ const DynamicWordPressPage = () => {
     );
   }
 
-  // Render posts section (for stories, guides, affiliates, etc.)
+  // Render posts section (for guides, etc.)
   if (pageType === 'posts' && posts.length > 0) {
     return (
       <Layout>

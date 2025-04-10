@@ -66,8 +66,12 @@ const Index = () => {
       localStorage.removeItem('newsletter-subscribed');
       localStorage.removeItem('ebook-downloaded');
       localStorage.removeItem('ebook-popup-shown');
-      console.log('Reset popup state for testing');
+      localStorage.removeItem('content-sections-loaded');
+      console.log('Reset popup state and content section tracking for testing');
     }
+
+    // Mark content sections as loaded for dynamic content
+    localStorage.setItem('content-sections-loaded', 'true');
 
     // Clean up
     return () => {
