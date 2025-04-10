@@ -21,10 +21,12 @@ import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import DynamicWordPressPage from "./pages/DynamicWordPressPage";
 import EmailSubscribers from "./pages/admin/EmailSubscribers";
+import TravelTips from "./pages/TravelTips";
 
 const HANDLED_ROUTES = [
   "/", "/blog", "/about", "/contact", "/shop", "/cart", 
-  "/travel", "/explore-travel", "/privacy-policy", "/terms-of-service"
+  "/travel", "/explore-travel", "/privacy-policy", "/terms-of-service",
+  "/travel/budget-tips"
 ];
 
 const queryClient = new QueryClient();
@@ -51,6 +53,10 @@ const App = () => (
               <Route path="/explore-travel" element={<ExploreTravel />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              
+              {/* Travel Tips Pages */}
+              <Route path="/travel/budget-tips" element={<TravelTips category="budget" />} />
+              <Route path="/travel/tips/:category" element={<TravelTips />} />
               
               {/* Admin pages */}
               <Route path="/admin/email-subscribers" element={<EmailSubscribers />} />

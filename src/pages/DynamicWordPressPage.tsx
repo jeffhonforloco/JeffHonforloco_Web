@@ -82,6 +82,71 @@ const DynamicWordPressPage = () => {
           }
         }
         
+        // Special case for nested paths like travel/budget-tips
+        if (pathSegments.length >= 2) {
+          // Try with the full path first (minus leading slash)
+          const fullPath = location.pathname.startsWith('/') ? location.pathname.substring(1) : location.pathname;
+          console.log(`Trying to fetch page with full path: ${fullPath}`);
+          const pageByFullPath = await getPageBySlug(fullPath);
+          
+          if (pageByFullPath) {
+            console.log('Found page by full path:', pageByFullPath.title?.rendered);
+            setContent(pageByFullPath);
+            setPageType('page');
+            
+            const pageTitle = pageByFullPath.title?.rendered || '';
+            const pageContent = pageByFullPath.content?.rendered || '';
+            
+            setPageTitle(pageTitle);
+            setPageDescription(pageByFullPath.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || '');
+            
+            if (pageContent) {
+              const keywords = extractKeywords(pageContent, pageTitle, '');
+              setPageKeywords(keywords);
+            }
+            
+            setLoading(false);
+            return;
+          }
+          
+          // If not found, try with parent/child combination
+          // For example, for /travel/budget-tips, try "travel-budget-tips"
+          const combinedSlug = pathSegments.join('-');
+          console.log(`Trying to fetch page with combined slug: ${combinedSlug}`);
+          const pageByCombinedSlug = await getPageBySlug(combinedSlug);
+          
+          if (pageByCombinedSlug) {
+            console.log('Found page by combined slug:', pageByCombinedSlug.title?.rendered);
+            setContent(pageByCombinedSlug);
+            setPageType('page');
+            
+            const pageTitle = pageByCombinedSlug.title?.rendered || '';
+            const pageContent = pageByCombinedSlug.content?.rendered || '';
+            
+            setPageTitle(pageTitle);
+            setPageDescription(pageByCombinedSlug.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || '');
+            
+            if (pageContent) {
+              const keywords = extractKeywords(pageContent, pageTitle, '');
+              setPageKeywords(keywords);
+            }
+            
+            setLoading(false);
+            return;
+          }
+          
+          // For travel/tips type pages, redirect to the dedicated TravelTips component
+          if (pathSegments[0] === 'travel' && (pathSegments[1] === 'tips' || pathSegments[1] === 'budget-tips')) {
+            const tipCategory = pathSegments[2] || (pathSegments[1] === 'budget-tips' ? 'budget' : '');
+            if (tipCategory) {
+              navigate(`/travel/tips/${tipCategory}`, { replace: true });
+            } else {
+              navigate('/travel/tips/general', { replace: true });
+            }
+            return;
+          }
+        }
+        
         // Try to fetch as a page first
         let pageResult;
         
@@ -179,6 +244,11 @@ const DynamicWordPressPage = () => {
               searchQuery = contentSlug || 'resource';
               sectionDescription = `Valuable ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}resources and tools to help you succeed.`;
               break;
+            case 'travel':
+              sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Travel` : 'Travel';
+              searchQuery = contentSlug ? `${contentSlug} travel` : 'travel';
+              sectionDescription = `Travel ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}advice, tips, and stories to inspire your next adventure.`;
+              break;
           }
           
           if (searchQuery) {
@@ -220,7 +290,7 @@ const DynamicWordPressPage = () => {
     };
     
     fetchContent();
-  }, [location.pathname, categoryParam, contentSlug, contentType, toast]);
+  }, [location.pathname, categoryParam, contentSlug, contentType, toast, navigate, pathSegments]);
 
   // Handle error state - Use useEffect for navigation to prevent render-phase updates
   useEffect(() => {
