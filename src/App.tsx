@@ -21,6 +21,7 @@ import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import DynamicWordPressPage from "./pages/DynamicWordPressPage";
 import EmailSubscribers from "./pages/admin/EmailSubscribers";
+import WordPressContent from "./pages/admin/WordPressContent";
 import TravelTips from "./pages/TravelTips";
 
 // Create a more optimized QueryClient with better caching settings
@@ -95,6 +96,7 @@ const App = () => (
               
               {/* Admin pages */}
               <Route path="/admin/email-subscribers" element={<EmailSubscribers />} />
+              <Route path="/admin/wordpress-content" element={<WordPressContent />} />
               
               {/* Category Pages */}
               <Route path="/category/:categorySlug/*" element={<DynamicWordPressPage />} />
