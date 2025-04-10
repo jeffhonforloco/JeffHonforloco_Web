@@ -5,6 +5,9 @@ import Layout from '@/components/layout/Layout';
 import ContentSyncStatus from '@/components/wordpress/ContentSyncStatus';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import MediaManager from '@/components/wordpress/MediaManager';
+import ContentPreview from '@/components/wordpress/ContentPreview';
+import SelectiveSync from '@/components/wordpress/SelectiveSync';
 
 const WordPressContent = () => {
   return (
@@ -25,11 +28,26 @@ const WordPressContent = () => {
         <Tabs defaultValue="sync" className="w-full">
           <TabsList className="mb-8">
             <TabsTrigger value="sync">Content Sync</TabsTrigger>
+            <TabsTrigger value="preview">Content Preview</TabsTrigger>
+            <TabsTrigger value="selective">Selective Sync</TabsTrigger>
+            <TabsTrigger value="media">Media Library</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
           
           <TabsContent value="sync" className="space-y-6">
             <ContentSyncStatus />
+          </TabsContent>
+          
+          <TabsContent value="preview" className="space-y-6">
+            <ContentPreview />
+          </TabsContent>
+          
+          <TabsContent value="selective" className="space-y-6">
+            <SelectiveSync />
+          </TabsContent>
+          
+          <TabsContent value="media" className="space-y-6">
+            <MediaManager />
           </TabsContent>
           
           <TabsContent value="settings">

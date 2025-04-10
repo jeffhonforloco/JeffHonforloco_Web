@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { syncAllContent } from '@/lib/wordpress';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface SyncStatus {
   postsCount: number;
@@ -86,7 +86,7 @@ const ContentSyncStatus = () => {
       <CardHeader>
         <CardTitle>WordPress Content Sync</CardTitle>
         <CardDescription>
-          Sync content from your WordPress site to keep your content up to date.
+          Sync all content from your WordPress site to keep your content up to date.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -146,7 +146,7 @@ const ContentSyncStatus = () => {
           disabled={syncStatus.inProgress}
         >
           {syncStatus.inProgress && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {syncStatus.inProgress ? 'Syncing...' : 'Sync WordPress Content'}
+          {syncStatus.inProgress ? 'Syncing...' : 'Sync All WordPress Content'}
         </Button>
       </CardFooter>
     </Card>
