@@ -49,6 +49,10 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/post/:slug" element={<SinglePost />} />
               <Route path="/category/:slug" element={<CategoryPage />} />
+              
+              {/* Specific Category Routes - Add motivation-stories explicitly */}
+              <Route path="/category/motivation-stories" element={<CategoryPage />} />
+              
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/shop" element={<Shop />} />
@@ -92,6 +96,11 @@ const App = () => (
               
               {/* Category Pages */}
               <Route path="/category/:categorySlug/*" element={<DynamicWordPressPage />} />
+              
+              {/* Stories Pages */}
+              <Route path="/stories" element={<DynamicWordPressPage />} />
+              <Route path="/stories/:storySlug" element={<DynamicWordPressPage />} />
+              <Route path="/motivation-stories" element={<DynamicWordPressPage />} />
               
               {/* Post URL fallback - Important for direct post URLs */}
               <Route path="/post/:postSlug/*" element={<DynamicWordPressPage />} />

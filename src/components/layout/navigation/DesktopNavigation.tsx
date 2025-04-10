@@ -38,6 +38,10 @@ const DesktopNavigation = () => {
                   href="/category/building-habits"
                 />
                 <NavigationItem 
+                  title="Motivation Stories" 
+                  href="/category/motivation-stories"
+                />
+                <NavigationItem 
                   title="All Lifestyle Content" 
                   href="/category/lifestyle-growth"
                 />

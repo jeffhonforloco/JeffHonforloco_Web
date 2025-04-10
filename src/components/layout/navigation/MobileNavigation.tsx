@@ -48,6 +48,13 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
                     Building Habits
                   </Link>
                   <Link 
+                    to="/category/motivation-stories" 
+                    className="text-lg font-medium text-charcoal w-full py-2"
+                    onClick={onClose}
+                  >
+                    Motivation Stories
+                  </Link>
+                  <Link 
                     to="/blog" 
                     className="text-lg font-medium text-charcoal w-full py-2"
                     onClick={onClose}

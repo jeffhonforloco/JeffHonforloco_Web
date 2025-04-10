@@ -73,6 +73,25 @@ const DynamicWordPressPage = () => {
         console.log(`Fetching content for path: ${location.pathname}`);
         console.log(`Content type: ${contentType}, slug: ${contentSlug}`);
         
+        if (location.pathname === '/category/motivation-stories' || 
+            location.pathname === '/category/motivation-stories/') {
+          console.log('Handling motivation-stories category');
+          const category = await getCategoryBySlug('motivation-stories');
+          
+          if (category) {
+            console.log('Found motivation-stories category:', category);
+            const { posts: categoryPosts } = await getPostsByCategory('motivation-stories');
+            setContent(category);
+            setPosts(categoryPosts);
+            setPageType('category');
+            setPageTitle(category.name || 'Motivation Stories');
+            setPageDescription(category.description || 'Read inspiring motivation stories from Jeff HonForLoco.');
+            setPageKeywords(['motivation', 'stories', 'inspiration', 'personal development']);
+            setLoading(false);
+            return;
+          }
+        }
+        
         if (['stories', 'story', 'affiliate', 'recommendations', 'recommendation', 'resources', 'resource'].includes(contentType)) {
           console.log(`Special content type detected: ${contentType}`);
           
@@ -85,7 +104,7 @@ const DynamicWordPressPage = () => {
             case 'stories':
             case 'story':
               sectionTitle = contentSlug ? `${contentSlug.replace(/-/g, ' ')} Stories` : 'Personal Stories';
-              searchQuery = contentSlug || 'story, personal experience';
+              searchQuery = contentSlug || 'story, personal experience, motivation';
               sectionDescription = `Discover ${contentSlug ? contentSlug.replace(/-/g, ' ') + ' ' : ''}personal stories and experiences from Jeff HonForLoco.`;
               pageTypeValue = 'story';
               break;
