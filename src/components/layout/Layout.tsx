@@ -3,7 +3,6 @@ import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import { ScrollToTop } from './ScrollToTop';
-import NewsletterPopup from '../home/NewsletterPopup';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,7 +17,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
       <Footer />
       <ScrollToTop />
-      <NewsletterPopup />
     </div>
   );
 };

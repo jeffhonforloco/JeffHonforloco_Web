@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from "@/hooks/use-toast";
 import { subscribeEmail } from '@/utils/emailService';
+import { isUserEngaged } from '@/utils/userEngagement';
 
 const NewsletterPopup = () => {
   const [open, setOpen] = useState(false);
@@ -18,14 +19,35 @@ const NewsletterPopup = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Show popup after 15 seconds (increased from 5 seconds to not conflict with ebook popup)
+    // Show popup after user engagement and the ebook popup has been shown (or not shown)
     const timer = setTimeout(() => {
-      // Check if user has already subscribed (using localStorage)
+      // Check if user has already subscribed
       const hasSubscribed = localStorage.getItem('newsletter-subscribed');
       // Also check if they downloaded the ebook (to avoid too many popups)
       const hasDownloadedEbook = localStorage.getItem('ebook-downloaded');
+      // Check when the ebook popup was shown
+      const ebookPopupShownTime = localStorage.getItem('ebook-popup-shown');
       
-      if (!hasSubscribed && !hasDownloadedEbook) {
+      const shouldShowPopup = () => {
+        // If they've already subscribed or downloaded the ebook, don't show
+        if (hasSubscribed || hasDownloadedEbook) return false;
+        
+        // If the ebook popup was shown recently, add minimum delay between popups
+        if (ebookPopupShownTime) {
+          const timeSinceEbookPopup = Date.now() - parseInt(ebookPopupShownTime);
+          // Ensure at least 60 seconds between popups
+          if (timeSinceEbookPopup < 60000) return false;
+        }
+        
+        // Check for user engagement
+        return isUserEngaged({
+          timeOnPage: 35, // At least 35 seconds on page
+          scrollPercentage: 30, // Scrolled at least 30% of the page
+          interactionCount: 3  // Had at least 3 interactions
+        });
+      };
+      
+      if (shouldShowPopup()) {
         setOpen(true);
       }
     }, 15000);

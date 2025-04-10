@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { subscribeEmail } from '@/utils/emailService';
+import { isUserEngaged, initEngagementTracking } from '@/utils/userEngagement';
 
 const EbookPopup = () => {
   const [open, setOpen] = useState(false);
@@ -20,18 +21,32 @@ const EbookPopup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const { toast } = useToast();
-
+  
   useEffect(() => {
-    // Show popup after 8 seconds
+    // Initialize engagement tracking
+    const cleanupTracking = initEngagementTracking();
+    
+    // Show popup after engagement criteria are met and timeout
     const timer = setTimeout(() => {
       // Check if user has already downloaded the ebook
       const hasDownloaded = localStorage.getItem('ebook-downloaded');
-      if (!hasDownloaded) {
+      
+      // Only show if they haven't downloaded and are engaged
+      if (!hasDownloaded && isUserEngaged({
+        timeOnPage: 20, // At least 20 seconds on page
+        scrollPercentage: 15, // Scrolled at least 15% of the page
+        interactionCount: 2  // Had at least 2 interactions
+      })) {
+        // Mark that we've shown the ebook popup to properly space them
+        localStorage.setItem('ebook-popup-shown', Date.now().toString());
         setOpen(true);
       }
     }, 8000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      cleanupTracking();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
