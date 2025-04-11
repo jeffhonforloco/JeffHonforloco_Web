@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
@@ -10,17 +9,22 @@ interface ThemeToggleProps {
 const ThemeToggle = ({ minimal = false }: ThemeToggleProps) => {
   const [isDark, setIsDark] = useState(false);
 
-  // Check for user's preferred color scheme on component mount
+  // Set theme to light mode on component mount
   useEffect(() => {
-    // Check if theme is stored in localStorage
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // Force light mode by default
+    setIsDark(false);
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
     
-    // Set initial state based on localStorage or system preference
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    }
+    // Add listener for system preference changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => {
+      // We don't automatically switch to dark mode, but keep the listener for future changes
+      // This allows the user to manually toggle dark mode if they wish
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   const toggleTheme = () => {
