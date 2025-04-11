@@ -36,18 +36,18 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-charcoal text-white pt-20 pb-10">
+    <footer className="bg-charcoal text-white pt-24 pb-12">
       <div className="container-lg">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 mb-16">
-          {/* Brand */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12 mb-20">
+          {/* Brand - Enhanced logo display */}
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
-            <Link to="/" className="block mb-6">
+            <Link to="/" className="block mb-8">
               <img 
                 src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
                 alt="Jeff HonForLoco Logo" 
-                className="h-24 mx-auto md:mx-0 mb-3" 
+                className="h-28 w-auto mx-auto md:mx-0 mb-4 filter brightness-0 invert drop-shadow-[0_0_4px_rgba(255,255,255,0.3)]" 
               />
-              <p className="text-gray-300 text-xs text-center md:text-left italic">
+              <p className="text-gray-300 text-sm text-center md:text-left italic mt-3">
                 live bold. travel far. grow every day.
               </p>
             </Link>
@@ -144,7 +144,7 @@ const Footer = () => {
         </div>
         
         {/* Bottom */}
-        <div className="pt-10 border-t border-gray-800 text-center text-gray-400 text-sm">
+        <div className="pt-12 border-t border-gray-800 text-center text-gray-400 text-sm">
           <p>&copy; {currentYear} Jeff HonForLoco. All rights reserved.</p>
           <p className="mt-3">
             Designed and developed with <span className="text-red-500">❤</span> for optimal performance and user experience.

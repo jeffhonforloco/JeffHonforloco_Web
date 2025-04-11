@@ -34,26 +34,26 @@ const Header = () => {
       }`}
     >
       <div className="container-lg flex items-center justify-between">
-        {/* Logo - with increased margin to create more separation */}
-        <Link to="/" className="flex items-center mr-20">
-          <div className="h-20 relative transition-all duration-300">
-            {/* Light mode logo */}
+        {/* Logo - with increased margin and larger size */}
+        <Link to="/" className="flex items-center mr-28">
+          <div className="h-24 w-auto relative transition-all duration-300">
+            {/* Light mode logo - enhanced with shadow for prominence */}
             <img 
               src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
               alt="Jeff HonForLoco Logo" 
-              className="h-full dark:hidden"
+              className="h-full w-auto object-contain filter drop-shadow-md dark:hidden"
             />
-            {/* Dark mode logo - we use the same image but apply a filter to make it white */}
+            {/* Dark mode logo - enhanced with glow effect */}
             <img 
               src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
               alt="Jeff HonForLoco Logo" 
-              className="h-full hidden dark:block brightness-0 invert"
+              className="h-full w-auto object-contain hidden dark:block brightness-0 invert filter drop-shadow-[0_0_2px_rgba(255,255,255,0.5)]"
             />
           </div>
         </Link>
         
         {/* Desktop Navigation - with more space */}
-        <div className="flex-1 ml-8">
+        <div className="flex-1 ml-10">
           <DesktopNavigation />
         </div>
         
