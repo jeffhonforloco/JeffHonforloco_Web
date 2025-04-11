@@ -34,16 +34,16 @@ const Header = () => {
       }`}
     >
       <div className="container-lg flex items-center justify-between">
-        {/* Logo with enhanced size and prominence */}
-        <Link to="/" className="flex items-center mr-28">
-          <div className="h-28 w-auto flex-shrink-0 relative transition-all duration-300">
-            {/* Light mode logo - with enhanced shadow and size */}
+        {/* Logo with optimized positioning and spacing */}
+        <Link to="/" className="flex items-center mr-36">
+          <div className="h-24 w-auto flex-shrink-0 relative transition-all duration-300">
+            {/* Light mode logo with enhanced shadow */}
             <img 
               src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
               alt="Jeff HonForLoco Logo" 
               className="h-full w-auto object-contain filter drop-shadow-lg dark:hidden"
             />
-            {/* Dark mode logo - with stronger glow effect */}
+            {/* Dark mode logo with stronger glow effect */}
             <img 
               src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
               alt="Jeff HonForLoco Logo" 
@@ -52,8 +52,8 @@ const Header = () => {
           </div>
         </Link>
         
-        {/* Desktop Navigation - with increased spacing */}
-        <div className="flex-1 ml-12">
+        {/* Desktop Navigation with additional spacing from logo */}
+        <div className="flex-1 ml-16">
           <DesktopNavigation />
         </div>
         
