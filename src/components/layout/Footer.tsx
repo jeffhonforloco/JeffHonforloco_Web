@@ -36,27 +36,27 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-charcoal text-white pt-16 pb-8">
+    <footer className="bg-charcoal text-white pt-20 pb-10">
       <div className="container-lg">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 mb-16">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
-            <Link to="/" className="block mb-4">
+            <Link to="/" className="block mb-6">
               <img 
                 src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
                 alt="Jeff HonForLoco Logo" 
-                className="h-24 mx-auto md:mx-0 mb-2" 
+                className="h-24 mx-auto md:mx-0 mb-3" 
               />
               <p className="text-gray-300 text-xs text-center md:text-left italic">
                 live bold. travel far. grow every day.
               </p>
             </Link>
-            <p className="text-gray-300 mb-6">
+            <p className="text-gray-300 mb-8">
               Exploring life through travel, lifestyle, and personal growth experiences.
             </p>
             
             {/* Social Icons */}
-            <div className="grid grid-cols-5 gap-3 mb-6">
+            <div className="grid grid-cols-5 gap-4 mb-8">
               {socialLinks.slice(0, 10).map((social, index) => (
                 <a 
                   key={index}
@@ -75,8 +75,8 @@ const Footer = () => {
           
           {/* Links */}
           <div className="col-span-1">
-            <h3 className="font-serif text-lg font-semibold mb-4">Categories</h3>
-            <ul className="space-y-2">
+            <h3 className="font-serif text-lg font-semibold mb-6">Categories</h3>
+            <ul className="space-y-3">
               {footerCategories.map((category) => (
                 <li key={category.id}>
                   <Link 
@@ -97,8 +97,8 @@ const Footer = () => {
           
           {/* Pages */}
           <div className="col-span-1">
-            <h3 className="font-serif text-lg font-semibold mb-4">Pages</h3>
-            <ul className="space-y-2">
+            <h3 className="font-serif text-lg font-semibold mb-6">Pages</h3>
+            <ul className="space-y-3">
               <li>
                 <Link to="/about" className="text-gray-300 hover:text-gold transition-colors">
                   About
@@ -124,18 +124,18 @@ const Footer = () => {
           
           {/* Newsletter */}
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
-            <h3 className="font-serif text-lg font-semibold mb-4">Newsletter</h3>
-            <p className="text-gray-300 mb-4">Subscribe to get the latest posts and updates.</p>
-            <form className="flex flex-col space-y-2">
+            <h3 className="font-serif text-lg font-semibold mb-6">Newsletter</h3>
+            <p className="text-gray-300 mb-5">Subscribe to get the latest posts and updates.</p>
+            <form className="flex flex-col space-y-3">
               <input 
                 type="email" 
                 placeholder="Your email" 
-                className="bg-gray-800 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-gold"
+                className="bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-1 focus:ring-gold"
                 required
               />
               <button 
                 type="submit" 
-                className="bg-gold text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition-colors flex items-center justify-center"
+                className="bg-gold text-white px-4 py-3 rounded-md hover:bg-opacity-90 transition-colors flex items-center justify-center"
               >
                 Subscribe <Mail className="ml-2 h-4 w-4" />
               </button>
@@ -144,9 +144,9 @@ const Footer = () => {
         </div>
         
         {/* Bottom */}
-        <div className="pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
+        <div className="pt-10 border-t border-gray-800 text-center text-gray-400 text-sm">
           <p>&copy; {currentYear} Jeff HonForLoco. All rights reserved.</p>
-          <p className="mt-2">
+          <p className="mt-3">
             Designed and developed with <span className="text-red-500">❤</span> for optimal performance and user experience.
           </p>
         </div>

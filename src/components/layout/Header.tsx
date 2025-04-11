@@ -30,12 +30,12 @@ const Header = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white dark:bg-gray-900 shadow-md py-2' : 'bg-white dark:bg-gray-900 py-2'
+        isScrolled ? 'bg-white dark:bg-gray-900 shadow-md py-3' : 'bg-white dark:bg-gray-900 py-4'
       }`}
     >
       <div className="container-lg flex items-center justify-between">
-        {/* Logo - adjusted with more right margin to create separation */}
-        <Link to="/" className="flex items-center mr-14">
+        {/* Logo - with increased margin to create more separation */}
+        <Link to="/" className="flex items-center mr-20">
           <div className="h-20 relative transition-all duration-300">
             {/* Light mode logo */}
             <img 
@@ -53,18 +53,18 @@ const Header = () => {
         </Link>
         
         {/* Desktop Navigation - with more space */}
-        <div className="flex-1">
+        <div className="flex-1 ml-8">
           <DesktopNavigation />
         </div>
         
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center gap-2">
+        {/* Mobile Menu Button - with increased spacing */}
+        <div className="md:hidden flex items-center gap-3">
           {/* Mobile Cart */}
           <CartButton mobile />
           
           {/* Mobile Search */}
           <ProductSearch>
-            <Button variant="ghost" size="icon" className="mr-1 font-semibold">
+            <Button variant="ghost" size="icon" className="mr-2 font-semibold">
               <span className="sr-only">Search products</span>
               <Search className="h-5 w-5 text-charcoal dark:text-white" />
             </Button>
