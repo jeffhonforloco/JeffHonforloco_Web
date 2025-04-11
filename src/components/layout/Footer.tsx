@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Facebook, Twitter, Instagram, Youtube, 
@@ -146,9 +145,6 @@ const Footer = () => {
         {/* Bottom */}
         <div className="pt-12 border-t border-gray-800 text-center text-gray-400 text-sm">
           <p>&copy; {currentYear} Jeff HonForLoco. All rights reserved.</p>
-          <p className="mt-3">
-            Designed and developed with <span className="text-red-500">❤</span> for optimal performance and user experience.
-          </p>
         </div>
       </div>
     </footer>
