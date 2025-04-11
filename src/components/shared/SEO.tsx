@@ -19,6 +19,7 @@ interface SEOProps {
   language?: string;
   noIndex?: boolean;
   noFollow?: boolean;
+  schema?: object; // New prop for custom schema
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -38,10 +39,72 @@ const SEO: React.FC<SEOProps> = ({
   language = 'en_US',
   noIndex = false,
   noFollow = false,
+  schema,
 }) => {
   const siteUrl = 'https://www.jeffhonforloco.com';
   const fullTitle = `${title} | Jeff HonForLoco`;
   const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
+  
+  // Enhanced article schema with more properties
+  const articleSchema = type === 'article' ? {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description: description,
+    image: imageUrl,
+    datePublished: publishedAt,
+    dateModified: updatedAt || publishedAt,
+    author: {
+      '@type': 'Person',
+      name: author,
+      url: `${siteUrl}/about`,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Jeff HonForLoco',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.png`,
+        width: 600,
+        height: 60,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonical,
+    },
+    wordCount: wordCount,
+    articleSection: category,
+    keywords: keywords,
+    // New fields for enhanced SEO
+    inLanguage: language,
+    copyrightYear: new Date(publishedAt || new Date()).getFullYear(),
+    ...(readingTime && { timeRequired: `PT${readingTime.replace(/\D/g, '')}M` }),
+  } : null;
+
+  // Website schema with more properties
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: siteUrl,
+    name: 'Jeff HonForLoco',
+    description: description,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${siteUrl}/search?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+    // New fields
+    inLanguage: language,
+    copyrightHolder: {
+      '@type': 'Person',
+      name: 'Jeff HonForLoco',
+      url: `${siteUrl}/about`,
+    },
+  };
+
+  // Determine which schema to use
+  const schemaToUse = schema || (type === 'article' ? articleSchema : websiteSchema);
   
   return (
     <Helmet>
@@ -90,74 +153,12 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       <meta name="apple-mobile-web-app-title" content="Jeff HonForLoco" />
       
-      {/* Structured data */}
-      {type === 'article' ? (
-        <script type="application/ld+json">
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-            headline: title,
-            description: description,
-            image: imageUrl,
-            datePublished: publishedAt,
-            dateModified: updatedAt || publishedAt,
-            author: {
-              '@type': 'Person',
-              name: author,
-              url: `${siteUrl}/about`,
-            },
-            publisher: {
-              '@type': 'Organization',
-              name: 'Jeff HonForLoco',
-              logo: {
-                '@type': 'ImageObject',
-                url: `${siteUrl}/logo.png`,
-                width: 600,
-                height: 60,
-              },
-            },
-            mainEntityOfPage: {
-              '@type': 'WebPage',
-              '@id': canonical,
-            },
-            wordCount: wordCount,
-            articleSection: category,
-            keywords: keywords,
-          })}
-        </script>
-      ) : (
-        <script type="application/ld+json">
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            url: siteUrl,
-            name: 'Jeff HonForLoco',
-            description: description,
-            potentialAction: {
-              '@type': 'SearchAction',
-              target: `${siteUrl}/search?q={search_term_string}`,
-              'query-input': 'required name=search_term_string',
-            },
-          })}
-        </script>
-      )}
-
-      {/* Add WebSite structured data */}
+      {/* Schema.org structured data */}
       <script type="application/ld+json">
-        {JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'WebSite',
-          name: 'Jeff HonForLoco',
-          url: siteUrl,
-          potentialAction: {
-            '@type': 'SearchAction',
-            target: `${siteUrl}/search?q={search_term_string}`,
-            'query-input': 'required name=search_term_string',
-          },
-        })}
+        {JSON.stringify(schemaToUse)}
       </script>
 
-      {/* Add BreadcrumbList structured data */}
+      {/* Additional schemas for improved SEO */}
       <script type="application/ld+json">
         {JSON.stringify({
           '@context': 'https://schema.org',
