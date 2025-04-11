@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronRight, ArrowRight, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getPosts, transformPost } from '@/lib/wordpress';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,7 @@ const Hero = () => {
   const [heroImages, setHeroImages] = useState<HeroImage[]>(fallbackImages);
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [animateTitle, setAnimateTitle] = useState(false);
 
   useEffect(() => {
     const fetchPostImages = async () => {
@@ -59,6 +60,7 @@ const Hero = () => {
         // Keep using fallback images
       } finally {
         setLoading(false);
+        setTimeout(() => setAnimateTitle(true), 500);
       }
     };
 
@@ -70,7 +72,7 @@ const Hero = () => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
       setImageLoaded(false);
-    }, 5000);
+    }, 6000);
     
     return () => clearInterval(interval);
   }, [heroImages.length]);
@@ -87,6 +89,13 @@ const Hero = () => {
     setImageLoaded(true);
   };
 
+  const scrollToContent = () => {
+    const featuredArticleSection = document.querySelector('section:nth-of-type(2)');
+    if (featuredArticleSection) {
+      featuredArticleSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative bg-gradient-to-r from-charcoal to-gray-800 text-white min-h-[90vh] flex items-center overflow-hidden">
       {/* Fullscreen background image carousel */}
@@ -98,7 +107,7 @@ const Hero = () => {
               index === currentIndex ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent z-10"></div>
             <img 
               src={image.url} 
               alt={image.alt}
@@ -108,14 +117,18 @@ const Hero = () => {
           </div>
         ))}
         
+        {/* Decorative elements */}
+        <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
+        <div className="absolute top-0 right-0 w-full h-20 bg-gradient-to-b from-black/30 to-transparent z-10"></div>
+        
         {/* Manual navigation controls */}
-        <div className="absolute bottom-8 left-0 right-0 z-20 flex justify-center gap-2">
+        <div className="absolute bottom-12 left-0 right-0 z-20 flex justify-center gap-2">
           {heroImages.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`w-3 h-3 rounded-full transition-all ${
-                index === currentIndex ? 'bg-white scale-125' : 'bg-white/50'
+                index === currentIndex ? 'bg-gold scale-125' : 'bg-white/50 hover:bg-white/80'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -124,46 +137,68 @@ const Hero = () => {
       </div>
       
       <div className="container-lg relative z-10">
-        <div className="max-w-2xl animate-fade-in">
-          <span className="inline-block px-4 py-1 bg-gradient-to-r from-gold to-amber-400 text-white text-sm font-bold rounded-full mb-6 transform hover:scale-105 transition-transform duration-300">
-            Welcome to Jeff HonForLoco
-          </span>
-          <h1 className="title-xl mb-8 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
-            Explore. Experience. <span className="text-gold">Evolve.</span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-10 text-gray-100 leading-relaxed max-w-xl">
-            Join me on a journey through lifestyle, travel, and personal growth. 
-            Discover insights, tips, and stories to inspire your own path.
-          </p>
-          <div className="flex flex-wrap gap-5">
-            <Link to="/explore-travel">
-              <Button size="lg" className="bg-gold hover:bg-gold/90 text-white font-medium group overflow-hidden relative">
-                <span className="relative z-10 flex items-center">
-                  Explore Travel 
+        <div className="max-w-2xl">
+          <div className={`transform transition-all duration-700 ${animateTitle ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+            <span className="inline-block px-4 py-1 bg-gradient-to-r from-gold to-amber-400 text-white text-sm font-bold rounded-full mb-6 transform hover:scale-105 transition-transform duration-300 shadow-lg">
+              Welcome to Jeff HonForLoco
+            </span>
+            
+            <h1 className="title-xl mb-8 leading-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-300">
+                Explore. Experience.{' '}
+              </span>
+              <span className="text-gold relative inline-block">
+                Evolve
+                <span className="absolute -bottom-1 left-0 w-full h-1 bg-gold/50 rounded-full"></span>
+              </span>
+              <span className="text-gold">.</span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl mb-10 text-gray-100 leading-relaxed max-w-xl">
+              Join me on a journey through lifestyle, travel, and personal growth. 
+              Discover insights, tips, and stories to inspire your own path.
+            </p>
+            
+            <div className="flex flex-wrap gap-5">
+              <Link to="/explore-travel">
+                <Button size="lg" className="bg-gold hover:bg-gold/90 text-white font-medium group overflow-hidden relative shadow-md">
+                  <span className="relative z-10 flex items-center">
+                    Explore Travel 
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-amber-400 to-gold transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                </Button>
+              </Link>
+              <Link to="/blog">
+                <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 group shadow-md">
+                  Read Blog 
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </span>
-                <span className="absolute inset-0 bg-gradient-to-r from-amber-400 to-gold transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-              </Button>
-            </Link>
-            <Link to="/blog">
-              <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 group">
-                Read Blog 
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
+                </Button>
+              </Link>
+            </div>
           </div>
           
-          {/* Animated scroll indicator */}
-          <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 hidden md:block">
+          {/* Animated scroll indicator with ripple effect */}
+          <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 hidden md:block">
             <div className="flex flex-col items-center">
-              <span className="text-sm text-white/70 mb-2 animate-bounce">Scroll Down</span>
-              <div className="w-5 h-10 border-2 border-white/50 rounded-full flex justify-center">
-                <div className="w-1 h-2 bg-white rounded-full mt-1 animate-pulse"></div>
-              </div>
+              <span className="text-sm text-white/70 mb-2">Scroll Down</span>
+              <button 
+                onClick={scrollToContent}
+                className="w-10 h-10 rounded-full border-2 border-white/50 flex items-center justify-center group hover:border-gold hover:bg-gold/20 transition-all duration-300"
+                aria-label="Scroll to content"
+              >
+                <ChevronDown className="h-5 w-5 text-white/70 group-hover:text-gold animate-bounce" />
+                <span className="absolute w-full h-full rounded-full bg-gold/20 animate-ping"></span>
+              </button>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Decorative elements */}
+      <div className="absolute top-10 right-10 w-24 h-24 border border-white/10 rounded-full animate-[spin_20s_linear_infinite] opacity-30"></div>
+      <div className="absolute bottom-20 right-20 w-16 h-16 border border-gold/20 rounded-full animate-[spin_15s_linear_infinite_reverse] opacity-40"></div>
+      <div className="absolute top-1/4 left-10 w-12 h-12 border border-white/10 rounded-full animate-[spin_25s_linear_infinite] opacity-20"></div>
     </section>
   );
 };

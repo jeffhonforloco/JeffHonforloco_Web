@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
@@ -19,14 +20,21 @@ import { ArrowUp } from 'lucide-react';
 const Index = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [animateSections, setAnimateSections] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 500);
+      
+      // Check if sections should be animated
+      if (window.scrollY > 200 && !animateSections) {
+        setAnimateSections(true);
+      }
     };
     
     window.addEventListener('scroll', handleScroll);
     
+    // Stagger the loading of sections
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
@@ -35,7 +43,7 @@ const Index = () => {
       window.removeEventListener('scroll', handleScroll);
       clearTimeout(timer);
     };
-  }, []);
+  }, [animateSections]);
   
   useEffect(() => {
     let cleanupTracking: (() => void) | undefined;
@@ -47,6 +55,7 @@ const Index = () => {
       console.error('Error initializing engagement tracking:', error);
     }
     
+    // Enhanced schema for the homepage
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
@@ -82,7 +91,15 @@ const Index = () => {
         'https://www.reddit.com/user/jeffhonforloco/',
         'https://www.threads.net/@jeffhonforloco',
         'https://www.tumblr.com/jeffhonforloco'
-      ]
+      ],
+      mainContentOfPage: {
+        '@type': 'WebPageElement',
+        isPartOf: {
+          '@type': 'Website',
+          name: 'Jeff HonForLoco',
+          url: 'https://www.jeffhonforloco.com'
+        }
+      }
     };
 
     try {
@@ -133,6 +150,16 @@ const Index = () => {
     });
   };
 
+  // Animation classes based on scroll and load state
+  const getAnimationClass = (index: number) => {
+    const baseDelay = 200; // base delay in ms
+    const delay = index * baseDelay; // staggered delay
+    
+    if (!isLoaded) return 'opacity-0 translate-y-8';
+    
+    return `animate-fade-in animate-delay-${delay} opacity-100 translate-y-0`;
+  };
+
   return (
     <Layout>
       <SEO 
@@ -143,6 +170,7 @@ const Index = () => {
         type="website"
       />
       
+      {/* Back to top button */}
       {showScrollTop && (
         <button
           className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-gold text-white shadow-lg hover:bg-gold/90 transition-all duration-300"
@@ -153,46 +181,57 @@ const Index = () => {
         </button>
       )}
       
-      <div>
+      {/* Hero section */}
+      <div className="transition-all duration-500">
         <Hero />
       </div>
       
-      <div>
+      {/* Featured article section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(1)}`}>
         <FeaturedArticle />
       </div>
       
-      <div>
+      {/* Featured posts section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(2)}`}>
         <FeaturedPosts />
       </div>
       
-      <div>
+      {/* Trending articles section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(3)}`}>
         <TrendingArticles />
       </div>
       
-      <div>
+      {/* Social media icons section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(4)}`}>
         <SocialMediaIcons />
       </div>
       
-      <div>
+      {/* Social media feed section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(5)}`}>
         <SocialMediaFeed />
       </div>
       
-      <div>
+      {/* Category feature section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(6)}`}>
         <CategoryFeature />
       </div>
       
-      <div>
+      {/* Featured destinations section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(7)}`}>
         <FeaturedDestinations />
       </div>
       
-      <div>
+      {/* Ad section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(8)}`}>
         <AdSection />
       </div>
       
-      <div>
+      {/* Newsletter CTA section */}
+      <div className={`transition-all duration-500 ${getAnimationClass(9)}`}>
         <NewsletterCTA />
       </div>
       
+      {/* Popups */}
       <EbookPopup />
       <NewsletterPopup />
     </Layout>

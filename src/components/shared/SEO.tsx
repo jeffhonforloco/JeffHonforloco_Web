@@ -19,7 +19,7 @@ interface SEOProps {
   language?: string;
   noIndex?: boolean;
   noFollow?: boolean;
-  schema?: object; // New prop for custom schema
+  schema?: object; // Custom schema
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -82,7 +82,7 @@ const SEO: React.FC<SEOProps> = ({
     ...(readingTime && { timeRequired: `PT${readingTime.replace(/\D/g, '')}M` }),
   } : null;
 
-  // Website schema with more properties
+  // Enhanced website schema with more properties
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -103,6 +103,27 @@ const SEO: React.FC<SEOProps> = ({
     },
   };
 
+  // Person schema for author information
+  const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Jeff HonForLoco',
+    url: `${siteUrl}/about`,
+    sameAs: [
+      'https://www.facebook.com/people/Jeff-Honforloco/61551819509232/',
+      'https://www.instagram.com/jeffhonforloco',
+      'https://www.youtube.com/@jeffhonforloco',
+      'https://x.com/jeffhonforloco',
+      'https://www.tiktok.com/@jeffhonforloco',
+      'https://www.linkedin.com/in/jeffhonforloco/'
+    ],
+    jobTitle: 'Lifestyle & Travel Blogger',
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Jeff HonForLoco Blog'
+    }
+  };
+
   // Determine which schema to use
   const schemaToUse = schema || (type === 'article' ? articleSchema : websiteSchema);
   
@@ -115,7 +136,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="keywords" content={keywords} />
       <link rel="canonical" href={canonical} />
       
-      {/* Robots control - important for SEO */}
+      {/* Robots control */}
       {noIndex || noFollow ? (
         <meta name="robots" content={`${noIndex ? 'noindex' : 'index'}, ${noFollow ? 'nofollow' : 'follow'}`} />
       ) : null}
@@ -158,7 +179,12 @@ const SEO: React.FC<SEOProps> = ({
         {JSON.stringify(schemaToUse)}
       </script>
 
-      {/* Additional schemas for improved SEO */}
+      {/* Person schema */}
+      <script type="application/ld+json">
+        {JSON.stringify(personSchema)}
+      </script>
+
+      {/* BreadcrumbList schema */}
       <script type="application/ld+json">
         {JSON.stringify({
           '@context': 'https://schema.org',
@@ -193,6 +219,11 @@ const SEO: React.FC<SEOProps> = ({
             'https://www.facebook.com/jeffhonforloco',
             'https://www.instagram.com/jeffhonforloco',
             'https://www.linkedin.com/in/jeffhonforloco',
+            'https://www.pinterest.com/jeffhonforloco/',
+            'https://bsky.app/profile/jeffhonforloco.bsky.social',
+            'https://www.reddit.com/user/jeffhonforloco/',
+            'https://www.threads.net/@jeffhonforloco',
+            'https://www.tumblr.com/jeffhonforloco'
           ],
         })}
       </script>
