@@ -34,8 +34,8 @@ const Header = () => {
       }`}
     >
       <div className="container-lg flex items-center justify-between">
-        {/* Logo - adjusted to take less space */}
-        <Link to="/" className="flex items-center mr-6">
+        {/* Logo - adjusted with more right margin to create separation */}
+        <Link to="/" className="flex items-center mr-14">
           <div className="h-20 relative transition-all duration-300">
             {/* Light mode logo */}
             <img 
