@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { syncAllContent } from '@/lib/wordpress';
-import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface SyncStatus {
   postsCount: number;
@@ -28,6 +29,7 @@ const ContentSyncStatus = () => {
     inProgress: false,
     lastSynced: null
   });
+  const [apiAvailable, setApiAvailable] = useState<boolean | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -36,10 +38,47 @@ const ContentSyncStatus = () => {
     if (storedSyncData) {
       setSyncStatus(JSON.parse(storedSyncData));
     }
+    
+    // Check API availability
+    checkApiAvailability();
   }, []);
+  
+  const checkApiAvailability = async () => {
+    try {
+      const response = await fetch('https://www.jeffhonforloco.com/wp-json/wp/v2', { 
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Add a timeout to prevent long waiting times
+        signal: AbortSignal.timeout(5000) 
+      });
+      
+      setApiAvailable(response.ok);
+      
+      if (!response.ok) {
+        console.error('WordPress API not available:', response.status);
+      }
+    } catch (error) {
+      console.error('Error checking WordPress API availability:', error);
+      setApiAvailable(false);
+    }
+  };
 
   const handleSync = async () => {
     try {
+      // Check API availability first
+      await checkApiAvailability();
+      
+      if (!apiAvailable) {
+        toast({
+          title: "WordPress API Unavailable",
+          description: "The WordPress API is currently unavailable. Please check your connection or try again later.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       setSyncStatus(current => ({ ...current, inProgress: true }));
       
       toast({
@@ -90,6 +129,25 @@ const ContentSyncStatus = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {apiAvailable === false && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>WordPress API Unavailable</AlertTitle>
+            <AlertDescription>
+              Unable to connect to the WordPress API. Please check your connection or try again later.
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={checkApiAvailability}
+                className="mt-2 ml-2"
+              >
+                <Loader2 className={`mr-2 h-4 w-4 ${apiAvailable === null ? 'animate-spin' : ''}`} />
+                Check Again
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+        
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             <div className="border rounded-lg p-3 text-center">
@@ -143,7 +201,7 @@ const ContentSyncStatus = () => {
         <Button 
           onClick={handleSync} 
           className="w-full" 
-          disabled={syncStatus.inProgress}
+          disabled={syncStatus.inProgress || apiAvailable === false}
         >
           {syncStatus.inProgress && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {syncStatus.inProgress ? 'Syncing...' : 'Sync All WordPress Content'}
