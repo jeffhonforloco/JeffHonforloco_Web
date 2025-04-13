@@ -20,19 +20,95 @@ interface Post {
 const FeaturedPosts = () => {
   const [featuredPosts, setFeaturedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [visiblePosts, setVisiblePosts] = useState<Post[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 3;
 
+  // Fallback featured posts when API fails
+  const fallbackPosts: Post[] = [
+    {
+      id: 5,
+      slug: 'beginner-hiking-guide',
+      title: 'Beginner Hiking Guide',
+      excerpt: '<p>Getting started with hiking: essential tips and gear recommendations for beginners.</p>',
+      category: 'Outdoors',
+      categorySlug: 'outdoors',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    },
+    {
+      id: 6,
+      slug: 'city-photography-tips',
+      title: 'Urban Photography Tips',
+      excerpt: '<p>How to capture stunning city scenes and street photography.</p>',
+      category: 'Photography',
+      categorySlug: 'photography',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    },
+    {
+      id: 7,
+      slug: 'packing-efficiently',
+      title: 'Packing Efficiently',
+      excerpt: '<p>Learn how to pack light but have everything you need for your next trip.</p>',
+      category: 'Travel',
+      categorySlug: 'travel',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    },
+    {
+      id: 8,
+      slug: 'budget-destinations-2023',
+      title: 'Top Budget Destinations',
+      excerpt: '<p>Discover incredible places to visit that won\'t break the bank.</p>',
+      category: 'Budget Travel',
+      categorySlug: 'budget-travel',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    },
+    {
+      id: 9,
+      slug: 'local-cuisine-experiences',
+      title: 'Experiencing Local Cuisine',
+      excerpt: '<p>How to find authentic food experiences when traveling abroad.</p>',
+      category: 'Food',
+      categorySlug: 'food',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    },
+    {
+      id: 10,
+      slug: 'cultural-etiquette-guide',
+      title: 'Cultural Etiquette Guide',
+      excerpt: '<p>Important customs and etiquette to know when visiting different countries.</p>',
+      category: 'Culture',
+      categorySlug: 'culture',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    }
+  ];
+
   const fetchFeaturedPosts = useCallback(async () => {
     try {
       setLoading(true);
+      setError(false);
       const posts = await getPosts({ perPage: 6 });
-      const transformedPosts = posts.map(transformPost).filter(Boolean) as Post[];
-      setFeaturedPosts(transformedPosts);
-      setVisiblePosts(transformedPosts.slice(0, postsPerPage));
+      
+      if (posts.length > 0) {
+        const transformedPosts = posts.map(transformPost).filter(Boolean) as Post[];
+        setFeaturedPosts(transformedPosts);
+        setVisiblePosts(transformedPosts.slice(0, postsPerPage));
+      } else {
+        setError(true);
+        setFeaturedPosts(fallbackPosts);
+        setVisiblePosts(fallbackPosts.slice(0, postsPerPage));
+      }
     } catch (error) {
       console.error('Error fetching featured posts:', error);
+      setError(true);
+      setFeaturedPosts(fallbackPosts);
+      setVisiblePosts(fallbackPosts.slice(0, postsPerPage));
     } finally {
       setLoading(false);
     }
@@ -64,6 +140,10 @@ const FeaturedPosts = () => {
           alt={typeof post.title === 'string' ? post.title : 'Featured post'} 
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           loading="lazy"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/placeholder.jpg'; // Fallback image
+          }}
         />
         <div className="absolute top-4 left-4">
           <span className="bg-gold text-white text-xs px-3 py-1 rounded-full transition-all duration-300 group-hover:bg-blue-600">
@@ -103,6 +183,11 @@ const FeaturedPosts = () => {
               <div className="absolute -bottom-2 left-0 w-1/2 h-3 bg-gold/20 -z-10"></div>
             </div>
             <p className="text-gray-600 text-lg max-w-2xl">Discover insights and adventures from my latest articles</p>
+            {error && (
+              <p className="text-sm text-gray-500 mt-1 italic">
+                Note: Placeholder stories are displayed while WordPress content is unavailable.
+              </p>
+            )}
           </div>
           <Link 
             to="/blog" 

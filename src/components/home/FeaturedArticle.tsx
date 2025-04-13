@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar } from 'lucide-react';
@@ -21,21 +20,28 @@ interface Post {
 const FeaturedArticle = () => {
   const [featuredArticle, setFeaturedArticle] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchFeaturedArticle = async () => {
       try {
         setLoading(true);
+        setError(false);
         // For now, just get the first post
         const posts = await getPosts({ perPage: 1 });
         if (posts.length > 0) {
           const transformedPost = transformPost(posts[0]);
           if (transformedPost) {
             setFeaturedArticle(transformedPost);
+          } else {
+            setError(true);
           }
+        } else {
+          setError(true);
         }
       } catch (error) {
         console.error('Error fetching featured article:', error);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -43,6 +49,18 @@ const FeaturedArticle = () => {
 
     fetchFeaturedArticle();
   }, []);
+
+  const fallbackArticle: Post = {
+    id: 0,
+    slug: 'example-post',
+    title: 'Welcome to Jeff HonForLoco',
+    excerpt: '<p>Explore insights, travel tips, and personal stories about growth, adventure, and making the most of every opportunity. Stay tuned for new content coming soon!</p>',
+    content: '',
+    category: 'Featured',
+    categorySlug: 'featured',
+    featuredImage: '/placeholder.jpg',
+    date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  };
 
   if (loading) {
     return (
@@ -66,9 +84,7 @@ const FeaturedArticle = () => {
     );
   }
 
-  if (!featuredArticle) {
-    return null;
-  }
+  const articleToDisplay = (!error && featuredArticle) ? featuredArticle : fallbackArticle;
 
   return (
     <section className="py-16 bg-slate-50 border-b">
@@ -76,33 +92,43 @@ const FeaturedArticle = () => {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-2 mb-2">
             <Link 
-              to={`/category/${featuredArticle.categorySlug}`}
+              to={`/category/${articleToDisplay.categorySlug}`}
               className="bg-blue-600 text-white text-xs font-medium px-2.5 py-1 rounded-sm uppercase tracking-wide"
             >
-              {featuredArticle.category}
+              {articleToDisplay.category}
             </Link>
             <span className="px-2 text-gray-500">•</span>
             <span className="text-sm text-gray-500 flex items-center">
               <Calendar className="h-4 w-4 mr-1" />
-              {featuredArticle.date}
+              {articleToDisplay.date}
             </span>
           </div>
           
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-6" dangerouslySetInnerHTML={{ __html: featuredArticle.title }} />
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-6" dangerouslySetInnerHTML={{ __html: articleToDisplay.title }} />
           
-          <Link to={`/post/${featuredArticle.slug}`} className="block mb-6">
+          <Link to={`/post/${articleToDisplay.slug}`} className="block mb-6">
             <div className="rounded-lg overflow-hidden shadow-md">
               <img 
-                src={featuredArticle.featuredImage} 
-                alt={typeof featuredArticle.title === 'string' ? featuredArticle.title : 'Featured article'} 
+                src={articleToDisplay.featuredImage} 
+                alt={typeof articleToDisplay.title === 'string' ? articleToDisplay.title : 'Featured article'} 
                 className="w-full h-auto object-cover transition-transform hover:scale-105 duration-700"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/placeholder.jpg'; // Fallback image
+                }}
               />
             </div>
           </Link>
           
-          <div className="font-sans text-lg text-gray-600 leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: featuredArticle.excerpt }} />
+          <div className="font-sans text-lg text-gray-600 leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: articleToDisplay.excerpt }} />
           
-          <Link to={`/post/${featuredArticle.slug}`}>
+          {error ? (
+            <div className="text-sm text-gray-500 italic mb-4">
+              Note: Placeholder content is displayed because WordPress content is currently unavailable.
+            </div>
+          ) : null}
+          
+          <Link to={`/post/${articleToDisplay.slug}`}>
             <Button className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md group">
               Continue Reading
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

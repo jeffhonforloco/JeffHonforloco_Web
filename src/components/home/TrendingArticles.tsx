@@ -21,18 +21,70 @@ interface Post {
 const TrendingArticles = () => {
   const [trendingPosts, setTrendingPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  // Fallback trending posts when API fails
+  const fallbackPosts: Post[] = [
+    {
+      id: 1,
+      slug: 'travel-essentials',
+      title: 'Top 10 Travel Essentials',
+      excerpt: 'Must-have items for every traveler',
+      category: 'Travel',
+      categorySlug: 'travel',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    },
+    {
+      id: 2,
+      slug: 'budget-tips',
+      title: 'Budget Travel Tips',
+      excerpt: 'How to travel on a shoestring budget',
+      category: 'Tips',
+      categorySlug: 'tips',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    },
+    {
+      id: 3,
+      slug: 'solo-adventures',
+      title: 'Solo Adventures',
+      excerpt: 'Making the most of traveling alone',
+      category: 'Adventure',
+      categorySlug: 'adventure',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    },
+    {
+      id: 4,
+      slug: 'remote-work',
+      title: 'Remote Work & Travel',
+      excerpt: 'Balancing work and exploration',
+      category: 'Lifestyle',
+      categorySlug: 'lifestyle',
+      featuredImage: '/placeholder.jpg',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    }
+  ];
 
   useEffect(() => {
     const fetchTrendingPosts = async () => {
       try {
         setLoading(true);
+        setError(false);
         // In a real app, you might have a different endpoint for trending posts
         // For now, we'll just get the latest posts
         const posts = await getPosts({ perPage: 4, page: 2 });
         const transformedPosts = posts.map(transformPost).filter(Boolean) as Post[];
-        setTrendingPosts(transformedPosts);
+        
+        if (transformedPosts.length > 0) {
+          setTrendingPosts(transformedPosts);
+        } else {
+          setError(true);
+        }
       } catch (error) {
         console.error('Error fetching trending posts:', error);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -40,6 +92,9 @@ const TrendingArticles = () => {
 
     fetchTrendingPosts();
   }, []);
+
+  // Use real posts if available, otherwise use fallback
+  const postsToDisplay = (!error && trendingPosts.length > 0) ? trendingPosts : fallbackPosts;
 
   return (
     <section className="py-24 bg-charcoal text-white">
@@ -51,6 +106,11 @@ const TrendingArticles = () => {
               <h2 className="title-lg">Trending Now</h2>
             </div>
             <p className="text-gray-300 text-lg max-w-2xl">Articles capturing readers' attention</p>
+            {error && (
+              <p className="text-sm text-gray-400 mt-2 italic">
+                Note: Placeholder content is displayed while WordPress content is unavailable.
+              </p>
+            )}
           </div>
           <Link to="/blog" className="mt-4 md:mt-0">
             <Button variant="outline" className="group bg-transparent border-white text-white hover:bg-white/10">
@@ -75,7 +135,7 @@ const TrendingArticles = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {trendingPosts.map((post, index) => (
+            {postsToDisplay.map((post, index) => (
               <Card 
                 key={post.id} 
                 className="bg-gray-800/50 border-gray-700 hover:bg-gray-800 transition-all hover:-translate-y-1 duration-300"
