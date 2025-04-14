@@ -24,25 +24,25 @@ interface SEOProps {
 
 const SEO: React.FC<SEOProps> = ({
   title,
-  description = 'Explore lifestyle, travel, and personal growth with Jeff HonForLoco. Discover insights, tips, and stories to inspire your journey.',
-  canonical = 'https://www.jeffhonforloco.com',
-  image = '/og-image.jpg',
+  description = 'Join Jeff Hon\'s campaign for a brighter future in Loco. Transparent leadership, community empowerment, and positive change. Learn more and get involved.',
+  canonical = 'https://jeffhonforloco.com',
+  image = '/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png',
   type = 'website',
   publishedAt,
   updatedAt,
-  author = 'Jeff HonForLoco',
+  author = 'Jeff Hon for Loco',
   category,
   tags,
   readingTime,
   wordCount,
-  keywords = 'lifestyle, travel, personal growth, blogging, jeff honforloco',
+  keywords = 'jeff hon, loco, leadership, campaign, community, transparency, empowerment',
   language = 'en_US',
   noIndex = false,
   noFollow = false,
   schema,
 }) => {
-  const siteUrl = 'https://www.jeffhonforloco.com';
-  const fullTitle = `${title} | Jeff HonForLoco`;
+  const siteUrl = 'https://jeffhonforloco.com';
+  const fullTitle = `${title} | Jeff Hon for Loco`;
   const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
   
   // Enhanced article schema with more properties
@@ -61,10 +61,10 @@ const SEO: React.FC<SEOProps> = ({
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Jeff HonForLoco',
+      name: 'Jeff Hon for Loco',
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/logo.png`,
+        url: `${siteUrl}/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png`,
         width: 600,
         height: 60,
       },
@@ -87,7 +87,7 @@ const SEO: React.FC<SEOProps> = ({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     url: siteUrl,
-    name: 'Jeff HonForLoco',
+    name: 'Jeff Hon for Loco',
     description: description,
     potentialAction: {
       '@type': 'SearchAction',
@@ -98,7 +98,7 @@ const SEO: React.FC<SEOProps> = ({
     inLanguage: language,
     copyrightHolder: {
       '@type': 'Person',
-      name: 'Jeff HonForLoco',
+      name: 'Jeff Hon for Loco',
       url: `${siteUrl}/about`,
     },
   };
@@ -107,7 +107,7 @@ const SEO: React.FC<SEOProps> = ({
   const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Jeff HonForLoco',
+    name: 'Jeff Hon for Loco',
     url: `${siteUrl}/about`,
     sameAs: [
       'https://www.facebook.com/people/Jeff-Honforloco/61551819509232/',
@@ -117,10 +117,10 @@ const SEO: React.FC<SEOProps> = ({
       'https://www.tiktok.com/@jeffhonforloco',
       'https://www.linkedin.com/in/jeffhonforloco/'
     ],
-    jobTitle: 'Lifestyle & Travel Blogger',
+    jobTitle: 'Candidate for Loco',
     worksFor: {
       '@type': 'Organization',
-      name: 'Jeff HonForLoco Blog'
+      name: 'Jeff Hon for Loco Campaign'
     }
   };
 
@@ -142,7 +142,7 @@ const SEO: React.FC<SEOProps> = ({
       ) : null}
       
       {/* Open Graph tags */}
-      <meta property="og:site_name" content="Jeff HonForLoco" />
+      <meta property="og:site_name" content="Jeff Hon for Loco" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonical} />
@@ -172,7 +172,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      <meta name="apple-mobile-web-app-title" content="Jeff HonForLoco" />
+      <meta name="apple-mobile-web-app-title" content="Jeff Hon for Loco" />
       
       {/* Schema.org structured data */}
       <script type="application/ld+json">
@@ -211,9 +211,9 @@ const SEO: React.FC<SEOProps> = ({
         {JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Organization',
-          name: 'Jeff HonForLoco',
+          name: 'Jeff Hon for Loco',
           url: siteUrl,
-          logo: `${siteUrl}/logo.png`,
+          logo: `${siteUrl}/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png`,
           sameAs: [
             'https://twitter.com/jeffhonforloco',
             'https://www.facebook.com/jeffhonforloco',
