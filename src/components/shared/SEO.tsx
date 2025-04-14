@@ -24,25 +24,25 @@ interface SEOProps {
 
 const SEO: React.FC<SEOProps> = ({
   title,
-  description = 'Join Jeff Hon\'s campaign for a brighter future in Loco. Transparent leadership, community empowerment, and positive change. Learn more and get involved.',
+  description = 'Join JeffHonForLoco\'s campaign for a brighter future. Transparent leadership, community empowerment, and positive change. Learn more and get involved.',
   canonical = 'https://jeffhonforloco.com',
   image = '/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png',
   type = 'website',
   publishedAt,
   updatedAt,
-  author = 'Jeff Hon for Loco',
+  author = 'JeffHonForLoco',
   category,
   tags,
   readingTime,
   wordCount,
-  keywords = 'jeff hon, loco, leadership, campaign, community, transparency, empowerment',
+  keywords = 'jeffhonforloco, leadership, campaign, community, transparency, empowerment',
   language = 'en_US',
   noIndex = false,
   noFollow = false,
   schema,
 }) => {
   const siteUrl = 'https://jeffhonforloco.com';
-  const fullTitle = `${title} | Jeff Hon for Loco`;
+  const fullTitle = `${title} | JeffHonForLoco`;
   const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
   
   // Enhanced article schema with more properties
@@ -61,7 +61,7 @@ const SEO: React.FC<SEOProps> = ({
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Jeff Hon for Loco',
+      name: 'JeffHonForLoco',
       logo: {
         '@type': 'ImageObject',
         url: `${siteUrl}/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png`,
@@ -87,7 +87,7 @@ const SEO: React.FC<SEOProps> = ({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     url: siteUrl,
-    name: 'Jeff Hon for Loco',
+    name: 'JeffHonForLoco',
     description: description,
     potentialAction: {
       '@type': 'SearchAction',
@@ -98,7 +98,7 @@ const SEO: React.FC<SEOProps> = ({
     inLanguage: language,
     copyrightHolder: {
       '@type': 'Person',
-      name: 'Jeff Hon for Loco',
+      name: 'JeffHonForLoco',
       url: `${siteUrl}/about`,
     },
   };
@@ -107,7 +107,7 @@ const SEO: React.FC<SEOProps> = ({
   const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Jeff Hon for Loco',
+    name: 'JeffHonForLoco',
     url: `${siteUrl}/about`,
     sameAs: [
       'https://www.facebook.com/people/Jeff-Honforloco/61551819509232/',
@@ -120,7 +120,7 @@ const SEO: React.FC<SEOProps> = ({
     jobTitle: 'Candidate for Loco',
     worksFor: {
       '@type': 'Organization',
-      name: 'Jeff Hon for Loco Campaign'
+      name: 'JeffHonForLoco Campaign'
     }
   };
 
@@ -142,7 +142,7 @@ const SEO: React.FC<SEOProps> = ({
       ) : null}
       
       {/* Open Graph tags */}
-      <meta property="og:site_name" content="Jeff Hon for Loco" />
+      <meta property="og:site_name" content="JeffHonForLoco" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonical} />
@@ -172,7 +172,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      <meta name="apple-mobile-web-app-title" content="Jeff Hon for Loco" />
+      <meta name="apple-mobile-web-app-title" content="JeffHonForLoco" />
       
       {/* Schema.org structured data */}
       <script type="application/ld+json">
@@ -211,7 +211,7 @@ const SEO: React.FC<SEOProps> = ({
         {JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Organization',
-          name: 'Jeff Hon for Loco',
+          name: 'JeffHonForLoco',
           url: siteUrl,
           logo: `${siteUrl}/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png`,
           sameAs: [
