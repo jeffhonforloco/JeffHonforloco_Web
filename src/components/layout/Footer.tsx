@@ -7,7 +7,6 @@ import TiktokIcon from '../icons/TiktokIcon';
 import PinterestIcon from '../icons/PinterestIcon';
 import { Link } from 'react-router-dom';
 
-// Define our main categories for the footer
 const footerCategories = [
   { id: 1, name: "Lifestyle & Growth", slug: "lifestyle-growth" },
   { id: 2, name: "Travel Adventures", slug: "travel-adventures" },
@@ -16,7 +15,6 @@ const footerCategories = [
   { id: 5, name: "Motivation & Stories", slug: "motivation-stories" }
 ];
 
-// Social media links
 const socialLinks = [
   { name: "Facebook", icon: <Facebook className="h-5 w-5" />, url: "https://www.facebook.com/people/Jeff-HonForloco/61551819509232/" },
   { name: "Instagram", icon: <Instagram className="h-5 w-5" />, url: "https://www.instagram.com/jeffhonforloco" },
@@ -38,23 +36,21 @@ const Footer = () => {
     <footer className="bg-charcoal text-white pt-24 pb-12">
       <div className="container-lg">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12 mb-20">
-          {/* Brand - Enhanced logo display */}
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
             <Link to="/" className="block mb-8">
               <img 
-                src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
-                alt="Jeff HonForLoco Logo" 
+                src="/lovable-uploads/944a3675-1b45-4fb8-97fc-f1c673a946ed.png" 
+                alt="JeffHonForLoco Logo" 
                 className="h-28 w-auto mx-auto md:mx-0 mb-4 filter brightness-0 invert drop-shadow-[0_0_4px_rgba(255,255,255,0.3)]" 
               />
               <p className="text-gray-300 text-sm text-center md:text-left italic mt-3">
-                live bold. travel far. grow every day.
+                Elevate Your Lifestyle, Explore the World, and Grow Every Day
               </p>
             </Link>
             <p className="text-gray-300 mb-8">
               Exploring life through travel, lifestyle, and personal growth experiences.
             </p>
             
-            {/* Social Icons */}
             <div className="grid grid-cols-5 gap-4 mb-8">
               {socialLinks.slice(0, 10).map((social, index) => (
                 <a 
@@ -72,7 +68,6 @@ const Footer = () => {
             </div>
           </div>
           
-          {/* Links */}
           <div className="col-span-1">
             <h3 className="font-serif text-lg font-semibold mb-6">Categories</h3>
             <ul className="space-y-3">
@@ -94,7 +89,6 @@ const Footer = () => {
             </ul>
           </div>
           
-          {/* Pages */}
           <div className="col-span-1">
             <h3 className="font-serif text-lg font-semibold mb-6">Pages</h3>
             <ul className="space-y-3">
@@ -121,7 +115,6 @@ const Footer = () => {
             </ul>
           </div>
           
-          {/* Newsletter */}
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
             <h3 className="font-serif text-lg font-semibold mb-6">Newsletter</h3>
             <p className="text-gray-300 mb-5">Subscribe to get the latest posts and updates.</p>
@@ -142,7 +135,6 @@ const Footer = () => {
           </div>
         </div>
         
-        {/* Bottom */}
         <div className="pt-12 border-t border-gray-800 text-center text-gray-400 text-sm">
           <p>&copy; {currentYear} Jeff HonForLoco. All rights reserved.</p>
         </div>

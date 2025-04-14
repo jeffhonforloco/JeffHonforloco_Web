@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -34,35 +33,28 @@ const Header = () => {
       }`}
     >
       <div className="container-lg flex items-center justify-between">
-        {/* Logo with optimized positioning and spacing */}
         <Link to="/" className="flex items-center mr-36">
           <div className="h-24 w-auto flex-shrink-0 relative transition-all duration-300">
-            {/* Light mode logo with enhanced shadow */}
             <img 
-              src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
-              alt="Jeff HonForLoco Logo" 
+              src="/lovable-uploads/944a3675-1b45-4fb8-97fc-f1c673a946ed.png" 
+              alt="JeffHonForLoco Logo" 
               className="h-full w-auto object-contain filter drop-shadow-lg dark:hidden"
             />
-            {/* Dark mode logo with stronger glow effect */}
             <img 
-              src="/lovable-uploads/e52f107c-b791-4d40-b79e-e31779685349.png" 
-              alt="Jeff HonForLoco Logo" 
+              src="/lovable-uploads/944a3675-1b45-4fb8-97fc-f1c673a946ed.png" 
+              alt="JeffHonForLoco Logo" 
               className="h-full w-auto object-contain hidden dark:block brightness-0 invert filter drop-shadow-[0_0_4px_rgba(255,255,255,0.7)]"
             />
           </div>
         </Link>
         
-        {/* Desktop Navigation with additional spacing from logo */}
         <div className="flex-1 ml-16">
           <DesktopNavigation />
         </div>
         
-        {/* Mobile Menu Button - with increased spacing */}
         <div className="md:hidden flex items-center gap-3">
-          {/* Mobile Cart */}
           <CartButton mobile />
           
-          {/* Mobile Search */}
           <ProductSearch>
             <Button variant="ghost" size="icon" className="mr-2 font-semibold">
               <span className="sr-only">Search products</span>
@@ -83,7 +75,6 @@ const Header = () => {
         </div>
       </div>
       
-      {/* Mobile Menu */}
       <MobileNavigation isOpen={isMenuOpen} onClose={closeMenu} />
     </header>
   );

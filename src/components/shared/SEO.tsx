@@ -24,9 +24,9 @@ interface SEOProps {
 
 const SEO: React.FC<SEOProps> = ({
   title,
-  description = 'Join JeffHonForLoco\'s campaign for a brighter future. Transparent leadership, community empowerment, and positive change. Learn more and get involved.',
+  description = 'JeffHonForLoco: Your guide to lifestyle elevation, world exploration, and personal growth. Join the journey of transformation and inspiration.',
   canonical = 'https://jeffhonforloco.com',
-  image = '/lovable-uploads/de41e868-2d87-4432-b302-30721ae1dc95.png',
+  image = '/lovable-uploads/944a3675-1b45-4fb8-97fc-f1c673a946ed.png',
   type = 'website',
   publishedAt,
   updatedAt,
