@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Facebook, Twitter, Instagram, Youtube, 
@@ -38,10 +39,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12 mb-20">
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
             <Link to="/" className="block mb-8">
+              {/* Using the white version of the logo in the footer */}
               <img 
-                src="/lovable-uploads/944a3675-1b45-4fb8-97fc-f1c673a946ed.png" 
+                src="/lovable-uploads/0047146b-ff61-4c56-9cb6-b073048ca9ab.png" 
                 alt="JeffHonForLoco Logo" 
-                className="h-28 w-auto mx-auto md:mx-0 mb-4 filter brightness-0 invert drop-shadow-[0_0_4px_rgba(255,255,255,0.3)]" 
+                className="h-28 w-auto mx-auto md:mx-0 mb-4 filter brightness-0 invert" 
               />
               <p className="text-gray-300 text-sm text-center md:text-left italic mt-3">
                 Elevate Your Lifestyle, Explore the World, and Grow Every Day

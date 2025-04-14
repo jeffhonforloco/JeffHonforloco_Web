@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -35,15 +36,17 @@ const Header = () => {
       <div className="container-lg flex items-center justify-between">
         <Link to="/" className="flex items-center mr-36">
           <div className="h-24 w-auto flex-shrink-0 relative transition-all duration-300">
+            {/* Logo for light mode (black version) */}
             <img 
-              src="/lovable-uploads/944a3675-1b45-4fb8-97fc-f1c673a946ed.png" 
+              src="/lovable-uploads/0047146b-ff61-4c56-9cb6-b073048ca9ab.png" 
               alt="JeffHonForLoco Logo" 
-              className="h-full w-auto object-contain filter drop-shadow-lg dark:hidden"
+              className="h-full w-auto object-contain dark:hidden"
             />
+            {/* Logo for dark mode (white version) */}
             <img 
-              src="/lovable-uploads/944a3675-1b45-4fb8-97fc-f1c673a946ed.png" 
+              src="/lovable-uploads/0047146b-ff61-4c56-9cb6-b073048ca9ab.png" 
               alt="JeffHonForLoco Logo" 
-              className="h-full w-auto object-contain hidden dark:block brightness-0 invert filter drop-shadow-[0_0_4px_rgba(255,255,255,0.7)]"
+              className="h-full w-auto object-contain hidden dark:block brightness-0 invert"
             />
           </div>
         </Link>
