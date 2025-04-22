@@ -1,0 +1,31 @@
+
+# Allow all web crawlers for the entire site
+User-agent: *
+Allow: /
+
+# Allow specific crawlers (improves rendering priority)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Yandexbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# Social media crawlers
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+# Optimize crawl budget by setting a reasonable crawl delay
+User-agent: *
+Crawl-delay: 5
+
+# Point to the sitemap
+Sitemap: https://www.jeffhonforloco.com/sitemap.xml
